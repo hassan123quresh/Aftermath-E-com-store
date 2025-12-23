@@ -15,9 +15,9 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Outerwear',
     description: "## Construction\n\nA tailored silhouette cut from heavyweight Japanese wool. Designed to create a boundary between the self and the noise of the world.\n\n*   100% Virgin Wool\n*   Hidden placket\n*   Structured shoulder\n\n## Philosophy\n\nArmor for the modern ascetic. Wear it to disappear in plain sight.",
     images: [
-      'https://picsum.photos/800/1000?random=1',
-      'https://picsum.photos/800/1000?random=11',
-      'https://picsum.photos/800/1000?random=12'
+      'https://picsum.photos/600/750?random=1',
+      'https://picsum.photos/600/750?random=11',
+      'https://picsum.photos/600/750?random=12'
     ],
     sizes: ['XS', 'S', 'M', 'L'],
     inStock: true,
@@ -29,8 +29,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Bottoms',
     description: "## Form\n\nWide-leg trousers with deep pleats. The fabric flows with movement but stands still in repose.\n\n*   High-twist cotton drill\n*   Extended waistband\n*   Raw hem capability",
     images: [
-      'https://picsum.photos/800/1000?random=2',
-      'https://picsum.photos/800/1000?random=22'
+      'https://picsum.photos/600/750?random=2',
+      'https://picsum.photos/600/750?random=22'
     ],
     sizes: ['S', 'M', 'L'],
     inStock: true,
@@ -42,8 +42,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Knitwear',
     description: "## Texture\n\nA dense, dry-touch merino knit. Seamless construction eliminates friction. \n\nIntended to be worn directly against the skin.",
     images: [
-      'https://picsum.photos/800/1000?random=3',
-      'https://picsum.photos/800/1000?random=33'
+      'https://picsum.photos/600/750?random=3',
+      'https://picsum.photos/600/750?random=33'
     ],
     sizes: ['XS', 'S', 'M', 'L'],
     inStock: true,
@@ -55,8 +55,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Tops',
     description: "## Essential\n\nCrisp poplin. Oversized fit. A blank canvas for the day.",
     images: [
-      'https://picsum.photos/800/1000?random=4',
-      'https://picsum.photos/800/1000?random=44'
+      'https://picsum.photos/600/750?random=4',
+      'https://picsum.photos/600/750?random=44'
     ],
     sizes: ['S', 'M', 'L'],
     inStock: true,
@@ -68,8 +68,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Accessories',
     description: "## Utility\n\nHeavy canvas. Reinforced handles. Carries the weight of necessity.",
     images: [
-      'https://picsum.photos/800/1000?random=5',
-      'https://picsum.photos/800/1000?random=55'
+      'https://picsum.photos/600/750?random=5',
+      'https://picsum.photos/600/750?random=55'
     ],
     sizes: ['One Size'],
     inStock: true,

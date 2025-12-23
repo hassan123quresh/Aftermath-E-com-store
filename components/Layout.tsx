@@ -64,7 +64,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             
             {/* Mobile: Menu Trigger (Left) */}
             <div className="flex md:hidden items-center">
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 -ml-2 hover:opacity-70 transition-opacity btn-glass-icon">
+                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 -ml-2 hover:opacity-70 transition-opacity btn-glass-icon" aria-label="Menu">
                     <Menu className="w-5 h-5 stroke-1" />
                 </button>
             </div>
@@ -72,10 +72,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             {/* Logo (Centered on Mobile, Left on Desktop) */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto z-10">
                 <Link to="/" className={`block transition-opacity ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
+                    {/* Header Logo: Resized via Cloudinary (height ~100px source for retina) */}
                     <img 
-                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_100,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                         alt="Aftermath" 
                         className="h-8 md:h-12 w-auto object-contain"
+                        width="150"
+                        height="48"
                     />
                 </Link>
             </div>
@@ -109,7 +112,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                 }}
                             />
                         </form>
-                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="ml-2 text-stone-400 hover:text-obsidian btn-glass-icon p-1 rounded-full">
+                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="ml-2 text-stone-400 hover:text-obsidian btn-glass-icon p-1 rounded-full" aria-label="Close search">
                             <X className="w-4 h-4" />
                         </button>
                     </div>
@@ -119,6 +122,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         <button 
                             onClick={() => setIsSearchOpen(true)} 
                             className={`p-2 btn-glass-icon rounded-full ${isSearchOpen && window.innerWidth >= 768 ? 'hidden' : 'block'}`}
+                            aria-label="Search"
                         >
                             <Search className="w-5 h-5 stroke-1" />
                         </button>
@@ -136,7 +140,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                         onClick={() => setIsSearchOpen(false)}
                                     >
                                         <div className="w-10 h-12 bg-stone-200 overflow-hidden rounded-sm">
-                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" width="40" height="48" loading="lazy" />
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xs font-medium font-serif">{product.name}</span>
@@ -152,11 +156,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     )}
                 </div>
 
-                <Link to="/admin" className="hidden md:block p-2 btn-glass-icon rounded-full">
+                <Link to="/admin" className="hidden md:block p-2 btn-glass-icon rounded-full" aria-label="Admin">
                     <User className="w-5 h-5 stroke-1" />
                 </Link>
 
-                <button onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full">
+                <button onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full" aria-label="Cart">
                     <ShoppingBag className="w-5 h-5 stroke-1" />
                     {cart.length > 0 && (
                         <span className="absolute top-1 right-1 w-2 h-2 bg-obsidian rounded-full"></span>
@@ -177,7 +181,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}>
+                    <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} aria-label="Close">
                         <X className="w-5 h-5 stroke-1 opacity-60" />
                     </button>
 
@@ -193,7 +197,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                         onClick={() => setIsSearchOpen(false)}
                                     >
                                         <div className="w-12 h-16 bg-stone-200 overflow-hidden">
-                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover" />
+                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover" width="48" height="64" loading="lazy" />
                                         </div>
                                         <div>
                                             <p className="text-sm font-serif">{product.name}</p>
@@ -230,10 +234,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2">
             <div className="mb-6">
+                {/* Footer Logo: Resized via Cloudinary (height ~150px source for retina) */}
                 <img 
-                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_150,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                     alt="Aftermath" 
                     className="h-16 w-auto object-contain invert opacity-90"
+                    width="200"
+                    height="64"
+                    loading="lazy"
                 />
             </div>
             <p className="text-sm opacity-70 max-w-sm leading-relaxed">
@@ -300,7 +308,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             
             <div className="flex flex-wrap items-center gap-3 justify-center md:justify-end order-1 md:order-2">
                {/* COD Badge */}
-               <div className="h-8 px-2 bg-white rounded flex items-center justify-center shadow-sm">
+               <div className="h-8 px-2 bg-white rounded flex items-center justify-center shadow-sm w-12">
                    <span className="text-[9px] font-bold text-emerald-800 leading-none text-center">CASH ON<br/>DELIVERY</span>
                </div>
                
@@ -311,6 +319,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                          src={pm.src} 
                          alt={pm.name} 
                          className="w-full h-full object-contain"
+                         width="48"
+                         height="32"
+                         loading="lazy"
                          onError={(e) => {
                            // Text fallback if image fails
                            const img = e.target as HTMLImageElement;
@@ -346,7 +357,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               ) : (
                 cart.map((item, idx) => (
                   <div key={`${item.id}-${item.selectedSize}-${idx}`} className="flex gap-4">
-                    <img src={item.images[0]} alt={item.name} className="w-20 h-24 object-cover grayscale rounded-md" />
+                    <img src={item.images[0]} alt={item.name} className="w-20 h-24 object-cover grayscale rounded-md" width="80" height="96" loading="lazy" />
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-1">
                         <h3 className="font-medium text-sm">{item.name}</h3>

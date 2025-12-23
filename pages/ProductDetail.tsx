@@ -142,6 +142,9 @@ const ProductDetail = () => {
                     src={product.images[activeImgIndex]} 
                     alt={product.name} 
                     className="w-full h-full object-cover"
+                    width="600"
+                    height="750"
+                    loading="eager"
                 />
             </div>
             <div className="grid grid-cols-4 gap-2">
@@ -151,7 +154,7 @@ const ProductDetail = () => {
                         onClick={() => setActiveImgIndex(idx)}
                         className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 ${activeImgIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
                     >
-                        <img src={img} className="w-full h-full object-cover" alt="" />
+                        <img src={img} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
                     </button>
                 ))}
             </div>
@@ -259,7 +262,7 @@ const ProductDetail = () => {
                 {relatedProducts.map(rp => (
                     <Link key={rp.id} to={`/product/${rp.id}`} className="group block">
                          <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md">
-                             <img src={rp.images[0]} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={rp.name} />
+                             <img src={rp.images[0]} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
                          </div>
                          <h4 className="font-serif text-lg">{rp.name}</h4>
                          <p className="text-sm opacity-60">PKR {rp.price.toLocaleString()}</p>

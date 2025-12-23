@@ -44,11 +44,17 @@ const Collection = () => {
                 src={product.images[0]} 
                 alt={product.name} 
                 className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 group-hover:opacity-0"
+                loading="lazy"
+                width="400"
+                height="533"
               />
               <img 
                 src={product.images[1] || product.images[0]} 
                 alt={`${product.name} Alt`} 
                 className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
+                loading="lazy"
+                width="400"
+                height="533"
               />
               
               {/* Badge if low stock or new (optional example) */}

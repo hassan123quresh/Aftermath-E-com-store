@@ -130,12 +130,18 @@ const Home = () => {
                   src={product.images[0]} 
                   alt={product.name} 
                   className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 group-hover:opacity-0"
+                  width="360"
+                  height="480"
+                  loading={idx < 2 ? "eager" : "lazy"}
                 />
                 {/* Secondary Image (revealed on hover) */}
                 <img 
                   src={product.images[1] || product.images[0]} 
                   alt={`${product.name} Detail`} 
                   className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
+                  width="360"
+                  height="480"
+                  loading="lazy"
                 />
               </div>
 

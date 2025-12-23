@@ -26,7 +26,9 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     if (!containerRef.current) return;
 
     const container = containerRef.current;
-    const renderer = new Renderer({ antialias: true, alpha: true });
+    // PERFORMANCE: Limit DPR to 1 to reduce fragment shader load on high-DPI screens.
+    // This resolves "Minimize main-thread work" diagnostics related to heavy WebGL rendering.
+    const renderer = new Renderer({ antialias: false, alpha: true, dpr: 1 });
     const gl = renderer.gl;
     // Transparent clear color so it blends if needed, though shader covers all
     gl.clearColor(0, 0, 0, 0);
@@ -56,7 +58,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
           vec2 fragCoord = uvCoord * uResolution.xy;
           vec2 uv = (2.0 * fragCoord - uResolution.xy) / min(uResolution.x, uResolution.y);
 
-          for (float i = 1.0; i < 10.0; i++){
+          for (float i = 1.0; i < 6.0; i++){ // PERFORMANCE: Reduced loop from 10 to 6
               uv.x += uAmplitude / i * cos(i * uFrequencyX * uv.y + uTime + uMouse.x * 3.14159);
               uv.y += uAmplitude / i * cos(i * uFrequencyY * uv.x + uTime + uMouse.y * 3.14159);
           }
@@ -72,16 +74,8 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
       }
 
       void main() {
-          vec4 col = vec4(0.0);
-          int samples = 0;
-          for (int i = -1; i <= 1; i++){
-              for (int j = -1; j <= 1; j++){
-                  vec2 offset = vec2(float(i), float(j)) * (1.0 / min(uResolution.x, uResolution.y));
-                  col += renderImage(vUv + offset);
-                  samples++;
-              }
-          }
-          gl_FragColor = col / float(samples);
+        // PERFORMANCE: Removed multi-sampling loop. Standard render is sufficient for background.
+        gl_FragColor = renderImage(vUv);
       }
     `;
 
@@ -127,8 +121,6 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
       mouseTarget.x = x;
       mouseTarget.y = y;
     }
-
-    // Touch listeners removed to prevent movement on mobile/tablet
 
     if (interactive) {
       container.addEventListener('mousemove', handleMouseMove);
