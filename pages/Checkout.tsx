@@ -168,10 +168,10 @@ const styles = `
   width: 100%;
   height: 40px;
   
-  /* Liquid Glass Dark */
-  background: rgba(20, 20, 20, 0.85);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  /* Liquid Glass Dark - Optimized */
+  background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   
@@ -183,12 +183,16 @@ const styles = `
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-family: 'Inter', sans-serif;
-  transition: all 0.3s;
+  
+  /* Performance Optimizations */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .coupons form button:hover {
     background: rgba(20, 20, 20, 0.95);
-    transform: translateY(-1px);
+    transform: translateY(-1px) translateZ(0);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -251,10 +255,10 @@ const styles = `
   max-width: 140px;
   height: 42px;
   
-  /* Liquid Glass Dark */
-  background: rgba(20, 20, 20, 0.85);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  /* Liquid Glass Dark - Optimized */
+  background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   
@@ -266,13 +270,17 @@ const styles = `
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: all 0.3s;
+  
+  /* Performance Optimizations */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
   font-family: 'Inter', sans-serif;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .checkout .checkout-btn:hover {
     background: rgba(20, 20, 20, 0.95);
-    transform: translateY(-2px);
+    transform: translateY(-2px) translateZ(0);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 `;
