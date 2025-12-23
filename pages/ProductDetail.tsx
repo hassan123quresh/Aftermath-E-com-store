@@ -5,6 +5,8 @@ import { Truck, Package } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import DOMPurify from 'dompurify';
+import LiquidButton from '../components/LiquidButton';
+import ShimmerButton from '../components/ShimmerButton';
 
 // Configure marked with a custom tokenizer for math ($...$ and $$...$$)
 const mathExtension = {
@@ -179,37 +181,39 @@ const ProductDetail = () => {
                     </div>
                     <div className="flex gap-4">
                         {product.sizes.map(size => (
-                            <button
+                            <LiquidButton
                                 key={size}
                                 onClick={() => handleSizeSelect(size)}
-                                className={`w-12 h-12 flex items-center justify-center text-sm rounded-lg transition-all duration-300 ${
+                                size="lg"
+                                className={`w-12 h-12 p-0 transition-colors duration-200 ${
                                     selectedSize === size 
-                                    ? 'btn-glass-dark font-medium shadow-lg' 
+                                    ? 'bg-obsidian text-stone-100 font-medium' 
                                     : showSizeError 
-                                        ? 'border border-red-300 text-red-900 bg-red-50 hover:border-red-500' 
-                                        : 'btn-glass'
+                                        ? 'border border-red-300 text-red-900 bg-red-50' 
+                                        : 'opacity-80 hover:bg-black/5'
                                 }`}
                             >
                                 {size}
-                            </button>
+                            </LiquidButton>
                         ))}
                     </div>
                 </div>
 
                 {/* Actions (Always visible) */}
                 <div className="flex flex-col md:flex-row gap-4">
-                    <button
+                    <LiquidButton
                         onClick={handleAddToCart}
-                        className="flex-1 py-4 text-xs uppercase tracking-widest btn-glass rounded-full font-semibold"
+                        size="xl"
+                        className="flex-1 text-xs uppercase tracking-widest font-semibold"
                     >
                         Add to Cart
-                    </button>
-                    <button
+                    </LiquidButton>
+                    <ShimmerButton
                         onClick={handleBuyNow}
-                        className="flex-1 py-4 text-xs uppercase tracking-widest btn-glass-dark rounded-full font-semibold"
+                        className="flex-1 h-12 text-xs uppercase tracking-widest font-semibold"
                     >
                         Buy Now
-                    </button>
+                    </ShimmerButton>
                 </div>
 
                 {/* Shipping & Returns Details */}
