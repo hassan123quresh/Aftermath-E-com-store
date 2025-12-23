@@ -17,7 +17,7 @@ const Contact = () => {
                 href="https://wa.me/923079909749" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="btn-glass group flex flex-col items-center justify-center p-4 md:p-8 rounded-2xl gap-3 md:gap-4 hover:scale-[1.02] transition-transform"
+                className="btn-glass group flex flex-col items-center justify-center p-4 md:p-8 rounded-2xl gap-3 md:gap-4"
             >
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-obsidian/5 flex items-center justify-center group-hover:bg-obsidian/10 transition-colors">
                     <MessageCircle className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />
@@ -30,7 +30,7 @@ const Contact = () => {
 
             <a 
                 href="mailto:aftermathstore@hotmail.com"
-                className="btn-glass group flex flex-col items-center justify-center p-4 md:p-8 rounded-2xl gap-3 md:gap-4 hover:scale-[1.02] transition-transform"
+                className="btn-glass group flex flex-col items-center justify-center p-4 md:p-8 rounded-2xl gap-3 md:gap-4"
             >
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-obsidian/5 flex items-center justify-center group-hover:bg-obsidian/10 transition-colors">
                     <Mail className="w-5 h-5 md:w-6 md:h-6 stroke-[1.5]" />

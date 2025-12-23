@@ -184,10 +184,10 @@ const ProductDetail = () => {
                                 onClick={() => handleSizeSelect(size)}
                                 className={`w-12 h-12 flex items-center justify-center text-sm rounded-lg transition-all duration-300 ${
                                     selectedSize === size 
-                                    ? 'btn-glass-dark font-medium scale-110 shadow-lg' 
+                                    ? 'btn-glass-dark font-medium shadow-lg' 
                                     : showSizeError 
                                         ? 'border border-red-300 text-red-900 bg-red-50 hover:border-red-500' 
-                                        : 'btn-glass hover:scale-105'
+                                        : 'btn-glass'
                                 }`}
                             >
                                 {size}

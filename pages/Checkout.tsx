@@ -9,7 +9,7 @@ const styles = `
   gap: 20px;
   font-family: 'Inter', sans-serif;
   width: 100%;
-  max-width: 450px; /* Slightly reduced for better aesthetic */
+  max-width: 450px; 
 }
 
 .card {
@@ -160,42 +160,6 @@ const styles = `
   background: white;
 }
 
-.coupons form button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  width: 100%;
-  height: 40px;
-  
-  /* Liquid Glass Dark - Optimized */
-  background: rgba(20, 20, 20, 0.9);
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  
-  color: #ffffff;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: 'Inter', sans-serif;
-  
-  /* Performance Optimizations */
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-.coupons form button:hover {
-    background: rgba(20, 20, 20, 0.95);
-    transform: translateY(-1px) translateZ(0);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
 /* Checkout */
 .checkout .details {
   display: grid;
@@ -245,43 +209,6 @@ const styles = `
   font-size: 11px;
   top: -6px;
   font-weight: 500;
-}
-
-.checkout .checkout-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 140px;
-  height: 42px;
-  
-  /* Liquid Glass Dark - Optimized */
-  background: rgba(20, 20, 20, 0.9);
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  
-  color: #ffffff;
-  border-radius: 99px;
-  border: 0;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  
-  /* Performance Optimizations */
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
-  font-family: 'Inter', sans-serif;
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-.checkout .checkout-btn:hover {
-    background: rgba(20, 20, 20, 0.95);
-    transform: translateY(-2px) translateZ(0);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 `;
 
@@ -492,7 +419,7 @@ const Checkout = () => {
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
                     />
-                    <button type="submit">Apply</button>
+                    <button type="submit" className="btn-glass-dark w-full h-[40px] text-xs uppercase tracking-widest font-bold">Apply</button>
                 </form>
                 {error && <p className="text-red-500 text-xs px-5 pb-3 -mt-2 font-sans">{error}</p>}
                 {discountPercent > 0 && <p className="text-green-700 text-xs px-5 pb-3 -mt-2 font-sans">Discount applied!</p>}
@@ -514,7 +441,7 @@ const Checkout = () => {
                 
                 <div className="checkout--footer">
                   <label className="price"><sup>PKR </sup>{total.toLocaleString()}</label>
-                  <button className="checkout-btn" form="checkout-form" type="submit">Place Order</button>
+                  <button className="btn-glass-dark w-[140px] h-[42px] text-[11px] uppercase tracking-widest font-bold" form="checkout-form" type="submit">Place Order</button>
                 </div>
               </div>
             </div>

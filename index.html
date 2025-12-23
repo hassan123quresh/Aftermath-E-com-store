@@ -120,73 +120,123 @@
         height: 100%;
       }
 
-      /* Liquid Glass Apple Style Buttons - Optimized for Performance */
-      .btn-glass {
-        background: rgba(255, 255, 255, 0.55); /* Increased opacity slightly to reduce blur reliance */
-        backdrop-filter: blur(8px) saturate(180%); /* Reduced blur from 12px for mobile performance */
-        -webkit-backdrop-filter: blur(8px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 
-          0 4px 6px -1px rgba(0, 0, 0, 0.05), 
-          inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        color: #141414;
-        /* Perf: Animate specific properties only */
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
-        text-shadow: 0 0 1px rgba(255,255,255,0.5);
-        /* Perf: Force GPU layer */
-        transform: translateZ(0); 
-        will-change: transform;
-      }
-      .btn-glass:hover {
-        background: rgba(255, 255, 255, 0.75);
-        box-shadow: 
-          0 8px 15px -3px rgba(0, 0, 0, 0.1), 
-          inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        transform: translateY(-1px) translateZ(0);
-        border-color: rgba(255, 255, 255, 0.9);
-      }
-      .btn-glass:active {
-        transform: translateY(0) scale(0.98) translateZ(0);
-        background: rgba(255, 255, 255, 0.85);
+      /* --- NEW OPTIMIZED GLASS BUTTONS --- */
+      
+      /* Base styles derived from requested code */
+      .glass-btn-core {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        user-select: none;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        text-align: center;
+        border-radius: 0.5rem; /* rounded-lg */
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        -webkit-font-smoothing: antialiased;
+        transform: translateZ(0); /* Hardware accel */
+        will-change: transform, background-color, box-shadow;
       }
 
+      /* Shared Pseudo Elements for Gradients */
+      .glass-btn-core::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 0.5rem;
+        background: linear-gradient(to bottom right, rgba(255,255,255,0.6), transparent, transparent);
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .glass-btn-core::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 0.5rem;
+        background: linear-gradient(to top left, rgba(255,255,255,0.3), transparent, transparent);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* 1. Hero Button (Exact match to provided code, white text) */
+      .btn-glass-hero {
+        /* Extend core */
+        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
+        
+        /* Provided styles */
+        background-color: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        box-shadow: inset 0 1px 0px rgba(255,255,255,0.75), 0 0 9px rgba(0,0,0,0.2), 0 3px 8px rgba(0,0,0,0.15);
+        color: white;
+      }
+      .btn-glass-hero:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-hero::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.6), transparent, transparent); opacity: 0.7; pointer-events: none; }
+      .btn-glass-hero::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.3), transparent, transparent); opacity: 0.5; pointer-events: none; }
+
+
+      /* 2. Light Glass Button (For Light Backgrounds - Dark Text) */
+      .btn-glass {
+        /* Extend core */
+        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
+
+        /* Adapted for Light Background */
+        background-color: rgba(255, 255, 255, 0.1); /* Slightly more opaque */
+        border: 1px solid rgba(20, 20, 20, 0.1); /* Darker border for visibility on white */
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        box-shadow: inset 0 1px 0px rgba(255,255,255,0.9), 0 2px 6px rgba(0,0,0,0.05); /* Softer shadow */
+        color: #141414;
+      }
+      .btn-glass:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: inset 0 1px 0px rgba(255,255,255,0.9), 0 4px 12px rgba(0,0,0,0.1);
+      }
+      /* Adjusted gradients for light button */
+      .btn-glass::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.8), transparent, transparent); opacity: 0.8; pointer-events: none; }
+      .btn-glass::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.4), transparent, transparent); opacity: 0.6; pointer-events: none; }
+
+
+      /* 3. Dark Glass Button (Obsidian Fill - For Buy Now / Checkout) */
       .btn-glass-dark {
-        background: rgba(20, 20, 20, 0.9); /* More opaque base */
-        backdrop-filter: blur(8px) saturate(180%); /* Reduced blur */
-        -webkit-backdrop-filter: blur(8px) saturate(180%);
+        /* Extend core */
+        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
+
+        /* Dark Obsidian Base */
+        background-color: rgba(20, 20, 20, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-          0 4px 10px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        color: #f5f5f4;
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-        transform: translateZ(0);
-        will-change: transform;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        box-shadow: inset 0 1px 0px rgba(255,255,255,0.1), 0 0 9px rgba(0,0,0,0.3), 0 3px 8px rgba(0,0,0,0.25);
+        color: white;
       }
       .btn-glass-dark:hover {
-        background: rgba(20, 20, 20, 0.95);
-        box-shadow: 
-          0 10px 20px -5px rgba(0, 0, 0, 0.35),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        transform: translateY(-1px) translateZ(0);
-        border-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(20, 20, 20, 1);
+        /* REMOVED TRANSFORM to eliminate zoom/shift */
       }
-      .btn-glass-dark:active {
-        transform: translateY(0) scale(0.98) translateZ(0);
-      }
+      /* Gloss on dark */
+      .btn-glass-dark::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.15), transparent, transparent); opacity: 0.7; pointer-events: none; }
+      .btn-glass-dark::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.05), transparent, transparent); opacity: 0.5; pointer-events: none; }
       
+      /* Icon Button (Header) */
       .btn-glass-icon {
          background: rgba(255, 255, 255, 0.0);
          border: 1px solid transparent;
-         transition: background-color 0.2s ease, border-color 0.2s ease, backdrop-filter 0.2s ease;
+         border-radius: 9999px; /* Full rounded for icons */
+         transition: all 0.2s ease;
       }
       .btn-glass-icon:hover {
          background: rgba(255, 255, 255, 0.4);
          border-color: rgba(255, 255, 255, 0.6);
          backdrop-filter: blur(4px);
          -webkit-backdrop-filter: blur(4px);
-         border-radius: 999px;
       }
     </style>
   <script type="importmap">

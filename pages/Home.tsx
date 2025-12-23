@@ -57,30 +57,9 @@ const Home = () => {
                   e.preventDefault();
                   document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="group relative inline-flex items-center justify-center px-12 py-4 rounded-full transition-all duration-500 hover:scale-105 active:scale-95"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  backdropFilter: 'blur(20px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                  boxShadow: `
-                    0 8px 32px rgba(0, 0, 0, 0.3),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-                    inset 0 1px 0 0 rgba(255, 255, 255, 0.3)
-                  `,
-                }}
+                className="btn-glass-hero px-12 py-4 text-xs font-serif uppercase tracking-[0.25em] font-bold"
               >
-                {/* Internal shine/highlight for liquid feel */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent opacity-50 pointer-events-none" />
-                
-                {/* Hover glow */}
-                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-white/10 blur-xl pointer-events-none" />
-
-                <span 
-                    className="relative z-10 text-xs font-serif uppercase tracking-[0.25em] text-white font-bold transition-colors" 
-                    style={{ textShadow: '0 2px 4px rgba(0,0,0,1)' }}
-                >
                   Enter Store
-                </span>
               </Link>
           </div>
         </div>
