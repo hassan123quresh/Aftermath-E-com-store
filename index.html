@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aftermath | Live within.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              obsidian: '#141414',
+              stone: {
+                50: '#fcfcfb',
+                100: '#f5f5f4',
+                200: '#edece7', // Brand Soft Stone
+                300: '#d6d3d1',
+                800: '#292524',
+                900: '#1c1917',
+              },
+              primary: '#141414',
+            },
+            fontFamily: {
+              serif: ['"Playfair Display"', 'Georgia', 'serif'],
+              sans: ['"Inter"', 'sans-serif'],
+            },
+            letterSpacing: {
+              widest: '.15em',
+            },
+            animation: {
+              'fade-in-up': 'fadeInUp 1.5s ease-out forwards',
+              'fade-in': 'fadeIn 1.2s ease-out forwards',
+              'slow-pulse': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              }
+            },
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  color: theme('colors.obsidian'),
+                  '--tw-prose-body': theme('colors.obsidian'),
+                  '--tw-prose-headings': theme('colors.obsidian'),
+                  fontFamily: theme('fontFamily.sans'),
+                  h1: { fontFamily: theme('fontFamily.serif') },
+                  h2: { fontFamily: theme('fontFamily.serif'), fontWeight: '400' },
+                  h3: { fontFamily: theme('fontFamily.serif'), fontWeight: '400' },
+                  h4: { fontFamily: theme('fontFamily.serif'), fontWeight: '600' },
+                  blockquote: { fontStyle: 'italic', borderLeftColor: theme('colors.obsidian') },
+                },
+              },
+            }),
+          },
+        },
+      }
+    </script>
+    <style>
+      html {
+        scrollbar-gutter: stable;
+      }
+      body {
+        background-color: #edece7;
+        color: #141414;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family: 'Inter', sans-serif;
+      }
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+      
+      .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1.2s ease-out;
+      }
+      .reveal-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .liquidChrome-container {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+      .liquidChrome-container canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Liquid Glass Apple Style Buttons */
+      .btn-glass {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 
+          0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        color: #141414;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 0 0 1px rgba(255,255,255,0.5);
+      }
+      .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.65);
+        box-shadow: 
+          0 10px 20px -5px rgba(0, 0, 0, 0.1), 
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px) scale(1.01);
+        border-color: rgba(255, 255, 255, 0.9);
+      }
+      .btn-glass:active {
+        transform: translateY(0) scale(0.98);
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .btn-glass-dark {
+        background: rgba(20, 20, 20, 0.85);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+          0 4px 10px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        color: #f5f5f4;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      }
+      .btn-glass-dark:hover {
+        background: rgba(20, 20, 20, 0.95);
+        box-shadow: 
+          0 12px 25px -5px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px) scale(1.01);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      .btn-glass-dark:active {
+        transform: translateY(0) scale(0.98);
+      }
+      
+      .btn-glass-icon {
+         background: rgba(255, 255, 255, 0.0);
+         border: 1px solid transparent;
+         transition: all 0.3s ease;
+      }
+      .btn-glass-icon:hover {
+         background: rgba(255, 255, 255, 0.4);
+         border-color: rgba(255, 255, 255, 0.6);
+         backdrop-filter: blur(4px);
+         border-radius: 999px;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "ogl": "https://esm.sh/ogl@1.0.11",
+    "marked": "https://esm.sh/marked@12.0.0",
+    "katex": "https://esm.sh/katex@0.16.9",
+    "dompurify": "https://esm.sh/dompurify@3.0.9"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
