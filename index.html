@@ -69,24 +69,30 @@
     <style>
       html {
         scrollbar-gutter: stable;
+        overflow-y: scroll; /* Forces scrollbar track to exist, preventing layout jump */
       }
       body {
-        background-color: #edece7;
+        background-color: #141414; /* Changed to Obsidian to match loader, prevents white flash */
         color: #141414;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-family: 'Inter', sans-serif;
       }
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
+      /* Custom Scrollbar Styling */
+      ::-webkit-scrollbar {
+          width: 8px;
       }
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .no-scrollbar {
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+      ::-webkit-scrollbar-track {
+          background: #edece7;
       }
-      
+      ::-webkit-scrollbar-thumb {
+          background: #d6d3d1;
+          border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #a8a29e;
+      }
+
       .reveal-on-scroll {
         opacity: 0;
         transform: translateY(30px);

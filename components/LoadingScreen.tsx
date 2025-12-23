@@ -12,10 +12,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     const timer = setTimeout(() => {
       setHide(true);
       
-      // Wait for the CSS transition (1.0s) to finish before unmounting to ensure smooth reveal
+      // Wait for the CSS transition (1.0s) to finish completely (plus buffer) before unmounting
+      // This prevents the component from being removed while still visible/animating
       setTimeout(() => {
         onComplete();
-      }, 1000); 
+      }, 1500); 
     }, 2200);
 
     return () => clearTimeout(timer);
