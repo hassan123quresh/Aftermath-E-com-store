@@ -4,8 +4,11 @@ import { useStore } from '../StoreContext';
 import { Truck, Package } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
-import DOMPurify from 'dompurify';
+import createDOMPurify from 'dompurify';
 import LiquidButton from '../components/LiquidButton';
+
+// Initialize DOMPurify Factory
+const DOMPurify = createDOMPurify(window);
 
 // Configure marked with a custom tokenizer for math ($...$ and $$...$$)
 const mathExtension = {
@@ -37,6 +40,7 @@ const mathExtension = {
         }
     },
     renderer(token: any) {
+        if (!katex) return token.text;
         return katex.renderToString(token.text, {
             displayMode: token.display,
             throwOnError: false,

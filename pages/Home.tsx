@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LiquidChrome from '../components/LiquidChrome';
+import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
 
 const Home = () => {
@@ -61,13 +62,12 @@ const Home = () => {
                 Stillness in motion
              </p>
              
-             <LiquidButton 
-                variant="hero"
+             <HeroLiquidButton 
                 onClick={handleEnterStore}
-                className="px-12 py-4 text-xs font-serif uppercase tracking-[0.25em] font-bold min-w-[200px]"
+                className="px-12 py-4 min-w-[200px]"
              >
                 Enter Store
-             </LiquidButton>
+             </HeroLiquidButton>
           </div>
         </div>
       </section>
@@ -84,11 +84,11 @@ const Home = () => {
       </div>
       <style>{`
         .animate-marquee {
-            animation: marquee 25s linear infinite;
+            animation: marquee 12s linear infinite;
         }
         @media (min-width: 768px) {
             .animate-marquee {
-                animation: marquee 60s linear infinite;
+                animation: marquee 20s linear infinite;
             }
         }
         @keyframes marquee {
@@ -97,76 +97,85 @@ const Home = () => {
         }
       `}</style>
 
-      {/* Featured Products Carousel */}
-      <section id="shop" className="py-32 w-full">
-        {/* Header with See All button */}
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-end mb-20 reveal-on-scroll">
-            <div className="flex items-baseline gap-6">
-                <h2 className="font-serif text-4xl text-obsidian">Collection</h2>
+      {/* Featured Products Carousel - Redesigned for Luxury */}
+      <section id="shop" className="py-24 md:py-40 w-full bg-stone-50/50">
+        <div className="max-w-[1800px] mx-auto">
+            
+            {/* Header - Increased Padding to move away from margin */}
+            <div className="px-14 md:px-40 flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20 reveal-on-scroll">
+                <div className="max-w-xl">
+                    <h2 className="font-serif text-4xl md:text-7xl text-obsidian mb-4 md:mb-6">The Collection</h2>
+                    <p className="text-xs md:text-sm text-stone-500 max-w-sm leading-relaxed tracking-wide font-sans">
+                        Essential pieces designed for the modern minimalist. Structured for presence, softened for comfort.
+                    </p>
+                </div>
+                
                 <Link 
                     to="/collection" 
-                    className="hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-widest opacity-60 hover:opacity-100 transition-all group"
+                    className="group hidden md:flex items-center gap-4 pb-1 border-b border-obsidian/20 hover:border-obsidian transition-colors duration-500"
                 >
-                    See All <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                    <span className="text-xs font-medium uppercase tracking-[0.2em]">View All Artifacts</span>
+                    <span className="group-hover:translate-x-2 transition-transform duration-500">→</span>
                 </Link>
             </div>
             
-            <div className="flex flex-col items-end gap-1">
+            {/* Scroll Container - Increased Padding & Reduced Card Size */}
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-14 md:px-40 pb-12 w-full no-scrollbar">
+              {products.map((product, idx) => (
                 <Link 
-                    to="/collection" 
-                    className="md:hidden text-xs uppercase tracking-widest opacity-60 hover:opacity-100 border-b border-obsidian pb-1 mb-1"
+                    key={product.id} 
+                    to={`/product/${product.id}`} 
+                    className="relative flex-shrink-0 snap-start w-[75vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
+                    style={{ transitionDelay: `${idx * 100}ms` }}
                 >
-                    See All
-                </Link>
-                <span className="hidden md:block text-xs tracking-widest opacity-50 uppercase border-b border-obsidian pb-1 font-sans">
-                    {products.length} Artifacts
-                </span>
-            </div>
-        </div>
-        
-        {/* Horizontal Scroll Container */}
-        {/* Mobile: w-[44%] ensures ~2 items visible. Desktop: w-[300px] or percentage for more items. */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-8 px-6 pb-12 w-full no-scrollbar max-w-7xl mx-auto">
-          {products.map((product, idx) => (
-            <Link 
-                key={product.id} 
-                to={`/product/${product.id}`} 
-                className="relative flex-shrink-0 snap-start w-[44%] md:w-[320px] lg:w-[360px] group reveal-on-scroll"
-                style={{ transitionDelay: `${idx * 100}ms` }}
-            >
-              {/* Image Container with Hover Swap */}
-              <div className="relative aspect-[3/4] overflow-hidden mb-8 bg-stone-300 w-full">
-                {/* Primary Image */}
-                <img 
-                  src={product.images[0]} 
-                  alt={product.name} 
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 group-hover:opacity-0"
-                  width="360"
-                  height="480"
-                  loading={idx < 2 ? "eager" : "lazy"}
-                />
-                {/* Secondary Image (revealed on hover) */}
-                <img 
-                  src={product.images[1] || product.images[0]} 
-                  alt={`${product.name} Detail`} 
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
-                  width="360"
-                  height="480"
-                  loading="lazy"
-                />
-              </div>
+                  {/* Image */}
+                  <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-stone-200 w-full">
+                    <img 
+                      src={product.images[0]} 
+                      alt={product.name} 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                      loading={idx < 3 ? "eager" : "lazy"}
+                    />
+                    {/* Hover Image */}
+                    <img 
+                      src={product.images[1] || product.images[0]} 
+                      alt={product.name} 
+                      className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
+                      loading="lazy"
+                    />
+                  </div>
 
-              {/* Product Info */}
-              <div className="flex flex-col items-center text-center space-y-2">
-                <h3 className="font-medium text-lg md:text-2xl font-serif group-hover:text-stone-600 transition-colors duration-300 truncate w-full">{product.name}</h3>
-                <p className="text-xs md:text-sm opacity-40 uppercase tracking-widest font-sans">{product.category}</p>
-                <span className="text-sm md:text-lg opacity-80 mt-2 font-medium font-sans">PKR {product.price.toLocaleString()}</span>
-              </div>
-            </Link>
-          ))}
-          
-          {/* Spacer to ensure last item isn't flush against the screen edge when scrolled */}
-          <div className="w-2 flex-shrink-0" />
+                  {/* Info - Clean & Editorial */}
+                  <div className="flex flex-col items-start gap-1">
+                      <div className="flex justify-between w-full items-start">
+                          <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[70%]">{product.name}</h3>
+                          {/* Price more prominent: Larger, Serif, Bolder */}
+                          <span className="text-lg md:text-xl font-serif font-medium text-obsidian whitespace-nowrap">PKR {product.price.toLocaleString()}</span>
+                      </div>
+                      <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
+                  </div>
+                </Link>
+              ))}
+              
+              {/* CTA Card at the end - Resized */}
+              <Link to="/collection" className="flex-shrink-0 snap-start w-[75vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
+                  <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>
+                  <span className="text-xs uppercase tracking-widest border-b border-obsidian/20 group-hover:border-obsidian pb-1 transition-colors">Discover the archive</span>
+              </Link>
+              
+              <div className="w-6 md:w-12 flex-shrink-0" />
+            </div>
+            
+             {/* Mobile View All Link - Adjusted Padding */}
+            <div className="px-14 md:hidden mt-8">
+                 <Link 
+                    to="/collection" 
+                    className="flex items-center justify-between w-full py-6 border-t border-stone-200 group"
+                >
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-obsidian">View Full Collection</span>
+                    <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
+                </Link>
+            </div>
         </div>
       </section>
 
