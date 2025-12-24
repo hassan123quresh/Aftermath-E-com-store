@@ -59,10 +59,13 @@ try {
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, addToCart, toggleCart } = useStore();
+  const { products, addToCart, toggleCart, showToast } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [showSizeError, setShowSizeError] = useState(false);
+  
+  // State for button feedback
+  const [activeButton, setActiveButton] = useState<'none' | 'cart' | 'buy'>('none');
 
   // Fix: Scroll to top when product page is opened or changed
   useEffect(() => {
@@ -87,7 +90,18 @@ const ProductDetail = () => {
       setShowSizeError(true);
       return;
     }
+    
+    // Provide visual feedback
+    setActiveButton('cart');
     addToCart(product, selectedSize);
+    
+    // Show toast
+    showToast("Added to Cart", { label: "Click to Proceed", onClick: toggleCart });
+
+    // Reset button state after delay
+    setTimeout(() => {
+      setActiveButton('none');
+    }, 2000);
   };
 
   const handleBuyNow = () => {
@@ -95,9 +109,17 @@ const ProductDetail = () => {
         setShowSizeError(true);
         return;
       }
+      
+      // Visual feedback
+      setActiveButton('buy');
       addToCart(product, selectedSize);
-      toggleCart(); // Close the cart drawer that automatically opens
-      navigate('/checkout');
+      
+      // Navigate after a brief delay to show the feedback
+      setTimeout(() => {
+        setActiveButton('none');
+        // If drawer is open, close it (though navigate usually handles this via layout logic)
+        navigate('/checkout');
+      }, 500);
   };
 
   // Advanced Markdown Renderer
@@ -199,21 +221,23 @@ const ProductDetail = () => {
                 <div className="flex flex-row gap-3 md:gap-4 w-full">
                     <LiquidButton
                         onClick={handleAddToCart}
-                        variant="outline"
-                        // Mobile: smaller text, less padding, smaller height to fit side-by-side
-                        className="flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold"
+                        variant={activeButton === 'cart' ? 'solid' : 'outline'}
+                        className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
+                            activeButton === 'cart' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
+                        }`}
                         fullWidth
                     >
-                        Add to Cart
+                        {activeButton === 'cart' ? 'Added' : 'Add to Cart'}
                     </LiquidButton>
                     <LiquidButton
                         onClick={handleBuyNow}
                         variant="solid"
-                        // Mobile: smaller text, less padding, smaller height to fit side-by-side
-                        className="flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold"
+                        className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
+                             activeButton === 'buy' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
+                        }`}
                         fullWidth
                     >
-                        Buy Now
+                        {activeButton === 'buy' ? 'Proceeding...' : 'Buy Now'}
                     </LiquidButton>
                 </div>
 

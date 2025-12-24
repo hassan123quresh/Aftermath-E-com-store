@@ -3,6 +3,7 @@ import { useStore } from '../StoreContext';
 import { Menu, ShoppingBag, X, User, Search, Mail, MessageCircle, Instagram } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LiquidButton from './LiquidButton';
+import Toast from './Toast';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { cart, toggleCart, isCartOpen, removeFromCart, products } = useStore();
@@ -75,14 +76,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const paymentMethods = [
     { name: 'Visa', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png' },
     { name: 'Mastercard', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png' },
-    { name: 'Easypaisa', src: 'https://mediamatters.com.pk/wp-content/uploads/2021/08/Easypaisa-new-logo-1.jpg' },
-    { name: 'JazzCash', src: 'https://vectorseek.com/wp-content/uploads/2024/12/JazzCash-2025-Logo-PNG-Vector.png' },
-    { name: 'UnionPay', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/UnionPay_logo.svg/2560px-UnionPay_logo.svg.png' },
-    { name: 'Bank Alfalah', src: 'https://upload.wikimedia.org/wikipedia/commons/4/46/Bank_alfalah_logo.png' },
+    { name: 'Easypaisa', src: 'https://pbs.twimg.com/profile_images/1595402304240472064/YQPoq-Sr_400x400.jpg' },
+    { name: 'JazzCash', src: 'https://play-lh.googleusercontent.com/uG93WUUyYVhe-B-5hBqKhr1X--UvgiICOFgD9rK4dbYG3TdqXKjq_TsJU7Pg034dOA=w240-h480-rw' },
+    { name: 'Bank Alfalah', src: 'https://play-lh.googleusercontent.com/xAcsQph2V8-o0te7Vvmu-zKTqU0N677r_USEWsMIneEml_mZBz0R6m4lCUiIfoNwHA' },
   ];
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-stone-200 text-obsidian">
+      <Toast />
       {/* Unified Fixed Header */}
       <header className={headerClasses}>
         
@@ -338,9 +339,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-xs opacity-40 order-2 md:order-1">&copy; {new Date().getFullYear()} Aftermath. Live within.</p>
             
-            <div className="flex flex-wrap items-center gap-3 justify-center md:justify-end order-1 md:order-2">
+            <div className="grid grid-cols-3 gap-3 md:flex md:flex-wrap md:items-center md:justify-end order-1 md:order-2">
                {/* COD Badge */}
-               <div className="h-8 px-2 bg-white rounded flex items-center justify-center shadow-sm w-12">
+               <div className="h-8 w-12 px-2 bg-white rounded flex items-center justify-center shadow-sm">
                    <span className="text-[9px] font-bold text-emerald-800 leading-none text-center">CASH ON<br/>DELIVERY</span>
                </div>
                

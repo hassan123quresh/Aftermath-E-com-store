@@ -10,68 +10,60 @@ export const INITIAL_PROMOS: PromoCode[] = [
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'p1',
-    name: 'The Obsidian Coat',
-    price: 45000,
-    category: 'Outerwear',
-    description: "## Construction\n\nA tailored silhouette cut from heavyweight Japanese wool. Designed to create a boundary between the self and the noise of the world.\n\n*   100% Virgin Wool\n*   Hidden placket\n*   Structured shoulder\n\n## Philosophy\n\nArmor for the modern ascetic. Wear it to disappear in plain sight.",
+    name: 'Studio Cut Hoodie in Burnt Terra',
+    price: 8499,
+    category: 'Hoodies',
+    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://picsum.photos/600/750?random=1',
-      'https://picsum.photos/600/750?random=11',
-      'https://picsum.photos/600/750?random=12'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard2copy4.jpg?v=1763585095&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy5_8a6af684-d339-4b6a-b182-98dc5453ae4e.jpg?v=1763585095&width=1600'
     ],
-    sizes: ['XS', 'S', 'M', 'L'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
   },
   {
-    id: 'p2',
-    name: 'Structure Trousers',
-    price: 18500,
-    category: 'Bottoms',
-    description: "## Form\n\nWide-leg trousers with deep pleats. The fabric flows with movement but stands still in repose.\n\n*   High-twist cotton drill\n*   Extended waistband\n*   Raw hem capability",
+    id: 'p6',
+    name: 'Studio Cut Quarter in Cloud Dancer',
+    price: 7999,
+    category: 'Sweatshirts',
+    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://picsum.photos/600/750?random=2',
-      'https://picsum.photos/600/750?random=22'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1_7a132423-3efa-4f07-bcca-69ba437b394e.jpg?v=1763591134&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy_1ca85ebc-9107-439c-9c50-f3bb58d37ecb.jpg?v=1763591134&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy3_fb280b84-80e9-42ea-94a7-1fc5eb48a131.jpg?v=1763591134&width=1600'
     ],
-    sizes: ['S', 'M', 'L'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
   },
   {
-    id: 'p3',
-    name: 'Silence Knit',
-    price: 22000,
-    category: 'Knitwear',
-    description: "## Texture\n\nA dense, dry-touch merino knit. Seamless construction eliminates friction. \n\nIntended to be worn directly against the skin.",
+    id: 'p7',
+    name: 'Studio Cut Zipper in Coal Dust',
+    price: 8249,
+    category: 'Hoodies',
+    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut zipper is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://picsum.photos/600/750?random=3',
-      'https://picsum.photos/600/750?random=33'
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard1copy2.jpg?v=1763332847&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard2copy2.jpg?v=1763332847&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard3copy2.jpg?v=1763332847&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard4copy2.jpg?v=1763332848&width=1600'
     ],
-    sizes: ['XS', 'S', 'M', 'L'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
   },
   {
-    id: 'p4',
-    name: 'Void Shirt',
-    price: 12500,
-    category: 'Tops',
-    description: "## Essential\n\nCrisp poplin. Oversized fit. A blank canvas for the day.",
+    id: 'p8',
+    name: 'Studio Cut Quarter in Coal Dust',
+    price: 7999,
+    category: 'Sweatshirts',
+    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://picsum.photos/600/750?random=4',
-      'https://picsum.photos/600/750?random=44'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2.jpg?v=1763591103&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2_2.jpg?v=1763591103&width=1600',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy2.jpg?v=1763591103&width=1600'
     ],
-    sizes: ['S', 'M', 'L'],
-    inStock: true,
-  },
-    {
-    id: 'p5',
-    name: 'Canvas Tote',
-    price: 8500,
-    category: 'Accessories',
-    description: "## Utility\n\nHeavy canvas. Reinforced handles. Carries the weight of necessity.",
-    images: [
-      'https://picsum.photos/600/750?random=5',
-      'https://picsum.photos/600/750?random=55'
-    ],
-    sizes: ['One Size'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
   }
 ];
@@ -87,7 +79,7 @@ export const MOCK_ORDERS: Order[] = [
     items: [
       { ...MOCK_PRODUCTS[0], selectedSize: 'M', quantity: 1 }
     ],
-    total: 45000,
+    total: 8499,
     status: 'Delivered',
     paymentMethod: 'BankTransfer',
     date: '2023-10-15',
@@ -100,11 +92,11 @@ export const MOCK_ORDERS: Order[] = [
     address: 'Flat 4B, Askari 11',
     city: 'Lahore',
     items: [
-      { ...MOCK_PRODUCTS[2], selectedSize: 'S', quantity: 1 },
-      { ...MOCK_PRODUCTS[3], selectedSize: 'S', quantity: 2 }
+      { ...MOCK_PRODUCTS[1], selectedSize: 'S', quantity: 1 },
+      { ...MOCK_PRODUCTS[2], selectedSize: 'S', quantity: 2 }
 
     ],
-    total: 47000,
+    total: 24497,
     status: 'Pending',
     paymentMethod: 'COD',
     date: '2023-10-25',
@@ -117,9 +109,9 @@ export const MOCK_ORDERS: Order[] = [
     address: 'Sector F-7/2',
     city: 'Islamabad',
     items: [
-       { ...MOCK_PRODUCTS[1], selectedSize: 'L', quantity: 1 }
+       { ...MOCK_PRODUCTS[3], selectedSize: 'L', quantity: 1 }
     ],
-    total: 18500,
+    total: 7999,
     status: 'Shipped',
     paymentMethod: 'COD',
     date: '2023-10-26',

@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Product, CartItem, Order, PromoCode, StoreContextType } from './types';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData } from './types';
 import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT } from './constants';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -11,6 +11,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const [orders, setOrders] = useState<Order[]>(MOCK_ORDERS);
   const [promos, setPromos] = useState<PromoCode[]>(INITIAL_PROMOS);
   const [announcementText, setAnnouncementText] = useState(INITIAL_ANNOUNCEMENT);
+  
+  // Toast State
+  const [toast, setToast] = useState<ToastData | null>(null);
 
   const toggleCart = () => setIsCartOpen(prev => !prev);
 
@@ -26,7 +29,7 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       }
       return [...prev, { ...product, selectedSize: size, quantity: 1 }];
     });
-    setIsCartOpen(true);
+    // Removed automatic setIsCartOpen(true) here to allow custom handling via Toast
   };
 
   const removeFromCart = (productId: string, size: string) => {
@@ -61,6 +64,19 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
     if (promo.usageLimit !== -1 && promo.usedCount >= promo.usageLimit) return 0;
     return promo.discountPercentage / 100;
   };
+
+  // Toast Logic
+  const showToast = (message: string, action?: { label: string; onClick: () => void }) => {
+    const id = Date.now();
+    setToast({ message, action, id });
+    
+    // Auto hide after 4 seconds
+    setTimeout(() => {
+      setToast(prev => (prev?.id === id ? null : prev));
+    }, 4000);
+  };
+
+  const hideToast = () => setToast(null);
 
   // Admin Actions
   const addProduct = (product: Product) => setProducts(prev => [product, ...prev]);
@@ -101,7 +117,10 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       togglePromo,
       addPromo,
       announcementText,
-      updateAnnouncementText
+      updateAnnouncementText,
+      toast,
+      showToast,
+      hideToast
     }}>
       {children}
     </StoreContext.Provider>

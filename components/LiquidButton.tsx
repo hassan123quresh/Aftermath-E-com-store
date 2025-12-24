@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 import { cn } from "../lib/utils"
 
 // Removed hover transition effects to meet "static" requirement
@@ -36,9 +36,11 @@ const buttonVariants = cva(
 )
 
 export interface LiquidButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  asChild?: boolean;
+  variant?: "default" | "outline" | "solid" | "ghost" | "hero" | null | undefined;
+  size?: "default" | "sm" | "lg" | "xl" | "icon" | null | undefined;
+  fullWidth?: boolean | null | undefined;
 }
 
 const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
@@ -74,7 +76,7 @@ const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
 
     return (
       <button
-        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+        className={cn(buttonVariants({ variant, size, fullWidth: fullWidth as any, className }))}
         ref={ref}
         {...props}
         onClick={createRipple}
@@ -89,8 +91,8 @@ const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
             style={{
               top: ripple.y,
               left: ripple.x,
-              width: Math.max(props.style?.width as any || 100, 100) * 4 + 'px', 
-              height: Math.max(props.style?.width as any || 100, 100) * 4 + 'px',
+              width: Math.max((props.style?.width as any) || 100, 100) * 4 + 'px', 
+              height: Math.max((props.style?.width as any) || 100, 100) * 4 + 'px',
               minWidth: '200px', // Ensure visibility on small buttons
               minHeight: '200px'
             }}

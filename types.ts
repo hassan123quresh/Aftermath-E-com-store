@@ -42,6 +42,15 @@ export interface AnalyticsData {
   orders: number;
 }
 
+export interface ToastData {
+  message: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+  id: number;
+}
+
 export interface StoreContextType {
   products: Product[];
   cart: CartItem[];
@@ -66,4 +75,9 @@ export interface StoreContextType {
   // Config
   announcementText: string;
   updateAnnouncementText: (text: string) => void;
+
+  // Toast
+  toast: ToastData | null;
+  showToast: (message: string, action?: { label: string; onClick: () => void }) => void;
+  hideToast: () => void;
 }
