@@ -3,7 +3,7 @@ import { Mail, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-24 animate-fade-in">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12 md:py-20 animate-fade-in">
       <div className="max-w-2xl w-full text-center space-y-12">
         <div>
             <h1 className="text-5xl md:text-7xl font-serif mb-6">Get in Touch</h1>

@@ -11,7 +11,7 @@ const Collection = () => {
   }, []);
 
   return (
-    <div className="min-h-screen pt-32 pb-24 px-4 md:px-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="min-h-screen pt-4 md:pt-8 pb-24 px-4 md:px-6 max-w-7xl mx-auto animate-fade-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-obsidian/10 pb-6">
         <div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package, ArrowRight } from 'lucide-react';
+import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
@@ -79,10 +79,25 @@ const ProductDetail = () => {
   // State for button feedback
   const [activeButton, setActiveButton] = useState<'none' | 'cart' | 'buy'>('none');
 
+  // Zoom and Swipe State
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
   // Fix: Scroll to top when product page is opened or changed
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  // Lock body scroll when zoomed
+  useEffect(() => {
+    if (isZoomed) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; }
+  }, [isZoomed]);
 
   const product = products.find(p => p.id === id);
 
@@ -132,6 +147,47 @@ const ProductDetail = () => {
         // If drawer is open, close it (though navigate usually handles this via layout logic)
         navigate('/checkout');
       }, 500);
+  };
+
+  const handleNextImage = () => {
+      setActiveImgIndex((prev) => (prev + 1) % product.images.length);
+  };
+
+  const handlePrevImage = () => {
+      setActiveImgIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+  };
+
+  // Swipe Handlers
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+      setTouchEnd(null);
+      setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+      setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+      if (!touchStart || !touchEnd) return;
+      const distance = touchStart - touchEnd;
+      const isLeftSwipe = distance > minSwipeDistance;
+      const isRightSwipe = distance < -minSwipeDistance;
+      
+      if (isLeftSwipe) {
+          handleNextImage();
+      }
+      if (isRightSwipe) {
+          handlePrevImage();
+      }
+  };
+
+  const toggleZoom = () => {
+      // Only allow zoom on desktop view (md and up)
+      if (window.innerWidth >= 768) {
+          setIsZoomed(!isZoomed);
+      }
   };
 
   // Advanced Markdown Renderer
@@ -207,20 +263,55 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 py-4 md:py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* Images - Sticky functionality moved here for better scrolling experience */}
         <div className="space-y-2 lg:sticky lg:top-28">
-            <div className="aspect-[3/4] w-full overflow-hidden bg-stone-300">
+            {/* Main Image Container */}
+            <div 
+                className="aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group md:cursor-zoom-in"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                onClick={toggleZoom}
+            >
                 <img 
                     src={product.images[activeImgIndex]} 
                     alt={product.name} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover select-none"
                     width="600"
                     height="750"
                     loading="eager"
+                    draggable="false"
                 />
+
+                {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
+                {product.images.length > 1 && (
+                    <>
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                            aria-label="Previous image"
+                        >
+                            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
+                        </button>
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                            aria-label="Next image"
+                        >
+                            <ChevronRight className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
+                        </button>
+                    </>
+                )}
+
+                {/* Desktop Zoom Hint */}
+                <div className="hidden md:flex absolute bottom-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                    <ZoomIn className="w-5 h-5 text-obsidian drop-shadow-md" />
+                </div>
             </div>
+            
+            {/* Thumbnails */}
             <div className="grid grid-cols-4 gap-2">
                 {product.images.map((img, idx) => (
                     <button 
@@ -352,6 +443,50 @@ const ProductDetail = () => {
                 ))}
               </div>
           </div>
+      )}
+
+      {/* Desktop Zoom Modal */}
+      {isZoomed && (
+        <div 
+            className="fixed inset-0 z-[100] bg-obsidian/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
+            onClick={() => setIsZoomed(false)}
+        >
+            {/* Close Button */}
+            <button 
+                className="absolute top-6 right-6 p-2 text-white/60 hover:text-white transition-colors"
+                onClick={() => setIsZoomed(false)}
+            >
+                <X className="w-10 h-10 stroke-1" />
+            </button>
+
+            {/* Navigation Buttons */}
+            <button 
+                onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                className="hidden md:block absolute left-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
+            >
+                <ChevronLeft className="w-12 h-12 stroke-[0.5]" />
+            </button>
+
+            {/* Zoomed Image */}
+            <img 
+                src={product.images[activeImgIndex]} 
+                alt={product.name}
+                className="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl cursor-default select-none"
+                onClick={(e) => e.stopPropagation()} 
+            />
+
+            <button 
+                onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                className="hidden md:block absolute right-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
+            >
+                <ChevronRight className="w-12 h-12 stroke-[0.5]" />
+            </button>
+            
+            {/* Image Counter */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest uppercase font-sans">
+                {activeImgIndex + 1} / {product.images.length}
+            </div>
+        </div>
       )}
     </div>
   );
