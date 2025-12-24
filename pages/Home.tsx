@@ -99,10 +99,10 @@ const Home = () => {
 
       {/* Featured Products Carousel - Redesigned for Luxury */}
       <section id="shop" className="py-24 md:py-40 w-full bg-stone-50/50">
-        <div className="max-w-[1800px] mx-auto">
+        <div className="max-w-7xl mx-auto">
             
-            {/* Header - Increased Padding to move away from margin */}
-            <div className="px-14 md:px-40 flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20 reveal-on-scroll">
+            {/* Header - Fixed Alignment (items-start on mobile to align left) */}
+            <div className="px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-on-scroll">
                 <div className="max-w-xl">
                     <h2 className="font-serif text-4xl md:text-7xl text-obsidian mb-4 md:mb-6">The Collection</h2>
                     <p className="text-xs md:text-sm text-stone-500 max-w-sm leading-relaxed tracking-wide font-sans">
@@ -119,8 +119,8 @@ const Home = () => {
                 </Link>
             </div>
             
-            {/* Scroll Container - Increased Padding & Reduced Card Size */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-14 md:px-40 pb-12 w-full no-scrollbar">
+            {/* Scroll Container - Matching padding to header for perfect alignment */}
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-6 md:px-12 pb-12 w-full no-scrollbar">
               {products.map((product, idx) => (
                 <Link 
                     key={product.id} 
@@ -167,7 +167,7 @@ const Home = () => {
             </div>
             
              {/* Mobile View All Link - Adjusted Padding */}
-            <div className="px-14 md:hidden mt-8">
+            <div className="px-6 md:px-12 md:hidden mt-8">
                  <Link 
                     to="/collection" 
                     className="flex items-center justify-between w-full py-6 border-t border-stone-200 group"
