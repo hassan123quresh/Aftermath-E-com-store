@@ -42,15 +42,32 @@ const PageLoader = () => (
 
 // Component to handle scroll restoration on route change
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "instant" // Instant scroll to avoid visual lag during loading
-    });
-  }, [pathname]);
+    // Only force scroll to top if there is no hash
+    if (!hash) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant" // Instant scroll to avoid visual lag during loading
+      });
+    }
+  }, [pathname, hash]);
+
+  useEffect(() => {
+    // Handle hash scrolling for anchor links (e.g., #philosophy)
+    if (hash) {
+      // Delay slightly to ensure content is rendered, especially with Suspense/lazy loading
+      setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 300);
+    }
+  }, [pathname, hash]);
 
   return null;
 };

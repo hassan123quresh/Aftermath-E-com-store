@@ -86,7 +86,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
             {/* Desktop Links (Centered) */}
             <div className="hidden md:flex gap-8 text-xs tracking-[0.15em] uppercase opacity-80 absolute left-1/2 -translate-x-1/2">
-                <Link to="/" className="hover:opacity-100 transition-opacity">Shop</Link>
+                <Link to="/collection" className="hover:opacity-100 transition-opacity">Collection</Link>
                 <Link to="/#philosophy" className="hover:opacity-100 transition-opacity">Philosophy</Link>
                 <Link to="/contact" className="hover:opacity-100 transition-opacity">Contact</Link>
             </div>
@@ -218,7 +218,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
            <div className="fixed inset-0 top-[calc(2.5rem+3.5rem)] bg-stone-200 z-40 flex flex-col items-center justify-center space-y-8 animate-fade-in border-t border-obsidian/5">
-              <Link to="/" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
+              <Link to="/collection" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Collection</Link>
+              <Link to="/#philosophy" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Philosophy</Link>
               <Link to="/contact" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
               <Link to="/admin" className="text-sm opacity-50 uppercase tracking-widest" onClick={() => setIsMobileMenuOpen(false)}>Admin Access</Link>
            </div>
