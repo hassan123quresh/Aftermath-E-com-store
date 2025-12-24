@@ -91,7 +91,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
 
         {/* Navigation */}
-        <nav className={`border-b transition-colors duration-500 relative ${isTransparent ? 'border-white/10' : 'border-obsidian/5'}`}>
+        <nav className={`border-b transition-colors duration-500 relative ${isTransparent ? 'border-transparent' : 'border-obsidian/5'}`}>
             <div className="max-w-7xl mx-auto px-6 h-14 md:h-16 flex items-center justify-between">
             
             {/* Mobile: Menu Trigger (Left) */}
