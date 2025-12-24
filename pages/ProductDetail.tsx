@@ -9,14 +9,16 @@ import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 
 // Initialize DOMPurify Factory
-// Check if window is defined to avoid SSR issues if any, though this is client-side
 const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
 
 // Configure marked with a custom tokenizer for math ($...$ and $$...$$)
 const mathExtension = {
     name: 'math',
     level: 'inline',
-    start(src: string) { return src.match(/\$/)?.index; },
+    start(src: string) { 
+        const match = src.match(/\$/);
+        return match ? match.index : -1;
+    },
     tokenizer(src: string, tokens: any) {
         const blockRule = /^\$\$([\s\S]+?)\$\$/;
         const inlineRule = /^\$([^$\n]+?)\$/;
@@ -143,20 +145,58 @@ const ProductDetail = () => {
              ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
         }) : rawHtml;
         
+        // CSS classes for styling - Updated to match the requested image style
+        const proseClasses = `
+            prose prose-stone prose-sm md:prose-base max-w-none 
+            prose-headings:font-serif prose-headings:font-normal prose-headings:text-obsidian
+            prose-p:text-obsidian prose-p:opacity-80 prose-p:leading-relaxed
+            prose-a:text-obsidian prose-a:underline prose-a:underline-offset-2
+            prose-strong:text-obsidian prose-strong:font-bold
+            prose-em:font-serif prose-em:not-italic
+            prose-ul:list-disc prose-ol:list-decimal
+            prose-li:marker:text-stone-400
+            
+            /* Table Styling: Custom Background #EDECE7, Thick Dark Borders, Rounded Corners */
+            [&_table]:w-full 
+            [&_table]:border-separate [&_table]:border-spacing-0 
+            [&_table]:rounded-xl [&_table]:overflow-hidden 
+            [&_table]:my-8 
+            [&_table]:border-[2px] [&_table]:border-stone-600
+            [&_table]:bg-[#EDECE7]
+            [&_table]:shadow-sm
+            
+            /* Header Row */
+            [&_thead]:bg-[#EDECE7]
+            [&_th]:p-3 md:p-4 
+            [&_th]:text-center 
+            [&_th]:font-sans [&_th]:font-bold 
+            [&_th]:text-xs md:text-sm 
+            [&_th]:uppercase [&_th]:tracking-wider 
+            [&_th]:text-stone-700
+            [&_th]:border-b-[2px] [&_th]:border-r-[2px] [&_th]:border-stone-600
+            [&_th:last-child]:border-r-0
+
+            /* Body Rows */
+            [&_td]:p-3 md:p-4 
+            [&_td]:text-center 
+            [&_td]:text-xs md:text-sm 
+            [&_td]:font-semibold
+            [&_td]:text-stone-700 
+            [&_td]:bg-[#EDECE7]
+            [&_td]:border-b-[2px] [&_td]:border-r-[2px] [&_td]:border-stone-600
+            [&_td:last-child]:border-r-0
+            [&_tr:last-child_td]:border-b-0
+
+            /* First Column Specifics (Left aligned headers and data) */
+            [&_th:first-child]:text-left
+            [&_td:first-child]:text-left [&_td:first-child]:font-bold [&_td:first-child]:uppercase [&_td:first-child]:tracking-wider [&_td:first-child]:text-stone-600
+
+            [&_blockquote]:border-l-2 [&_blockquote]:border-obsidian [&_blockquote]:pl-4 [&_blockquote]:not-italic [&_blockquote]:opacity-70
+        `;
+
         return (
             <div 
-                className="prose prose-stone prose-sm md:prose-base max-w-none 
-                           prose-headings:font-serif prose-headings:font-normal prose-headings:text-obsidian
-                           prose-p:text-obsidian prose-p:opacity-80 prose-p:leading-relaxed
-                           prose-a:text-obsidian prose-a:underline prose-a:underline-offset-2
-                           prose-strong:text-obsidian prose-strong:font-bold
-                           prose-em:font-serif prose-em:not-italic
-                           prose-ul:list-disc prose-ol:list-decimal
-                           prose-li:marker:text-stone-400
-                           prose-table:w-full prose-table:text-left prose-table:border-collapse
-                           prose-th:p-3 prose-th:bg-stone-100 prose-th:font-serif prose-th:font-medium prose-th:text-xs prose-th:uppercase prose-th:tracking-widest
-                           prose-td:p-3 prose-td:border-b prose-td:border-stone-100 prose-td:text-sm
-                           [&_blockquote]:border-l-2 [&_blockquote]:border-obsidian [&_blockquote]:pl-4 [&_blockquote]:not-italic [&_blockquote]:opacity-70"
+                className={proseClasses}
                 dangerouslySetInnerHTML={{ __html: cleanHtml }} 
             />
         );
