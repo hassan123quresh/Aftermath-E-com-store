@@ -35,7 +35,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[90vh] w-full overflow-hidden bg-obsidian">
+      <section className="relative h-screen w-full overflow-hidden bg-obsidian">
         {/* Liquid Chrome Background */}
         <LiquidChrome
             baseColor={[0.1, 0.1, 0.1]}
