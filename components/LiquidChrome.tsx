@@ -31,21 +31,23 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     
     const container = containerRef.current;
 
-    // Initialize immediately without delay to ensure readiness when loader fades
+    // Initialize renderer
     try {
         renderer = new Renderer({ 
             powerPreference: "high-performance",
             antialias: false, 
             alpha: true, 
-            dpr: 1 // Keep DPR at 1 for performance
+            dpr: 1 
         });
         gl = renderer.gl;
-        // Set clear color to transparent so it blends with background if needed
         gl.clearColor(0, 0, 0, 0);
     } catch (e) {
         console.error("WebGL init failed:", e);
         return;
     }
+
+    // Append canvas immediately so it's in the DOM for accurate sizing and painting
+    container.appendChild(gl.canvas);
 
     const vertexShader = `
     attribute vec2 position;
@@ -83,7 +85,8 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         float ripple = sin(10.0 * dist - uTime * 2.0) * 0.03;
         uv += (diff / (dist + 0.0001)) * ripple * falloff;
 
-        vec3 color = uBaseColor / abs(sin(uTime - uv.y - uv.x));
+        // Add small epsilon to divisor to prevent infinity/white flash
+        vec3 color = uBaseColor / (abs(sin(uTime - uv.y - uv.x)) + 0.001);
         return vec4(color, 1.0);
     }
 
@@ -125,10 +128,10 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     }
     window.addEventListener('resize', resize);
     
-    // Initial resize
+    // Initial resize to ensure uniforms are correct before first render
     resize();
 
-    // State for smooth mouse movement
+    // Mouse handling
     const mouseTarget = { x: 0, y: 0 };
     const mouseCurrent = { x: 0, y: 0 };
 
@@ -158,14 +161,12 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         renderer.render({ scene: mesh });
     }
     
-    // Start animation loop immediately
+    // Start loop
     animationId = requestAnimationFrame(update);
 
-    // Force an immediate render to populate the canvas before the first frame callback
-    // This prevents a black flash if the browser delays the first rAF
+    // Initial warm-up render with non-zero time to avoid singularity at t=0
+    program.uniforms.uTime.value = performance.now() * 0.001 * speed;
     renderer.render({ scene: mesh });
-
-    container.appendChild(gl.canvas);
 
     return () => {
       if (animationId) cancelAnimationFrame(animationId);
@@ -177,13 +178,21 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
          const extension = gl.getExtension('WEBGL_lose_context');
          if (extension) extension.loseContext();
       }
-      if (renderer && renderer.gl.canvas.parentElement) {
-         renderer.gl.canvas.parentElement.removeChild(renderer.gl.canvas);
+      if (container.contains(gl.canvas)) {
+         container.removeChild(gl.canvas);
       }
     };
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
-  return <div ref={containerRef} className="liquidChrome-container" {...props} />;
+  // Set background color to match obsidian theme to prevent white flash if canvas lags
+  return (
+    <div 
+        ref={containerRef} 
+        className="liquidChrome-container" 
+        style={{ backgroundColor: '#141414', ...props.style }} 
+        {...props} 
+    />
+  );
 };
 
 export default LiquidChrome;
