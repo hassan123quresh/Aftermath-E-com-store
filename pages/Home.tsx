@@ -52,7 +52,7 @@ const Home = () => {
           {/* Removed animate-fade-in-up for instant visibility */}
           <div className="text-center pointer-events-auto flex flex-col items-center">
              <h1 
-                className="text-6xl md:text-9xl font-serif tracking-tight mb-8 italic text-white"
+                className="text-6xl md:text-9xl font-serif tracking-tight mb-8 text-white"
                 style={{ textShadow: '0 4px 10px rgba(0,0,0,0.9), 0 10px 30px rgba(0,0,0,0.8), 0 20px 60px rgba(0,0,0,0.6)' }}
              >
                 Live within.
@@ -102,7 +102,7 @@ const Home = () => {
         {/* Header with See All button */}
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-end mb-20 reveal-on-scroll">
             <div className="flex items-baseline gap-6">
-                <h2 className="font-serif text-4xl text-obsidian italic">Collection</h2>
+                <h2 className="font-serif text-4xl text-obsidian">Collection</h2>
                 <Link 
                     to="/collection" 
                     className="hidden md:inline-flex items-center gap-2 text-xs uppercase tracking-widest opacity-60 hover:opacity-100 transition-all group"
@@ -158,7 +158,7 @@ const Home = () => {
 
               {/* Product Info */}
               <div className="flex flex-col items-center text-center space-y-2">
-                <h3 className="font-medium text-lg md:text-2xl font-serif group-hover:text-stone-600 transition-colors duration-300 italic truncate w-full">{product.name}</h3>
+                <h3 className="font-medium text-lg md:text-2xl font-serif group-hover:text-stone-600 transition-colors duration-300 truncate w-full">{product.name}</h3>
                 <p className="text-xs md:text-sm opacity-40 uppercase tracking-widest font-sans">{product.category}</p>
                 <span className="text-sm md:text-lg opacity-80 mt-2 font-medium font-sans">PKR {product.price.toLocaleString()}</span>
               </div>
@@ -177,7 +177,7 @@ const Home = () => {
         
         <div className="max-w-3xl mx-auto text-center reveal-on-scroll">
           <h2 className="text-xs uppercase tracking-[0.3em] opacity-40 mb-12 font-sans">The Philosophy</h2>
-          <p className="font-serif text-3xl md:text-5xl leading-tight text-obsidian/90 mb-12 italic">
+          <p className="font-serif text-3xl md:text-5xl leading-tight text-obsidian/90 mb-12">
             "Aftermath is not trend-driven fashion. It is clothing for stillness, reflection, and inner alignment."
           </p>
           <div className="w-px h-24 bg-obsidian/20 mx-auto"></div>

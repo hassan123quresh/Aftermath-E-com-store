@@ -139,13 +139,13 @@ const ProductDetail = () => {
                            prose-p:text-obsidian prose-p:opacity-80 prose-p:leading-relaxed
                            prose-a:text-obsidian prose-a:underline prose-a:underline-offset-2
                            prose-strong:text-obsidian prose-strong:font-bold
-                           prose-em:font-serif prose-em:italic
+                           prose-em:font-serif prose-em:not-italic
                            prose-ul:list-disc prose-ol:list-decimal
                            prose-li:marker:text-stone-400
                            prose-table:w-full prose-table:text-left prose-table:border-collapse
                            prose-th:p-3 prose-th:bg-stone-100 prose-th:font-serif prose-th:font-medium prose-th:text-xs prose-th:uppercase prose-th:tracking-widest
                            prose-td:p-3 prose-td:border-b prose-td:border-stone-100 prose-td:text-sm
-                           [&_blockquote]:border-l-2 [&_blockquote]:border-obsidian [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:opacity-70"
+                           [&_blockquote]:border-l-2 [&_blockquote]:border-obsidian [&_blockquote]:pl-4 [&_blockquote]:not-italic [&_blockquote]:opacity-70"
                 dangerouslySetInnerHTML={{ __html: cleanHtml }} 
             />
         );

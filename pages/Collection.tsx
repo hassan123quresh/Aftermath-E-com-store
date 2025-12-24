@@ -14,7 +14,7 @@ const Collection = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-obsidian/10 pb-6">
         <div>
-            <h1 className="text-4xl md:text-6xl font-serif italic text-obsidian mb-2">
+            <h1 className="text-4xl md:text-6xl font-serif text-obsidian mb-2">
             The Archive
             </h1>
             <p className="text-xs md:text-sm text-stone-500 max-w-md leading-relaxed">
@@ -67,7 +67,7 @@ const Collection = () => {
 
             {/* Info */}
             <div className="flex flex-col space-y-1">
-              <h3 className="font-serif text-sm md:text-2xl leading-tight group-hover:text-stone-600 transition-colors italic">
+              <h3 className="font-serif text-sm md:text-2xl leading-tight group-hover:text-stone-600 transition-colors">
                 {product.name}
               </h3>
               <p className="text-[10px] md:text-xs uppercase tracking-widest opacity-40">
@@ -82,7 +82,7 @@ const Collection = () => {
       </div>
       
       {products.length === 0 && (
-          <div className="py-24 text-center opacity-50 font-serif italic">
+          <div className="py-24 text-center opacity-50 font-serif">
               No artifacts found.
           </div>
       )}

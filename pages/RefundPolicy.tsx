@@ -9,7 +9,7 @@ const RefundPolicy = () => {
     <div className="min-h-screen pt-32 pb-24 px-4 md:px-6 max-w-4xl mx-auto animate-fade-in font-sans text-obsidian">
         {/* Header */}
         <div className="mb-16 text-center">
-            <h1 className="text-4xl md:text-5xl font-serif italic mb-4">Refund Policy</h1>
+            <h1 className="text-4xl md:text-5xl font-serif mb-4">Refund Policy</h1>
             <p className="text-xs uppercase tracking-widest opacity-50">Last updated: November 13, 2025</p>
         </div>
 

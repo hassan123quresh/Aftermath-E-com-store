@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
@@ -6,7 +6,7 @@ const Contact = () => {
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-24 animate-fade-in">
       <div className="max-w-2xl w-full text-center space-y-12">
         <div>
-            <h1 className="text-5xl md:text-7xl font-serif italic mb-6">Get in Touch</h1>
+            <h1 className="text-5xl md:text-7xl font-serif mb-6">Get in Touch</h1>
             <p className="text-stone-500 text-sm md:text-base tracking-wide leading-relaxed">
                 We are here to assist with your order, sizing inquiries, or simply to share our philosophy.
             </p>

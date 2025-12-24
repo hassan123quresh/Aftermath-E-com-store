@@ -385,7 +385,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
               {cart.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center opacity-40">
-                  <p className="font-serif italic text-lg">Empty.</p>
+                  <p className="font-serif text-lg">Empty.</p>
                 </div>
               ) : (
                 cart.map((item, idx) => (

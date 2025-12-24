@@ -2,10 +2,11 @@ import React, { useState, useLayoutEffect } from "react"
 import { cva } from "class-variance-authority"
 import { cn } from "../lib/utils"
 
+// Added 'font-serif' to apply the Primary Font (Outfit) to all liquid buttons
 // Removed hover transition effects to meet "static" requirement
 // Added touch-action manipulation for better mobile performance
 const buttonVariants = cva(
-  "relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 overflow-hidden cursor-pointer select-none touch-manipulation",
+  "relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-serif font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 overflow-hidden cursor-pointer select-none touch-manipulation",
   {
     variants: {
       variant: {
