@@ -165,6 +165,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     animationId = requestAnimationFrame(update);
 
     // Initial warm-up render with non-zero time to avoid singularity at t=0
+    // This runs synchronously before the first paint to ensure no white flash
     program.uniforms.uTime.value = performance.now() * 0.001 * speed;
     renderer.render({ scene: mesh });
 
@@ -178,7 +179,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
          const extension = gl.getExtension('WEBGL_lose_context');
          if (extension) extension.loseContext();
       }
-      if (container.contains(gl.canvas)) {
+      if (container && container.contains(gl.canvas)) {
          container.removeChild(gl.canvas);
       }
     };
