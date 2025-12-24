@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package } from 'lucide-react';
+import { Truck, Package, ArrowRight } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
@@ -9,7 +9,8 @@ import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 
 // Initialize DOMPurify Factory
-const DOMPurify = createDOMPurify(window);
+// Check if window is defined to avoid SSR issues if any, though this is client-side
+const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
 
 // Configure marked with a custom tokenizer for math ($...$ and $$...$$)
 const mathExtension = {
@@ -42,11 +43,15 @@ const mathExtension = {
     },
     renderer(token: any) {
         if (!katex) return token.text;
-        return katex.renderToString(token.text, {
-            displayMode: token.display,
-            throwOnError: false,
-            output: 'html'
-        });
+        try {
+            return katex.renderToString(token.text, {
+                displayMode: token.display,
+                throwOnError: false,
+                output: 'html'
+            });
+        } catch (e) {
+            return token.text;
+        }
     }
 };
 
@@ -132,10 +137,11 @@ const ProductDetail = () => {
     if (!text) return null;
     try {
         const rawHtml = marked.parse(text) as string;
-        const cleanHtml = DOMPurify.sanitize(rawHtml, {
+        // Use sanitizer if available, otherwise raw HTML (fallback)
+        const cleanHtml = DOMPurify ? DOMPurify.sanitize(rawHtml, {
              ADD_TAGS: ['iframe', 'u'], // Allow iframes and underline
              ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
-        });
+        }) : rawHtml;
         
         return (
             <div 
@@ -246,35 +252,37 @@ const ProductDetail = () => {
                     </LiquidButton>
                 </div>
 
-                {/* Shipping & Returns Details */}
-                <div className="mt-10 pt-8 border-t border-obsidian/10 space-y-6">
-                    {/* Free Shipping */}
-                    <div className="flex gap-5 items-start">
-                        <Truck className="w-6 h-6 stroke-[1.5] text-obsidian flex-shrink-0" />
-                        <div className="space-y-1">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-obsidian">Free Shipping*</h4>
-                            <p className="text-xs text-stone-600 leading-relaxed">
-                                Expected time to arrive <span className="font-semibold text-emerald-800">3–5 business days</span>.
-                            </p>
-                             <p className="text-[10px] text-stone-400 leading-relaxed">
-                                *Free on all orders within Pakistan.
-                            </p>
-                            <Link to="/shipping" className="text-[10px] text-stone-500 underline decoration-stone-300 hover:text-obsidian hover:decoration-obsidian transition-all block mt-1">
-                                Delivery Details
+                {/* Shipping & Returns Details - Single Row Layout on All Screens */}
+                <div className="mt-10 pt-8 border-t border-obsidian/10">
+                    <div className="grid grid-cols-2 gap-3 md:gap-4">
+                        {/* Free Shipping */}
+                        <div className="bg-stone-50/50 p-3 md:p-4 rounded-lg border border-stone-200/50 flex flex-col items-start gap-2 md:gap-3 hover:border-stone-300 transition-colors h-full">
+                            <Truck className="w-5 h-5 stroke-[1.5] text-obsidian" />
+                            <div className="space-y-1">
+                                <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-obsidian">Free Shipping*</h4>
+                                <p className="text-[9px] md:text-[10px] text-stone-600 leading-relaxed">
+                                    3–5 business days within Pakistan.
+                                </p>
+                                <p className="text-[8px] md:text-[9px] text-stone-400 opacity-60">*All orders nationwide</p>
+                            </div>
+                             <Link to="/shipping" className="mt-auto pt-2 flex items-center gap-1 text-[9px] md:text-[10px] font-medium text-stone-500 hover:text-obsidian group">
+                                <span>Delivery Details</span>
+                                <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                             </Link>
                         </div>
-                    </div>
 
-                    {/* Easy Returns */}
-                    <div className="flex gap-5 items-start">
-                        <Package className="w-6 h-6 stroke-[1.5] text-obsidian flex-shrink-0" />
-                        <div className="space-y-1">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-obsidian">Easy Returns</h4>
-                            <p className="text-xs text-stone-600 leading-relaxed">
-                                Return for a refund or store credit within 14 days of the delivery date.
-                            </p>
-                            <Link to="/returns" className="text-[10px] text-stone-500 underline decoration-stone-300 hover:text-obsidian hover:decoration-obsidian transition-all block mt-1">
-                                Returns Policy
+                        {/* Easy Returns */}
+                        <div className="bg-stone-50/50 p-3 md:p-4 rounded-lg border border-stone-200/50 flex flex-col items-start gap-2 md:gap-3 hover:border-stone-300 transition-colors h-full">
+                            <Package className="w-5 h-5 stroke-[1.5] text-obsidian" />
+                            <div className="space-y-1">
+                                <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-obsidian">Easy Returns</h4>
+                                <p className="text-[9px] md:text-[10px] text-stone-600 leading-relaxed">
+                                    14-day refund or store credit policy.
+                                </p>
+                            </div>
+                            <Link to="/returns" className="mt-auto pt-2 flex items-center gap-1 text-[9px] md:text-[10px] font-medium text-stone-500 hover:text-obsidian group">
+                                <span>Returns Policy</span>
+                                <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
                             </Link>
                         </div>
                     </div>

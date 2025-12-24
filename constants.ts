@@ -13,7 +13,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: 'Studio Cut Hoodie in Burnt Terra',
     price: 8499,
     category: 'Hoodies',
-    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
+    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish\n\n| SIZE | XS | S | M | L |\n| :--- | :---: | :---: | :---: | :---: |\n| BODY LENGTH | 25 | 26 | 27 | 28 |\n| CHEST | 27 | 28 | 29 | 30 |\n| SLEEVE | 18.5 | 19 | 19.5 | 20 |\n| SHOULDER | 27.5 | 28.5 | 29.5 | 30.5 |\n| ARM HOLE | 11.5 | 12 | 12.5 | 13 |",
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=1600',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=1600',
