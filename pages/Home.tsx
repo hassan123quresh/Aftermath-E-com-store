@@ -103,7 +103,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
             
             {/* Header - Fixed Alignment (items-start on mobile to align left) */}
-            <div className="px-6 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-on-scroll">
+            <div className="px-8 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-on-scroll">
                 <div className="max-w-xl">
                     <h2 className="font-serif text-4xl md:text-7xl text-obsidian mb-4 md:mb-6">The Collection</h2>
                     <p className="text-xs md:text-sm text-stone-500 max-w-sm leading-relaxed tracking-wide font-sans">
@@ -121,12 +121,12 @@ const Home = () => {
             </div>
             
             {/* Scroll Container - Matching padding to header for perfect alignment */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-6 md:px-12 pb-12 w-full no-scrollbar">
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar">
               {products.map((product, idx) => (
                 <Link 
                     key={product.id} 
                     to={`/product/${product.id}`} 
-                    className="relative flex-shrink-0 snap-start w-[75vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
+                    className="relative flex-shrink-0 snap-start w-[80vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
                     style={{ transitionDelay: `${idx * 100}ms` }}
                 >
                   {/* Image */}
@@ -158,16 +158,16 @@ const Home = () => {
               ))}
               
               {/* CTA Card at the end - Resized */}
-              <Link to="/collection" className="flex-shrink-0 snap-start w-[75vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
+              <Link to="/collection" className="flex-shrink-0 snap-start w-[80vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
                   <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>
                   <span className="text-xs uppercase tracking-widest border-b border-obsidian/20 group-hover:border-obsidian pb-1 transition-colors">Discover the archive</span>
               </Link>
               
-              <div className="w-6 md:w-12 flex-shrink-0" />
+              <div className="w-8 md:w-12 flex-shrink-0" />
             </div>
             
              {/* Mobile View All Link - Adjusted Padding */}
-            <div className="px-6 md:px-12 md:hidden mt-8">
+            <div className="px-8 md:px-12 md:hidden mt-8">
                  <Link 
                     to="/collection" 
                     className="flex items-center justify-between w-full py-6 border-t border-stone-200 group"

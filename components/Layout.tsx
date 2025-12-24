@@ -347,7 +347,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                
                {/* Payment Icons */}
                {paymentMethods.map((pm) => (
-                   <div key={pm.name} className="h-8 w-12 bg-white rounded flex items-center justify-center p-1 shadow-sm overflow-hidden">
+                   <div key={pm.name} className={`h-8 w-12 bg-white rounded flex items-center justify-center shadow-sm overflow-hidden ${
+                       ['JazzCash', 'Easypaisa'].includes(pm.name) ? 'p-0' : 'p-1'
+                   }`}>
                        <img 
                          src={pm.src} 
                          alt={pm.name} 
