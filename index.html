@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aftermath | Live within.</title>
     
+    <!-- Favicon: Circular Crop -->
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dacyy7rkn/image/upload/w_64,h_64,c_fill,r_max,f_png/v1766566500/589657275_17854363365582984_3626859287362746756_n_bf4ekc.jpg">
+
     <!-- Performance Optimizations: Preconnect to critical domains -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,9 +123,8 @@
         height: 100%;
       }
 
-      /* --- NEW OPTIMIZED GLASS BUTTONS --- */
+      /* --- STATIC BUTTONS (No Hover Animations) --- */
       
-      /* Base styles derived from requested code */
       .glass-btn-core {
         display: inline-flex;
         align-items: center;
@@ -132,111 +134,70 @@
         font-family: 'Inter', sans-serif;
         font-weight: 500;
         text-align: center;
-        border-radius: 0.5rem; /* rounded-lg */
+        border-radius: 0.375rem;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s ease;
-        -webkit-font-smoothing: antialiased;
-        transform: translateZ(0); /* Hardware accel */
-        will-change: transform, background-color, box-shadow;
       }
-
-      /* Shared Pseudo Elements for Gradients */
-      .glass-btn-core::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 0.5rem;
-        background: linear-gradient(to bottom right, rgba(255,255,255,0.6), transparent, transparent);
-        opacity: 0.7;
-        pointer-events: none;
-      }
-
-      .glass-btn-core::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 0.5rem;
-        background: linear-gradient(to top left, rgba(255,255,255,0.3), transparent, transparent);
-        opacity: 0.5;
-        pointer-events: none;
-      }
-
-      /* 1. Hero Button (Exact match to provided code, white text) */
-      .btn-glass-hero {
-        /* Extend core */
-        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
-        
-        /* Provided styles */
-        background-color: rgba(255, 255, 255, 0.025);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        box-shadow: inset 0 1px 0px rgba(255,255,255,0.75), 0 0 9px rgba(0,0,0,0.2), 0 3px 8px rgba(0,0,0,0.15);
-        color: white;
-      }
-      .btn-glass-hero:hover {
-        background-color: rgba(255, 255, 255, 0.3);
-      }
-      .btn-glass-hero::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.6), transparent, transparent); opacity: 0.7; pointer-events: none; }
-      .btn-glass-hero::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.3), transparent, transparent); opacity: 0.5; pointer-events: none; }
-
-
-      /* 2. Light Glass Button (For Light Backgrounds - Dark Text) */
-      .btn-glass {
-        /* Extend core */
-        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
-
-        /* Adapted for Light Background */
-        background-color: rgba(255, 255, 255, 0.1); /* Slightly more opaque */
-        border: 1px solid rgba(20, 20, 20, 0.1); /* Darker border for visibility on white */
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        box-shadow: inset 0 1px 0px rgba(255,255,255,0.9), 0 2px 6px rgba(0,0,0,0.05); /* Softer shadow */
-        color: #141414;
-      }
-      .btn-glass:hover {
-        background-color: rgba(255, 255, 255, 0.5);
-        box-shadow: inset 0 1px 0px rgba(255,255,255,0.9), 0 4px 12px rgba(0,0,0,0.1);
-      }
-      /* Adjusted gradients for light button */
-      .btn-glass::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.8), transparent, transparent); opacity: 0.8; pointer-events: none; }
-      .btn-glass::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.4), transparent, transparent); opacity: 0.6; pointer-events: none; }
-
-
-      /* 3. Dark Glass Button (Obsidian Fill - For Buy Now / Checkout) */
-      .btn-glass-dark {
-        /* Extend core */
-        display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; user-select: none; font-family: 'Inter', sans-serif; font-weight: 500; text-align: center; border-radius: 0.5rem; position: relative; overflow: hidden; transition: all 0.3s ease; transform: translateZ(0);
-
-        /* Dark Obsidian Base */
-        background-color: rgba(20, 20, 20, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        box-shadow: inset 0 1px 0px rgba(255,255,255,0.1), 0 0 9px rgba(0,0,0,0.3), 0 3px 8px rgba(0,0,0,0.25);
-        color: white;
-      }
-      .btn-glass-dark:hover {
-        background-color: rgba(20, 20, 20, 1);
-        /* REMOVED TRANSFORM to eliminate zoom/shift */
-      }
-      /* Gloss on dark */
-      .btn-glass-dark::before { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to bottom right, rgba(255,255,255,0.15), transparent, transparent); opacity: 0.7; pointer-events: none; }
-      .btn-glass-dark::after { content: ''; position: absolute; inset: 0; border-radius: 0.5rem; background: linear-gradient(to top left, rgba(255,255,255,0.05), transparent, transparent); opacity: 0.5; pointer-events: none; }
       
-      /* Icon Button (Header) */
-      .btn-glass-icon {
-         background: rgba(255, 255, 255, 0.0);
-         border: 1px solid transparent;
-         border-radius: 9999px; /* Full rounded for icons */
-         transition: all 0.2s ease;
+      .glass-btn-core:active {
+        background-color: rgba(0,0,0,0.05); /* Subtle active state */
       }
-      .btn-glass-icon:hover {
-         background: rgba(255, 255, 255, 0.4);
-         border-color: rgba(255, 255, 255, 0.6);
-         backdrop-filter: blur(4px);
-         -webkit-backdrop-filter: blur(4px);
+
+      /* 1. Hero Button (Simple Outline) */
+      .btn-glass-hero {
+        display: inline-flex; align-items: center; justify-content: center;
+        font-family: 'Inter', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+        padding: 12px 24px;
+        border-radius: 4px;
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: white;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      /* Removed hover movement/bg-fill */
+      .btn-glass-hero:active {
+         opacity: 0.8;
+      }
+
+      /* 2. Light Button (Simple Outline) */
+      .btn-glass {
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 4px;
+        border: 1px solid #e5e5e4;
+        background-color: transparent;
+        color: #141414;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .btn-glass:active {
+        background-color: #f5f5f4;
+      }
+
+      /* 3. Dark Button (Solid Obsidian) */
+      .btn-glass-dark {
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 4px;
+        background-color: #141414;
+        color: white;
+        border: 1px solid #141414;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .btn-glass-dark:active {
+        opacity: 0.9;
+      }
+      
+      /* Icon Button */
+      .btn-glass-icon {
+         border-radius: 9999px;
+         cursor: pointer;
+      }
+      .btn-glass-icon:active {
+         background-color: rgba(0, 0, 0, 0.05);
       }
     </style>
   <script type="importmap">

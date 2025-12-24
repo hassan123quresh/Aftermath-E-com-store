@@ -1,135 +1,117 @@
-import React from "react"
+import React, { useState, useLayoutEffect } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../lib/utils"
 
-const liquidbuttonVariants = cva(
-  "inline-flex items-center transition-colors justify-center cursor-pointer gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+// Removed hover transition effects to meet "static" requirement
+// Added touch-action manipulation for better mobile performance
+const buttonVariants = cva(
+  "relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 overflow-hidden cursor-pointer select-none touch-manipulation",
   {
     variants: {
       variant: {
-        default: "bg-transparent hover:scale-105 duration-300 transition text-primary",
-        destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
-        outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        default: "bg-transparent text-obsidian border border-stone-200", // Standard button
+        outline: "border border-stone-200 bg-transparent text-obsidian",
+        solid: "bg-obsidian text-stone-100 border border-obsidian",
+        ghost: "bg-transparent text-obsidian",
+        hero: "border border-white/50 text-white bg-transparent", // Special variant for dark backgrounds
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 text-xs gap-1.5 px-4 has-[>svg]:px-4",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        xl: "h-12 rounded-md px-8 has-[>svg]:px-6",
-        xxl: "h-14 rounded-md px-10 has-[>svg]:px-8",
-        icon: "size-9",
+        default: "h-11 px-6 py-2", // Slightly taller for better touch target
+        sm: "h-9 px-3 text-xs",
+        lg: "h-12 px-8 text-base",
+        xl: "h-14 px-10 text-lg tracking-widest uppercase",
+        icon: "h-10 w-10",
       },
+      fullWidth: {
+        true: "w-full",
+        false: ""
+      }
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      fullWidth: false,
     },
   }
 )
 
 export interface LiquidButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof liquidbuttonVariants> {
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
 const LiquidButton = React.forwardRef<HTMLButtonElement, LiquidButtonProps>(
-  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
-    
-    // Decorative background elements (using span for valid nesting in buttons)
-    const decorations = (
-      <>
-        <span className="absolute top-0 left-0 z-0 h-full w-full rounded-md 
-            shadow-[0_0_6px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3px_rgba(0,0,0,0.9),inset_-3px_-3px_0.5px_-3px_rgba(0,0,0,0.85),inset_1px_1px_1px_-0.5px_rgba(0,0,0,0.6),inset_-1px_-1px_1px_-0.5px_rgba(0,0,0,0.6),inset_0_0_6px_6px_rgba(0,0,0,0.12),inset_0_0_2px_2px_rgba(0,0,0,0.06),0_0_12px_rgba(255,255,255,0.15)] 
-            transition-all pointer-events-none
-            dark:shadow-[0_0_8px_rgba(0,0,0,0.03),0_2px_6px_rgba(0,0,0,0.08),inset_3px_3px_0.5px_-3.5px_rgba(255,255,255,0.09),inset_-3px_-3px_0.5px_-3.5px_rgba(255,255,255,0.85),inset_1px_1px_1px_-0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_1px_-0.5px_rgba(255,255,255,0.6),inset_0_0_6px_6px_rgba(255,255,255,0.12),inset_0_0_2px_2px_rgba(255,255,255,0.06),0_0_12px_rgba(0,0,0,0.15)]" />
-        <span
-          className="absolute top-0 left-0 isolate -z-10 h-full w-full overflow-hidden rounded-md pointer-events-none"
-          style={{ backdropFilter: 'url("#container-glass")' }}
-        />
-        <GlassFilter />
-      </>
-    );
+  ({ className, variant, size, fullWidth, asChild = false, children, ...props }, ref) => {
+    const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([])
 
-    const baseClasses = cn(
-      "relative overflow-hidden",
-      liquidbuttonVariants({ variant, size, className })
-    );
+    const createRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
+      const button = event.currentTarget
+      const rect = button.getBoundingClientRect()
+      
+      const diameter = Math.max(button.clientWidth, button.clientHeight)
+      const radius = diameter / 2
+      
+      const x = event.clientX - rect.left - radius
+      const y = event.clientY - rect.top - radius
 
-    if (asChild) {
-      const child = React.Children.only(children) as React.ReactElement;
-      return React.cloneElement(child, {
-        ...props,
-        ...child.props, // Preserve child props
-        className: cn(baseClasses, child.props.className),
-        ref,
-        children: (
-          <>
-            {decorations}
-            <span className="relative z-10 flex items-center justify-center gap-2 w-full h-full">
-                {child.props.children}
-            </span>
-          </>
-        ),
-      });
+      const newRipple = { x, y, id: Date.now() }
+      setRipples((prev) => [...prev, newRipple])
+
+      if (props.onClick) {
+        props.onClick(event)
+      }
     }
+
+    useLayoutEffect(() => {
+      if (ripples.length > 0) {
+        const timer = setTimeout(() => {
+          setRipples((prev) => prev.slice(1))
+        }, 600) // Match animation duration
+        return () => clearTimeout(timer)
+      }
+    }, [ripples])
 
     return (
       <button
-        className={baseClasses}
+        className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         {...props}
+        onClick={createRipple}
       >
-        {decorations}
-        <span className="relative z-10 flex items-center justify-center gap-2">
+        <span className="relative z-10 flex items-center justify-center gap-2 pointer-events-none">
           {children}
         </span>
+        {ripples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="absolute rounded-full bg-current opacity-20 pointer-events-none animate-ripple"
+            style={{
+              top: ripple.y,
+              left: ripple.x,
+              width: Math.max(props.style?.width as any || 100, 100) * 4 + 'px', 
+              height: Math.max(props.style?.width as any || 100, 100) * 4 + 'px',
+              minWidth: '200px', // Ensure visibility on small buttons
+              minHeight: '200px'
+            }}
+          />
+        ))}
+        <style>{`
+          .animate-ripple {
+            animation: ripple 0.6s linear;
+            transform: scale(0);
+          }
+          @keyframes ripple {
+            to {
+              transform: scale(2.5);
+              opacity: 0;
+            }
+          }
+        `}</style>
       </button>
     )
   }
 )
 LiquidButton.displayName = "LiquidButton"
-
-function GlassFilter() {
-  return (
-    <svg className="hidden">
-      <defs>
-        <filter
-          id="container-glass"
-          x="0%"
-          y="0%"
-          width="100%"
-          height="100%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.05 0.05"
-            numOctaves="1"
-            seed="1"
-            result="turbulence"
-          />
-          <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="blurredNoise"
-            scale="70"
-            xChannelSelector="R"
-            yChannelSelector="B"
-            result="displaced"
-          />
-          <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
-          <feComposite in="finalBlur" in2="finalBlur" operator="over" />
-        </filter>
-      </defs>
-    </svg>
-  );
-}
 
 export default LiquidButton;

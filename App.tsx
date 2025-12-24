@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { StoreProvider } from './StoreContext';
 import Layout from './components/Layout';
 import AdminLayout from './components/AdminLayout';
@@ -28,12 +28,32 @@ const AdminRoute = ({ children }: { children?: React.ReactNode }) => (
   <AdminLayout>{children}</AdminLayout>
 );
 
-// Minimal fallback loader for route transitions
+// Minimal fallback loader for route transitions using the new logo
+// Updated: Larger size, positioned at the top with padding
 const PageLoader = () => (
-  <div className="w-full h-[60vh] flex items-center justify-center">
-    <div className="w-6 h-6 border-2 border-stone-300 border-t-obsidian rounded-full animate-spin"></div>
+  <div className="w-full min-h-[60vh] flex justify-center pt-32 md:pt-40">
+     <img 
+        src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766566500/589657275_17854363365582984_3626859287362746756_n_bf4ekc.jpg" 
+        alt="Loading..." 
+        className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover animate-pulse shadow-xl"
+     />
   </div>
 );
+
+// Component to handle scroll restoration on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant" // Instant scroll to avoid visual lag during loading
+    });
+  }, [pathname]);
+
+  return null;
+};
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -58,6 +78,7 @@ const App = () => {
         Suspense ensures that code-split chunks load gracefully.
       */}
       <HashRouter>
+        <ScrollToTop />
         <Suspense fallback={null}>
           <Routes>
             {/* Public Storefront */}

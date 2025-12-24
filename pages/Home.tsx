@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useStore } from '../StoreContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LiquidChrome from '../components/LiquidChrome';
+import LiquidButton from '../components/LiquidButton';
 
 const Home = () => {
   const { products } = useStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,6 +24,13 @@ const Home = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  const handleEnterStore = () => {
+      const shopElement = document.getElementById('shop');
+      if (shopElement) {
+          shopElement.scrollIntoView({ behavior: 'smooth' });
+      }
+  };
 
   return (
     <div>
@@ -51,16 +60,14 @@ const Home = () => {
              <p className="text-xs md:text-sm tracking-[0.2em] uppercase opacity-80 mb-12 font-light font-sans text-stone-200" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
                 Stillness in motion
              </p>
-             <Link 
-                to="/shop" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="btn-glass-hero px-12 py-4 text-xs font-serif uppercase tracking-[0.25em] font-bold"
-              >
-                  Enter Store
-              </Link>
+             
+             <LiquidButton 
+                variant="hero"
+                onClick={handleEnterStore}
+                className="px-12 py-4 text-xs font-serif uppercase tracking-[0.25em] font-bold min-w-[200px]"
+             >
+                Enter Store
+             </LiquidButton>
           </div>
         </div>
       </section>

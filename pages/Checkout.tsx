@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../StoreContext';
 import { useNavigate } from 'react-router-dom';
+import LiquidButton from '../components/LiquidButton';
 
 const styles = `
 .master-container {
@@ -419,7 +420,7 @@ const Checkout = () => {
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
                     />
-                    <button type="submit" className="btn-glass-dark w-full h-[40px] text-xs uppercase tracking-widest font-bold">Apply</button>
+                    <LiquidButton type="submit" variant="solid" className="w-full h-[40px] text-xs uppercase tracking-widest font-bold">Apply</LiquidButton>
                 </form>
                 {error && <p className="text-red-500 text-xs px-5 pb-3 -mt-2 font-sans">{error}</p>}
                 {discountPercent > 0 && <p className="text-green-700 text-xs px-5 pb-3 -mt-2 font-sans">Discount applied!</p>}
@@ -441,7 +442,7 @@ const Checkout = () => {
                 
                 <div className="checkout--footer">
                   <label className="price"><sup>PKR </sup>{total.toLocaleString()}</label>
-                  <button className="btn-glass-dark w-[140px] h-[42px] text-[11px] uppercase tracking-widest font-bold" form="checkout-form" type="submit">Place Order</button>
+                  <LiquidButton variant="solid" className="w-[140px] h-[42px] text-[11px] uppercase tracking-widest font-bold" form="checkout-form" type="submit">Place Order</LiquidButton>
                 </div>
               </div>
             </div>

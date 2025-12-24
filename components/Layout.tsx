@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useStore } from '../StoreContext';
 import { Menu, ShoppingBag, X, User, Search, Mail, MessageCircle, Instagram } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import LiquidButton from './LiquidButton';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { cart, toggleCart, isCartOpen, removeFromCart, announcementText, products } = useStore();
@@ -382,12 +383,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   <span className="text-xs uppercase tracking-widest opacity-60">Subtotal</span>
                   <span className="font-serif text-xl">PKR {cartTotal.toLocaleString()}</span>
                 </div>
-                <button 
+                <LiquidButton 
                   onClick={() => { toggleCart(); navigate('/checkout'); }}
-                  className="w-full btn-glass-dark py-4 uppercase text-xs tracking-widest rounded-full"
+                  variant="solid"
+                  className="w-full py-4 text-xs uppercase tracking-widest"
+                  fullWidth
                 >
                   Proceed to Checkout
-                </button>
+                </LiquidButton>
               </div>
             )}
           </div>

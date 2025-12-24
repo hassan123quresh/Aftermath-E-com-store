@@ -32,15 +32,15 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         <p className="text-xs md:text-sm font-sans uppercase tracking-[0.4em] text-stone-400 mb-6 animate-fade-in opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
           Presenting
         </p>
-        {/* Optimized logo: 300px height source */}
+        
+        {/* Main Logo */}
         <img 
-            src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_300,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp"
+            src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp"
             alt="Aftermath"
-            className="h-24 md:h-40 w-auto object-contain invert animate-fade-in-up opacity-0"
+            className="h-12 md:h-20 w-auto object-contain animate-fade-in-up opacity-0 invert"
             style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}
-            width="400"
-            height="160"
         />
+        
         {/* Subtle loading bar */}
         <div className="w-24 h-[1px] bg-stone-800 mx-auto mt-12 overflow-hidden relative">
             <div className="absolute inset-y-0 left-0 bg-stone-400 w-full animate-[loading_2s_ease-in-out_infinite] origin-left" />

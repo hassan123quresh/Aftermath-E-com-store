@@ -6,7 +6,6 @@ import { marked } from 'marked';
 import katex from 'katex';
 import DOMPurify from 'dompurify';
 import LiquidButton from '../components/LiquidButton';
-import ShimmerButton from '../components/ShimmerButton';
 
 // Configure marked with a custom tokenizer for math ($...$ and $$...$$)
 const mathExtension = {
@@ -185,12 +184,9 @@ const ProductDetail = () => {
                                 key={size}
                                 onClick={() => handleSizeSelect(size)}
                                 size="lg"
-                                className={`w-12 h-12 p-0 transition-colors duration-200 ${
-                                    selectedSize === size 
-                                    ? 'bg-obsidian text-stone-100 font-medium' 
-                                    : showSizeError 
-                                        ? 'border border-red-300 text-red-900 bg-red-50' 
-                                        : 'opacity-80 hover:bg-black/5'
+                                variant={selectedSize === size ? 'solid' : 'outline'}
+                                className={`w-12 h-12 p-0 ${
+                                    showSizeError && selectedSize !== size ? 'border-red-300 bg-red-50' : ''
                                 }`}
                             >
                                 {size}
@@ -200,20 +196,25 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Actions (Always visible) */}
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-row gap-3 md:gap-4 w-full">
                     <LiquidButton
                         onClick={handleAddToCart}
-                        size="xl"
-                        className="flex-1 text-xs uppercase tracking-widest font-semibold"
+                        variant="outline"
+                        // Mobile: smaller text, less padding, smaller height to fit side-by-side
+                        className="flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold"
+                        fullWidth
                     >
                         Add to Cart
                     </LiquidButton>
-                    <ShimmerButton
+                    <LiquidButton
                         onClick={handleBuyNow}
-                        className="flex-1 h-12 text-xs uppercase tracking-widest font-semibold"
+                        variant="solid"
+                        // Mobile: smaller text, less padding, smaller height to fit side-by-side
+                        className="flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold"
+                        fullWidth
                     >
                         Buy Now
-                    </ShimmerButton>
+                    </LiquidButton>
                 </div>
 
                 {/* Shipping & Returns Details */}
