@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import LiquidChrome from '../components/LiquidChrome';
 import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
+import { PriceBadge } from '../components/PriceBadge';
 
 const Home = () => {
   const { products } = useStore();
@@ -146,11 +147,10 @@ const Home = () => {
                   </div>
 
                   {/* Info - Clean & Editorial */}
-                  <div className="flex flex-col items-start gap-1">
+                  <div className="flex flex-col items-start gap-2">
                       <div className="flex justify-between w-full items-start">
-                          <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[70%]">{product.name}</h3>
-                          {/* Price more prominent: Larger, Serif, Bolder */}
-                          <span className="text-lg md:text-xl font-serif font-medium text-obsidian whitespace-nowrap">PKR {product.price.toLocaleString()}</span>
+                          <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
+                          <PriceBadge price={product.price} />
                       </div>
                       <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
                   </div>

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { Link } from 'react-router-dom';
+import { PriceBadge } from '../components/PriceBadge';
 
 const Collection = () => {
   const { products } = useStore();
@@ -66,16 +67,14 @@ const Collection = () => {
             </div>
 
             {/* Info */}
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-col items-start space-y-1">
               <h3 className="font-serif text-sm md:text-2xl leading-tight group-hover:text-stone-600 transition-colors">
                 {product.name}
               </h3>
               <p className="text-[10px] md:text-xs uppercase tracking-widest opacity-40">
                 {product.category}
               </p>
-              <span className="text-xs md:text-lg font-medium mt-1 opacity-80">
-                PKR {product.price.toLocaleString()}
-              </span>
+              <PriceBadge price={product.price} className="mt-2" />
             </div>
           </Link>
         ))}

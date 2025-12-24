@@ -6,6 +6,7 @@ import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
 import LiquidButton from '../components/LiquidButton';
+import { PriceBadge } from '../components/PriceBadge';
 
 // Initialize DOMPurify Factory
 const DOMPurify = createDOMPurify(window);
@@ -191,8 +192,8 @@ const ProductDetail = () => {
         <div className="flex flex-col h-full pt-4 lg:sticky lg:top-32">
             {/* Header */}
             <div className="mb-12 border-b border-obsidian/10 pb-8">
-                <h1 className="font-serif text-3xl md:text-4xl mb-2">{product.name}</h1>
-                <p className="text-xl opacity-70">PKR {product.price.toLocaleString()}</p>
+                <h1 className="font-serif text-3xl md:text-4xl mb-4">{product.name}</h1>
+                <PriceBadge price={product.price} className="text-lg md:text-xl px-6 py-2" />
             </div>
 
             <div className="space-y-8">
@@ -293,12 +294,12 @@ const ProductDetail = () => {
               <h3 className="font-serif text-2xl mb-12">You may also like</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {relatedProducts.map(rp => (
-                    <Link key={rp.id} to={`/product/${rp.id}`} className="group block">
-                         <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md">
+                    <Link key={rp.id} to={`/product/${rp.id}`} className="group block flex flex-col items-start">
+                         <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full">
                              <img src={rp.images[0]} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
                          </div>
                          <h4 className="font-serif text-lg">{rp.name}</h4>
-                         <p className="text-sm opacity-60">PKR {rp.price.toLocaleString()}</p>
+                         <PriceBadge price={rp.price} className="mt-2" />
                     </Link>
                 ))}
               </div>
