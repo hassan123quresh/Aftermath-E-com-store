@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LiquidButton from './LiquidButton';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { cart, toggleCart, isCartOpen, removeFromCart, announcementText, products } = useStore();
+  const { cart, toggleCart, isCartOpen, removeFromCart, products } = useStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -85,11 +85,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="min-h-screen flex flex-col font-sans bg-stone-200 text-obsidian">
       {/* Unified Fixed Header */}
       <header className={headerClasses}>
-        {/* Announcement Bar */}
-        <div className="bg-obsidian text-stone-200 text-[10px] md:text-xs tracking-[0.2em] text-center py-2 uppercase relative z-[51]">
-            {announcementText}
-        </div>
-
+        
         {/* Navigation */}
         <nav className={`border-b transition-colors duration-500 relative ${isTransparent ? 'border-transparent' : 'border-obsidian/5'}`}>
             <div className="max-w-7xl mx-auto px-6 h-14 md:h-16 flex items-center justify-between">

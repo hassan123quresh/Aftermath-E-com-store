@@ -72,6 +72,31 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Marquee Section */}
+      <div className="bg-obsidian text-stone-300 py-3 md:py-4 overflow-hidden relative z-20 border-t border-stone-800">
+         <div className="flex whitespace-nowrap animate-marquee">
+             {[...Array(20)].map((_, i) => (
+                <span key={i} className="mx-8 text-[10px] md:text-xs font-sans uppercase tracking-[0.3em] font-medium flex items-center gap-8 opacity-80">
+                   FREE SHIPPING ALL OVER PAKISTAN <span className="w-1 h-1 rounded-full bg-stone-600"></span>
+                </span>
+             ))}
+         </div>
+      </div>
+      <style>{`
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+        @media (min-width: 768px) {
+            .animate-marquee {
+                animation: marquee 60s linear infinite;
+            }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
       {/* Featured Products Carousel */}
       <section id="shop" className="py-32 w-full">
         {/* Header with See All button */}
