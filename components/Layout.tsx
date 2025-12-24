@@ -9,10 +9,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
 
   const cartTotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -22,6 +24,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setIsSearchOpen(false);
     setSearchQuery('');
   }, [location]);
+
+  // Handle Scroll for Header Styling
+  useEffect(() => {
+    const handleScroll = () => {
+        setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Focus input when opened
   useEffect(() => {
@@ -41,6 +52,26 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     e.preventDefault();
   };
 
+  // Dynamic Header Styles
+  const isTransparent = isHomePage && !isScrolled;
+  
+  const headerClasses = `fixed top-0 z-50 w-full transition-all duration-500 ease-in-out ${
+      isTransparent ? 'bg-transparent shadow-none' : 'bg-stone-200 shadow-md'
+  }`;
+
+  const textColorClass = isTransparent ? 'text-stone-100' : 'text-obsidian';
+  const iconColorClass = isTransparent ? 'text-stone-100' : 'text-obsidian';
+  
+  // Intense shadow for text visibility on Hero
+  const textShadowStyle = isTransparent 
+      ? { textShadow: '0 2px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.5)' } 
+      : {};
+
+  // Invert logo on transparent header (assuming logo is dark by default)
+  const logoClass = `h-8 md:h-12 w-auto object-contain transition-all duration-500 ${
+      isTransparent ? 'invert drop-shadow-lg' : ''
+  }`;
+
   const paymentMethods = [
     { name: 'Visa', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png' },
     { name: 'Mastercard', src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png' },
@@ -52,32 +83,35 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-stone-200 text-obsidian">
-      {/* Unified Sticky Header */}
-      <header className="sticky top-0 z-50 bg-stone-200 transition-all duration-300 shadow-sm">
+      {/* Unified Fixed Header */}
+      <header className={headerClasses}>
         {/* Announcement Bar */}
-        <div className="bg-obsidian text-stone-200 text-[10px] md:text-xs tracking-[0.2em] text-center py-2 uppercase">
+        <div className="bg-obsidian text-stone-200 text-[10px] md:text-xs tracking-[0.2em] text-center py-2 uppercase relative z-[51]">
             {announcementText}
         </div>
 
         {/* Navigation */}
-        <nav className="border-b border-obsidian/5 relative">
+        <nav className={`border-b transition-colors duration-500 relative ${isTransparent ? 'border-white/10' : 'border-obsidian/5'}`}>
             <div className="max-w-7xl mx-auto px-6 h-14 md:h-16 flex items-center justify-between">
             
             {/* Mobile: Menu Trigger (Left) */}
             <div className="flex md:hidden items-center">
-                <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 -ml-2 hover:opacity-70 transition-opacity btn-glass-icon" aria-label="Menu">
-                    <Menu className="w-5 h-5 stroke-1" />
+                <button 
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                    className={`p-2 -ml-2 hover:opacity-70 transition-opacity btn-glass-icon ${iconColorClass}`} 
+                    aria-label="Menu"
+                >
+                    <Menu className="w-5 h-5 stroke-1" style={textShadowStyle} />
                 </button>
             </div>
 
             {/* Logo (Centered on Mobile, Left on Desktop) */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto z-10">
                 <Link to="/" className={`block transition-opacity ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
-                    {/* Header Logo: Resized via Cloudinary (height ~100px source for retina) */}
                     <img 
                         src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_100,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                         alt="Aftermath" 
-                        className="h-8 md:h-12 w-auto object-contain"
+                        className={logoClass}
                         width="150"
                         height="48"
                     />
@@ -85,14 +119,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </div>
 
             {/* Desktop Links (Centered) */}
-            <div className="hidden md:flex gap-8 text-xs tracking-[0.15em] uppercase opacity-80 absolute left-1/2 -translate-x-1/2">
-                <Link to="/collection" className="hover:opacity-100 transition-opacity">Collection</Link>
-                <Link to="/#philosophy" className="hover:opacity-100 transition-opacity">Philosophy</Link>
-                <Link to="/contact" className="hover:opacity-100 transition-opacity">Contact</Link>
+            <div className={`hidden md:flex gap-8 text-xs tracking-[0.15em] uppercase opacity-90 absolute left-1/2 -translate-x-1/2 ${textColorClass}`} style={textShadowStyle}>
+                <Link to="/collection" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Collection</Link>
+                <Link to="/#philosophy" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Philosophy</Link>
+                <Link to="/contact" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Contact</Link>
             </div>
 
             {/* Right Icons: Search & Cart */}
-            <div className="flex items-center gap-2 md:gap-4 z-20">
+            <div className={`flex items-center gap-2 md:gap-4 z-20 ${iconColorClass}`}>
                 
                 {/* Search Component */}
                 <div className="flex items-center">
@@ -103,7 +137,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                 ref={searchInputRef}
                                 type="text" 
                                 placeholder="Search..." 
-                                className="w-full bg-transparent border-b border-obsidian/20 py-1 text-sm focus:outline-none focus:border-obsidian font-sans"
+                                className={`w-full bg-transparent border-b py-1 text-sm focus:outline-none font-sans placeholder-current opacity-80 ${isTransparent ? 'border-white/50 text-white' : 'border-obsidian/20 text-obsidian'}`}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onBlur={() => {
@@ -113,7 +147,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                 }}
                             />
                         </form>
-                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className="ml-2 text-stone-400 hover:text-obsidian btn-glass-icon p-1 rounded-full" aria-label="Close search">
+                        <button onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }} className={`ml-2 hover:opacity-80 btn-glass-icon p-1 rounded-full ${isTransparent ? 'text-white' : 'text-stone-400'}`} aria-label="Close search">
                             <X className="w-4 h-4" />
                         </button>
                     </div>
@@ -125,19 +159,19 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             className={`p-2 btn-glass-icon rounded-full ${isSearchOpen && window.innerWidth >= 768 ? 'hidden' : 'block'}`}
                             aria-label="Search"
                         >
-                            <Search className="w-5 h-5 stroke-1" />
+                            <Search className="w-5 h-5 stroke-1" style={textShadowStyle} />
                         </button>
                     )}
 
-                    {/* Desktop Results Dropdown */}
+                    {/* Desktop Results Dropdown - Always use light bg for readability */}
                     {isSearchOpen && searchQuery.length > 0 && (
-                        <div className="hidden md:block absolute top-full right-0 mt-2 w-80 bg-white shadow-2xl border border-stone-100 p-2 rounded-lg animate-fade-in backdrop-blur-md bg-white/90">
+                        <div className="hidden md:block absolute top-full right-0 mt-2 w-80 bg-white shadow-2xl border border-stone-100 p-2 rounded-lg animate-fade-in backdrop-blur-md bg-white/95 text-obsidian">
                             {searchResults.length > 0 ? (
                                 searchResults.map(product => (
                                     <Link 
                                         key={product.id} 
                                         to={`/product/${product.id}`}
-                                        className="flex items-center gap-3 p-2 hover:bg-stone-50/50 transition-colors group rounded-md"
+                                        className="flex items-center gap-3 p-2 hover:bg-stone-50 transition-colors group rounded-md"
                                         onClick={() => setIsSearchOpen(false)}
                                     >
                                         <div className="w-10 h-12 bg-stone-200 overflow-hidden rounded-sm">
@@ -158,13 +192,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 </div>
 
                 <Link to="/admin" className="hidden md:block p-2 btn-glass-icon rounded-full" aria-label="Admin">
-                    <User className="w-5 h-5 stroke-1" />
+                    <User className="w-5 h-5 stroke-1" style={textShadowStyle} />
                 </Link>
 
                 <button onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full" aria-label="Cart">
-                    <ShoppingBag className="w-5 h-5 stroke-1" />
+                    <ShoppingBag className="w-5 h-5 stroke-1" style={textShadowStyle} />
                     {cart.length > 0 && (
-                        <span className="absolute top-1 right-1 w-2 h-2 bg-obsidian rounded-full"></span>
+                        <span className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isTransparent ? 'bg-white' : 'bg-obsidian'}`}></span>
                     )}
                 </button>
             </div>
@@ -172,13 +206,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
             {/* Mobile Search Overlay */}
             {isSearchOpen && (
-                <div className="md:hidden absolute inset-0 bg-stone-200 z-50 flex items-center px-6 animate-fade-in h-14 border-b border-obsidian/5">
+                <div className="md:hidden absolute inset-0 bg-stone-200 z-50 flex items-center px-6 animate-fade-in h-14 border-b border-obsidian/5 text-obsidian">
                     <Search className="w-4 h-4 stroke-1 opacity-40 mr-3" />
                     <input 
                         ref={searchInputRef}
                         type="text" 
                         placeholder="Search products..." 
-                        className="flex-1 bg-transparent py-2 text-sm focus:outline-none font-sans"
+                        className="flex-1 bg-transparent py-2 text-sm focus:outline-none font-sans text-obsidian placeholder-obsidian/40"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -217,7 +251,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-           <div className="fixed inset-0 top-[calc(2.5rem+3.5rem)] bg-stone-200 z-40 flex flex-col items-center justify-center space-y-8 animate-fade-in border-t border-obsidian/5">
+           <div className="fixed inset-0 top-[calc(2.5rem+3.5rem)] bg-stone-200 z-40 flex flex-col items-center justify-center space-y-8 animate-fade-in border-t border-obsidian/5 text-obsidian">
               <Link to="/collection" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Collection</Link>
               <Link to="/#philosophy" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Philosophy</Link>
               <Link to="/contact" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
@@ -226,8 +260,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
       </header>
 
-      {/* Main Content */}
-      <main className="flex-grow">
+      {/* Main Content - Add padding top if not on home page to account for fixed header */}
+      <main className={`flex-grow ${isHomePage ? '' : 'pt-24 md:pt-28'}`}>
         {children}
       </main>
 
@@ -345,7 +379,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {isCartOpen && (
         <>
           <div className="fixed inset-0 bg-obsidian/20 backdrop-blur-sm z-[60] transition-opacity" onClick={toggleCart}></div>
-          <div className="fixed inset-y-0 right-0 w-full md:w-[450px] bg-stone-100/90 backdrop-blur-xl shadow-2xl z-[60] transform transition-transform duration-300 ease-out flex flex-col border-l border-white/20">
+          <div className="fixed inset-y-0 right-0 w-full md:w-[450px] bg-stone-100/90 backdrop-blur-xl shadow-2xl z-[60] transform transition-transform duration-300 ease-out flex flex-col border-l border-white/20 text-obsidian">
             <div className="p-6 flex items-center justify-between border-b border-stone-200/50">
               <h2 className="font-serif text-xl">Your Selection</h2>
               <button onClick={toggleCart}><X className="w-6 h-6 stroke-1 opacity-50 hover:opacity-100" /></button>
