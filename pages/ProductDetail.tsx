@@ -168,9 +168,9 @@ const ProductDetail = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-        {/* Images */}
-        <div className="space-y-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+        {/* Images - Sticky functionality moved here for better scrolling experience */}
+        <div className="space-y-2 lg:sticky lg:top-28">
             <div className="aspect-[3/4] w-full overflow-hidden bg-stone-300">
                 <img 
                     src={product.images[activeImgIndex]} 
@@ -194,8 +194,8 @@ const ProductDetail = () => {
             </div>
         </div>
 
-        {/* Details Column */}
-        <div className="flex flex-col h-full pt-4 lg:sticky lg:top-32">
+        {/* Details Column - Scrolls naturally */}
+        <div className="flex flex-col pt-4">
             {/* Header */}
             <div className="mb-12 border-b border-obsidian/10 pb-8">
                 <h1 className="font-serif text-3xl md:text-4xl mb-4">{product.name}</h1>
