@@ -91,8 +91,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 pt-[115px] md:pt-12 p-4 md:p-12 overflow-y-auto w-full">
+      {/* Main Content - Increased top padding for mobile to clear fixed header */}
+      <main className="flex-1 md:ml-64 pt-[160px] md:pt-12 p-4 md:p-12 overflow-y-auto w-full">
         {children}
       </main>
     </div>
