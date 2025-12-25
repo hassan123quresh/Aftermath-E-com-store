@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction } from './types';
-import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT } from './constants';
+import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost } from './types';
+import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS } from './constants';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
@@ -14,6 +14,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const [promos, setPromos] = useState<PromoCode[]>(INITIAL_PROMOS);
   const [announcementText, setAnnouncementText] = useState(INITIAL_ANNOUNCEMENT);
   
+  // Blog State
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(MOCK_BLOG_POSTS);
+
   // Toast State
   const [toast, setToast] = useState<ToastData | null>(null);
 
@@ -110,6 +113,11 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   
   const updateAnnouncementText = (text: string) => setAnnouncementText(text);
 
+  // Blog Actions
+  const addPost = (post: BlogPost) => setBlogPosts(prev => [post, ...prev]);
+  const updatePost = (post: BlogPost) => setBlogPosts(prev => prev.map(p => p.id === post.id ? post : p));
+  const deletePost = (id: string) => setBlogPosts(prev => prev.filter(p => p.id !== id));
+
   return (
     <StoreContext.Provider value={{
       products,
@@ -137,7 +145,11 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       updateAnnouncementText,
       toast,
       showToast,
-      hideToast
+      hideToast,
+      blogPosts,
+      addPost,
+      updatePost,
+      deletePost
     }}>
       {children}
     </StoreContext.Provider>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Package, ShoppingCart, Tag, LogOut, LayoutDashboard } from 'lucide-react';
+import { BarChart3, Package, ShoppingCart, Tag, LogOut, LayoutDashboard, BookOpen } from 'lucide-react';
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -10,6 +10,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: ShoppingCart, label: 'Orders', path: '/admin/orders' },
     { icon: Tag, label: 'Discounts', path: '/admin/discounts' },
+    { icon: BookOpen, label: 'Journal', path: '/admin/blog' },
   ];
 
   return (
@@ -41,12 +42,12 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     key={item.path}
                     to={item.path}
                     className={`flex-1 flex flex-col items-center justify-center py-3 min-w-[70px] border-b-2 transition-all duration-200 ${
-                        location.pathname === item.path 
+                        location.pathname === item.path || location.pathname.startsWith(item.path + '/')
                         ? 'border-white text-white bg-white/5' 
                         : 'border-transparent text-stone-500 hover:text-stone-300'
                     }`}
                 >
-                    <item.icon className={`w-5 h-5 mb-1 ${location.pathname === item.path ? 'stroke-2' : 'stroke-1'}`} />
+                    <item.icon className={`w-5 h-5 mb-1 ${location.pathname === item.path || location.pathname.startsWith(item.path + '/') ? 'stroke-2' : 'stroke-1'}`} />
                     <span className="text-[9px] uppercase tracking-wider font-medium">{item.label}</span>
                 </Link>
             ))}
@@ -72,7 +73,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     key={item.path}
                     to={item.path}
                     className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm transition-colors ${
-                        location.pathname === item.path 
+                        location.pathname === item.path || location.pathname.startsWith(item.path + '/')
                         ? 'bg-stone-800 text-white' 
                         : 'hover:bg-stone-900 hover:text-white'
                     }`}

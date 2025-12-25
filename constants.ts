@@ -1,4 +1,4 @@
-import { Product, PromoCode, Order } from './types';
+import { Product, PromoCode, Order, BlogPost } from './types';
 
 export const INITIAL_ANNOUNCEMENT = "FREE SHIPPING ALL OVER PAKISTAN";
 
@@ -115,5 +115,32 @@ export const MOCK_ORDERS: Order[] = [
     status: 'Shipped',
     paymentMethod: 'COD',
     date: '2023-10-26',
+  }
+];
+
+export const MOCK_BLOG_POSTS: BlogPost[] = [
+  {
+    id: '1',
+    title: 'The Architecture of Silence',
+    excerpt: 'Exploring the quiet spaces between noise and how our environment shapes our internal rhythm.',
+    content: "# The Architecture of Silence\n\nIn a world that shouts, silence is an architectural choice. It is not an absence, but a presence.\n\nWe often think of minimalism as a subtraction. Taking things away until nothing is left. But true minimalism is about *focus*. It is about removing the noise so that the signal can be heard.\n\n## Structure & Form\n\nJust as a building needs a strong foundation, our wardrobe needs a structure that supports our life, not complicates it.\n\n> \"The clothes are there to move with you while you read, make, reset, or simply sit.\"\n\nHere is how we breakdown the core elements of a quiet wardrobe:\n\n1.  **Texture:** The feel of the fabric against the skin.\n2.  **Silhouette:** The shape it creates in space.\n3.  **Utility:** The function it serves.\n\n![Studio Texture](https://aftermathstore.com/cdn/shop/files/blog_p_aftermathArtboard_1.jpg?v=1763682128&width=800)\n\n## The Mathematics of Calm\n\nThere is a ratio to relaxation. A balance between effort and ease. \n\n$$\n\\text{Stillness} = \\frac{\\text{Internal Rhythm}}{\\text{External Noise}}\n$$\n\nWhen we reduce the external variables (fast fashion, trends, clutter), the internal value increases.",
+    coverImage: 'https://cdn.shopify.com/s/files/1/0944/5933/0923/files/blog_p_aftermathArtboard_3_600x600.jpg?v=1763682137',
+    author: 'Aftermath Editorial',
+    date: '2023-11-01',
+    readTime: '3 min read',
+    tags: ['Philosophy', 'Design', 'Slow Living'],
+    isPublished: true,
+  },
+  {
+    id: '2',
+    title: 'Fabric as a Second Skin',
+    excerpt: 'Why we chose 500 GSM French Terry for our Studio Collection. A deep dive into material science.',
+    content: "# Fabric as a Second Skin\n\nWhy does weight matter? \n\nWhen we selected the 500 GSM French Terry for the Studio Collection, it wasn't just about durability. It was about **proprioception**—the body's ability to sense itself.\n\nA heavier fabric provides a grounding effect. It holds its shape, creating a distinct boundary between you and the world.\n\n## Material Breakdown\n\n| Property | Studio Fleece | Standard Fleece |\n| :--- | :--- | :--- |\n| **Weight** | 500 GSM | 280-320 GSM |\n| **Structure** | High | Low/Drapey |\n| **Warmth** | High | Medium |\n| **Longevity** | 5+ Years | 1-2 Years |\n\nWe don't design for a season. We design for a lifetime.",
+    coverImage: 'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=800',
+    author: 'Production Team',
+    date: '2023-11-10',
+    readTime: '4 min read',
+    tags: ['Materials', 'Production'],
+    isPublished: true,
   }
 ];

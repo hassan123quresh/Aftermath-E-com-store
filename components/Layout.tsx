@@ -133,6 +133,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             {/* Desktop Links (Centered) */}
             <div className={`hidden md:flex gap-8 text-xs tracking-[0.15em] uppercase opacity-90 absolute left-1/2 -translate-x-1/2 ${textColorClass}`} style={textShadowStyle}>
                 <Link to="/collection" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Collection</Link>
+                <Link to="/journal" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Journal</Link>
                 <Link to="/#philosophy" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Philosophy</Link>
                 <Link to="/contact" className="hover:opacity-100 transition-opacity hover:underline underline-offset-4 decoration-1">Contact</Link>
             </div>
@@ -281,6 +282,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <div className="flex-1 flex flex-col px-8 py-10 space-y-8 overflow-y-auto">
                   {[
                     { label: "The Collection", path: "/collection", sub: "Explore All Artifacts" },
+                    { label: "The Journal", path: "/journal", sub: "Editorial & Essays" },
                     { label: "Our Philosophy", path: "/#philosophy", sub: "Built for Stillness" },
                     { label: "Get in Touch", path: "/contact", sub: "Customer Support" },
                   ].map((item, idx) => (
@@ -377,6 +379,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </ul>
           </div>
           <div>
+            <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Explore</h4>
+            <div className="flex flex-col gap-4 mb-8">
+               <Link to="/collection" className="text-sm opacity-80 hover:text-white transition-colors">The Collection</Link>
+               <Link to="/journal" className="text-sm opacity-80 hover:text-white transition-colors">The Journal</Link>
+            </div>
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Connect</h4>
             <div className="flex flex-col gap-4">
                {/* Instagram */}

@@ -11,10 +11,16 @@ const ProductDetail = React.lazy(() => import('./pages/ProductDetail'));
 const Checkout = React.lazy(() => import('./pages/Checkout'));
 const Collection = React.lazy(() => import('./pages/Collection'));
 const Contact = React.lazy(() => import('./pages/Contact'));
+const Blog = React.lazy(() => import('./pages/Blog'));
+const BlogPost = React.lazy(() => import('./pages/BlogPost'));
+
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 const AdminProducts = React.lazy(() => import('./pages/AdminProducts'));
 const AdminOrders = React.lazy(() => import('./pages/AdminOrders'));
 const AdminDiscounts = React.lazy(() => import('./pages/AdminDiscounts'));
+const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
+const AdminBlogEditor = React.lazy(() => import('./pages/AdminBlogEditor'));
+
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 const RefundPolicy = React.lazy(() => import('./pages/RefundPolicy'));
 const ShippingPolicy = React.lazy(() => import('./pages/ShippingPolicy'));
@@ -134,6 +140,22 @@ const App = () => {
                 </Suspense>
               </StorefrontRoute>
             } />
+
+            {/* Blog Routes */}
+            <Route path="/journal" element={
+              <StorefrontRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <Blog />
+                </Suspense>
+              </StorefrontRoute>
+            } />
+            <Route path="/journal/:id" element={
+              <StorefrontRoute>
+                <Suspense fallback={<PageLoader />}>
+                  <BlogPost />
+                </Suspense>
+              </StorefrontRoute>
+            } />
             
             {/* Admin Routes */}
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
@@ -162,6 +184,27 @@ const App = () => {
               <AdminRoute>
                 <Suspense fallback={<PageLoader />}>
                    <AdminDiscounts />
+                </Suspense>
+              </AdminRoute>
+            } />
+            <Route path="/admin/blog" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminBlog />
+                </Suspense>
+              </AdminRoute>
+            } />
+            <Route path="/admin/blog/new" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminBlogEditor />
+                </Suspense>
+              </AdminRoute>
+            } />
+            <Route path="/admin/blog/edit/:id" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminBlogEditor />
                 </Suspense>
               </AdminRoute>
             } />

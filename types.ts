@@ -37,6 +37,19 @@ export interface PromoCode {
   isActive: boolean;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string; // Markdown
+  coverImage: string;
+  author: string;
+  date: string;
+  readTime: string;
+  tags: string[];
+  isPublished: boolean;
+}
+
 export interface AnalyticsData {
   name: string;
   sales: number;
@@ -69,6 +82,12 @@ export interface StoreContextType {
   promos: PromoCode[];
   validatePromo: (code: string) => number; // returns discount multiplier (e.g., 0.10 for 10%)
   
+  // Blog
+  blogPosts: BlogPost[];
+  addPost: (post: BlogPost) => void;
+  updatePost: (post: BlogPost) => void;
+  deletePost: (id: string) => void;
+
   // Admin functions
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
