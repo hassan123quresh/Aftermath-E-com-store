@@ -53,12 +53,10 @@ export function ProductPreview({
   start = "top top",
   articleTop,
   articleBottom,
-  // Adjusted length: 1 viewport height per product for comfortable scrolling
-  length = articleTop.length * 100, 
+  // OPTIMIZATION: Reduced multiplier from 100 to 60 for faster scrolling (less distance required)
+  length = articleTop.length * 60, 
 }: ProductPreviewProps) {
   const mainRef = useRef<HTMLElement>(null)
-  const dividerTopRef = useRef<HTMLSpanElement>(null)
-  const dividerBottomRef = useRef<HTMLSpanElement>(null)
   const articleTopRef = useRef<HTMLElement>(null)
   const articleBottomRef = useRef<HTMLElement>(null)
   
@@ -102,16 +100,13 @@ export function ProductPreview({
         existingTrigger.kill()
       }
       
-      // Ensure dividers are visible initially
-      gsap.set(dividerTopRef.current, { scaleX: 1, opacity: 1 });
-      gsap.set(dividerBottomRef.current, { width: "100%", opacity: 1 });
-
       gsap.timeline({
         scrollTrigger: {
           trigger: mainRef.current,
           start,
           end: `${length}% top`,
-          scrub: 0.5, // Small scrub for smoothing the visual pinning
+          // OPTIMIZATION: Reduced scrub time for tighter response
+          scrub: 0.1, 
           scroller: scroller?.current ?? window,
           pin: true,
           onUpdate: handleProgress,
@@ -121,6 +116,8 @@ export function ProductPreview({
              setCurrentBottomIndex(0)
           },
           id: instanceIdRef.current,
+          // OPTIMIZATION: Improve performance on fast scrolls
+          fastScrollEnd: true,
         },
       })
     }
@@ -151,12 +148,7 @@ export function ProductPreview({
                 type={"icon"}
                 pos={1}
             />
-            <span
-              ref={dividerTopRef}
-              className="mt-4 md:mt-6 w-full h-[1px] bg-stone-700 relative block origin-right"
-            >
-              <span className="absolute -right-1 top-0 -translate-y-1/2 -translate-x-1/2 h-2 w-2 rounded-full bg-stone-400"></span>
-            </span>
+            
             <div className="w-[90%] md:w-[80%] mr-auto mt-4 md:mt-6">
                 <Translate
                   arr={articleTop}
@@ -178,8 +170,9 @@ export function ProductPreview({
              {productImages.map((src, i) => (
                  <div 
                     key={i}
+                    // OPTIMIZATION: Added will-change-transform and will-change-opacity
                     className={cn(
-                        "absolute inset-0 w-full h-full flex items-center justify-center transition-all duration-700 ease-in-out",
+                        "absolute inset-0 w-full h-full flex items-center justify-center transition-all duration-500 ease-out will-change-transform will-change-opacity",
                         i === activeImageIndex ? "opacity-100 scale-100 blur-0 z-10" : "opacity-0 scale-95 blur-sm z-0"
                     )}
                  >
@@ -213,12 +206,7 @@ export function ProductPreview({
                 type={"icon"}
                 pos={2}
               />
-            <span
-              ref={dividerBottomRef}
-              className="mt-6 md:mt-10 w-full h-[1px] bg-stone-700 relative block origin-left"
-            >
-              <span className="absolute left-0 top-0 -translate-y-1/2 -translate-x-1/2 h-2 w-2 rounded-full bg-stone-400"></span>
-            </span>
+            
             <div className="w-[90%] md:w-[80%] ml-auto mt-4 md:mt-6">
                 <Translate
                   arr={articleBottom}
@@ -259,8 +247,8 @@ const Translate: React.FC<TranslateProps> = ({ arr, index, type, pos }) => {
   useGSAP(() => {
     if (!contentRef.current) return
     const height = contentRef.current.offsetHeight || 50
-    const ease = "power2.inOut"
-    const duration = 0.5
+    const ease = "power2.out" // OPTIMIZATION: Switched to 'out' easing for snappier feel
+    const duration = 0.4 // OPTIMIZATION: Reduced duration from 0.5s to 0.4s
 
     // Only animate if index changed
     if (previousIndex.current !== safeIndex) {
@@ -303,12 +291,12 @@ const Translate: React.FC<TranslateProps> = ({ arr, index, type, pos }) => {
   const getClassName = () => {
     switch (type) {
       case "title":
-        return cn("font-serif text-3xl md:text-5xl mb-2 leading-none", arr[safeIndex]?.title.className)
+        return cn("font-serif text-3xl md:text-5xl mb-2 leading-none will-change-transform", arr[safeIndex]?.title.className)
       case "description":
-        return cn("font-sans text-xs md:text-sm text-stone-400 leading-relaxed font-medium", arr[safeIndex]?.description.className)
+        return cn("font-sans text-xs md:text-sm text-stone-400 leading-relaxed font-medium will-change-transform", arr[safeIndex]?.description.className)
       case "icon":
         return cn(
-            "text-stone-300 md:scale-125 opacity-80",
+            "text-stone-300 md:scale-125 opacity-80 will-change-transform",
             pos === 1 ? "py-2 origin-left" : "py-2 origin-right"
         )
       default:
