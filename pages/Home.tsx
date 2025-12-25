@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useStore } from '../StoreContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LiquidChrome from '../components/LiquidChrome';
@@ -6,11 +6,12 @@ import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 import { ProductPreview } from '../components/ProductPreview';
-import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box } from 'lucide-react';
+import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 const Home = () => {
   const { products } = useStore();
   const navigate = useNavigate();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -34,6 +35,18 @@ const Home = () => {
       if (shopElement) {
           shopElement.scrollIntoView({ behavior: 'smooth' });
       }
+  };
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+    }
   };
 
   const articleTop = [
@@ -177,43 +190,70 @@ const Home = () => {
                 </Link>
             </div>
             
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar">
-              {products.map((product, idx) => (
-                <Link 
-                    key={product.id} 
-                    to={`/product/${product.id}`} 
-                    className="relative flex-shrink-0 snap-start w-[80vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
-                    style={{ transitionDelay: `${idx * 100}ms` }}
+            {/* Mobile Swipe Hint */}
+            <div className="md:hidden px-8 mb-4 flex items-center gap-2 animate-pulse opacity-60">
+                <span className="text-[10px] uppercase tracking-widest text-stone-500 font-medium">Swipe Left to Explore</span>
+                <ArrowRight className="w-3 h-3 text-stone-500" />
+            </div>
+
+            <div className="relative group">
+                {/* Desktop Navigation Buttons */}
+                <button 
+                    onClick={scrollLeft}
+                    className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/90 backdrop-blur border border-stone-200 rounded-full items-center justify-center hover:bg-obsidian hover:text-white transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    aria-label="Scroll Left"
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-stone-200 w-full">
-                    <img 
-                      src={product.images[0]} 
-                      alt={product.name} 
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
-                      loading={idx < 3 ? "eager" : "lazy"}
-                    />
-                    <img 
-                      src={product.images[1] || product.images[0]} 
-                      alt={product.name} 
-                      className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="flex flex-col items-start gap-2">
-                      <div className="flex justify-between w-full items-start">
-                          <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
-                          <PriceBadge price={product.price} />
-                      </div>
-                      <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
-                  </div>
+                    <ChevronLeft className="w-5 h-5 stroke-[1.5]" />
+                </button>
+                <button 
+                    onClick={scrollRight}
+                    className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/90 backdrop-blur border border-stone-200 rounded-full items-center justify-center hover:bg-obsidian hover:text-white transition-all duration-300 shadow-xl opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    aria-label="Scroll Right"
+                >
+                    <ChevronRight className="w-5 h-5 stroke-[1.5]" />
+                </button>
+
+                <div 
+                    ref={scrollContainerRef}
+                    className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar scroll-smooth"
+                >
+                {products.map((product, idx) => (
+                    <Link 
+                        key={product.id} 
+                        to={`/product/${product.id}`} 
+                        className="relative flex-shrink-0 snap-start w-[80vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
+                        style={{ transitionDelay: `${idx * 100}ms` }}
+                    >
+                    <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-stone-200 w-full">
+                        <img 
+                        src={product.images[0]} 
+                        alt={product.name} 
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                        loading={idx < 3 ? "eager" : "lazy"}
+                        />
+                        <img 
+                        src={product.images[1] || product.images[0]} 
+                        alt={product.name} 
+                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
+                        loading="lazy"
+                        />
+                    </div>
+                    <div className="flex flex-col items-start gap-2">
+                        <div className="flex justify-between w-full items-start">
+                            <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
+                            <PriceBadge price={product.price} />
+                        </div>
+                        <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
+                    </div>
+                    </Link>
+                ))}
+                
+                <Link to="/collection" className="flex-shrink-0 snap-start w-[80vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
+                    <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>
+                    <span className="text-xs uppercase tracking-widest border-b border-obsidian/20 group-hover:border-obsidian pb-1 transition-colors">Discover the archive</span>
                 </Link>
-              ))}
-              
-              <Link to="/collection" className="flex-shrink-0 snap-start w-[80vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
-                  <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>
-                  <span className="text-xs uppercase tracking-widest border-b border-obsidian/20 group-hover:border-obsidian pb-1 transition-colors">Discover the archive</span>
-              </Link>
-              <div className="w-8 md:w-12 flex-shrink-0" />
+                <div className="w-8 md:w-12 flex-shrink-0" />
+                </div>
             </div>
             
             <div className="px-8 md:px-12 md:hidden mt-8">
