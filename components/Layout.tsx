@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useStore } from '../StoreContext';
-import { Menu, ShoppingBag, X, User, Search, Mail, MessageCircle, Instagram } from 'lucide-react';
+import { Menu, ShoppingBag, X, User, Search, Mail, MessageCircle, Instagram, ArrowRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LiquidButton from './LiquidButton';
 import Toast from './Toast';
@@ -25,6 +25,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setIsSearchOpen(false);
     setSearchQuery('');
   }, [location]);
+
+  // Lock Body Scroll when Mobile Menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; }
+  }, [isMobileMenuOpen]);
 
   // Handle Scroll for Header Styling
   useEffect(() => {
@@ -54,7 +64,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   // Dynamic Header Styles
-  const isTransparent = isHomePage && !isScrolled;
+  const isTransparent = isHomePage && !isScrolled && !isMobileMenuOpen;
   
   const headerClasses = `fixed top-0 z-50 w-full transition-all duration-500 ease-in-out ${
       isTransparent ? 'bg-transparent shadow-none' : 'bg-stone-200 shadow-md'
@@ -98,7 +108,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     className={`p-2 -ml-2 hover:opacity-70 transition-opacity btn-glass-icon ${iconColorClass}`} 
                     aria-label="Menu"
                 >
-                    <Menu className="w-5 h-5 stroke-1" style={textShadowStyle} />
+                    {isMobileMenuOpen ? (
+                         // Render nothing here, the close button is inside the overlay
+                         <div className="w-5 h-5" /> 
+                    ) : (
+                         <Menu className="w-5 h-5 stroke-1" style={textShadowStyle} />
+                    )}
                 </button>
             </div>
 
@@ -246,13 +261,81 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             )}
         </nav>
 
-        {/* Mobile Menu Overlay */}
+        {/* RE-DESIGNED Mobile Menu Overlay (Dark Mode for High Visibility) */}
         {isMobileMenuOpen && (
-           <div className="fixed inset-0 top-[calc(2.5rem+3.5rem)] bg-stone-200 z-40 flex flex-col items-center justify-center space-y-8 animate-fade-in border-t border-obsidian/5 text-obsidian">
-              <Link to="/collection" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Collection</Link>
-              <Link to="/#philosophy" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Philosophy</Link>
-              <Link to="/contact" className="text-xl font-serif" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-              <Link to="/admin" className="text-sm opacity-50 uppercase tracking-widest" onClick={() => setIsMobileMenuOpen(false)}>Admin Access</Link>
+           <div className="fixed inset-0 z-[100] bg-obsidian/95 backdrop-blur-xl flex flex-col animate-fade-in text-stone-100 overflow-hidden">
+              
+              {/* Header inside Menu */}
+              <div className="flex items-center justify-between px-6 h-20 flex-shrink-0 border-b border-white/10">
+                  <span className="text-xs uppercase tracking-[0.25em] opacity-40 font-bold text-stone-300">Menu</span>
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="p-2 -mr-2 text-white hover:rotate-90 transition-transform duration-300"
+                    aria-label="Close Menu"
+                  >
+                      <X className="w-8 h-8 stroke-1" />
+                  </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="flex-1 flex flex-col px-8 py-10 space-y-8 overflow-y-auto">
+                  {[
+                    { label: "The Collection", path: "/collection", sub: "Explore All Artifacts" },
+                    { label: "Our Philosophy", path: "/#philosophy", sub: "Built for Stillness" },
+                    { label: "Get in Touch", path: "/contact", sub: "Customer Support" },
+                  ].map((item, idx) => (
+                    <Link 
+                        key={idx}
+                        to={item.path} 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="group flex flex-col animate-fade-in-up"
+                        style={{ animationDelay: `${idx * 100}ms` }}
+                    >
+                        <span 
+                            className="text-4xl md:text-5xl font-serif font-light group-hover:translate-x-2 transition-transform duration-300 text-stone-100"
+                            style={{ textShadow: '0 4px 30px rgba(0,0,0,0.5)' }}
+                        >
+                            {item.label}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-widest text-stone-500 mt-2 flex items-center gap-2 font-medium">
+                           {item.sub} 
+                           <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-stone-300" />
+                        </span>
+                    </Link>
+                  ))}
+
+                  <div 
+                    className="pt-8 mt-auto animate-fade-in-up" 
+                    style={{ animationDelay: '300ms' }}
+                  >
+                     <Link 
+                        to="/admin" 
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-lg shadow-sm hover:bg-white/10 transition-colors"
+                     >
+                        <User className="w-5 h-5 text-stone-400" />
+                        <div>
+                             <span className="block text-sm font-medium text-stone-200">My Account / Admin</span>
+                             <span className="block text-[10px] text-stone-500">Manage orders and profile</span>
+                        </div>
+                     </Link>
+                  </div>
+              </div>
+
+              {/* Footer inside Menu */}
+              <div className="px-8 pb-10 flex justify-between items-end border-t border-white/10 pt-8 animate-fade-in" style={{ animationDelay: '400ms' }}>
+                  <div className="flex flex-col gap-2">
+                      <span className="text-[10px] uppercase tracking-widest opacity-40 text-stone-400">Follow Us</span>
+                      <div className="flex gap-6 mt-1">
+                          <a href="https://instagram.com" className="text-stone-300 hover:text-white transition-colors"><Instagram className="w-6 h-6 stroke-[1.5]" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} /></a>
+                          <a href="mailto:aftermathstore@hotmail.com" className="text-stone-300 hover:text-white transition-colors"><Mail className="w-6 h-6 stroke-[1.5]" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }} /></a>
+                      </div>
+                  </div>
+                  <div className="text-right">
+                       <span className="text-[10px] text-stone-600 block">Lahore, Pakistan</span>
+                       <span className="text-[10px] text-stone-600 block">&copy; 2025 Aftermath</span>
+                  </div>
+              </div>
            </div>
         )}
       </header>
