@@ -114,6 +114,17 @@ const Home = () => {
       "#ffffff"  // WHITE
   ];
 
+  const testimonials = [
+      { name: "hassan", comment: "lowkey the best purchase ive made in a min." },
+      { name: "zoya", comment: "fabric is stupid soft i wear it everyday." },
+      { name: "bilal", comment: "fit is boxy just how i like it, sleeves go crazy." },
+      { name: "mira", comment: "took long to ship but quality makes up for it ig." },
+      { name: "ali", comment: "honestly wasnt expecting it to be this heavy." },
+      { name: "sameer", comment: "packaging went hard ngl felt bad opening it." },
+      { name: "fatima", comment: "dropped it in the wash and it didnt shrink, blessed." },
+      { name: "hamza", comment: "need this in every color fr." }
+  ];
+
   return (
     <div>
       {/* Hero Section */}
@@ -386,6 +397,81 @@ const Home = () => {
           <div className="w-px h-24 bg-obsidian/20 mx-auto"></div>
         </div>
       </section>
+
+      {/* Love Notes / Testimonials */}
+      <section className="bg-stone-100 border-t border-stone-200 relative">
+          
+          {/* DESKTOP VIEW: Split Screen (Sticky Left, Scroll Right) */}
+          <div className="hidden md:flex">
+              {/* Left Side - Sticky */}
+              <div className="w-1/3 sticky top-0 h-screen flex flex-col justify-center px-16 border-r border-stone-200 bg-stone-100 z-10">
+                  <h2 className="font-serif text-6xl text-obsidian mb-4">Love Notes</h2>
+                  <p className="text-xs uppercase tracking-[0.2em] text-stone-500 mb-8 font-sans">from our customers</p>
+                  <div className="w-12 h-0.5 bg-obsidian"></div>
+              </div>
+
+              {/* Right Side - Scrolling Content */}
+              <div className="w-2/3 bg-stone-50">
+                  {testimonials.map((item, idx) => (
+                      <div key={idx} className="min-h-[50vh] flex flex-col justify-center px-24 py-20 border-b border-stone-200 last:border-0 reveal-on-scroll">
+                          <p className="font-serif text-2xl leading-relaxed text-obsidian/80 mb-8 lowercase">
+                              "{item.comment}"
+                          </p>
+                          <span className="text-xs font-sans uppercase tracking-widest text-stone-400">
+                              {item.name}
+                          </span>
+                      </div>
+                  ))}
+              </div>
+          </div>
+
+          {/* MOBILE VIEW: Auto-Moving Carousel */}
+          <div className="md:hidden py-20 overflow-hidden bg-stone-50">
+              <div className="px-6 mb-12 text-center">
+                  <h2 className="font-serif text-4xl text-obsidian mb-2">Love Notes</h2>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-stone-500">from our customers</p>
+              </div>
+
+              {/* Infinite Marquee Container */}
+              <div className="relative w-full">
+                  <div className="flex w-max animate-testimonial-marquee">
+                      {/* Original Set */}
+                      {testimonials.map((item, idx) => (
+                          <div key={`orig-${idx}`} className="w-[85vw] flex-shrink-0 px-6 border-r border-stone-200/50 flex flex-col justify-center">
+                              <p className="font-serif text-xl leading-relaxed text-obsidian/80 mb-6 lowercase">
+                                  "{item.comment}"
+                              </p>
+                              <span className="text-[10px] font-sans uppercase tracking-widest text-stone-400">
+                                  {item.name}
+                              </span>
+                          </div>
+                      ))}
+                      {/* Duplicate Set for seamless loop */}
+                      {testimonials.map((item, idx) => (
+                          <div key={`dup-${idx}`} className="w-[85vw] flex-shrink-0 px-6 border-r border-stone-200/50 flex flex-col justify-center">
+                              <p className="font-serif text-xl leading-relaxed text-obsidian/80 mb-6 lowercase">
+                                  "{item.comment}"
+                              </p>
+                              <span className="text-[10px] font-sans uppercase tracking-widest text-stone-400">
+                                  {item.name}
+                              </span>
+                          </div>
+                      ))}
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* Styles for new marquee */}
+      <style>{`
+          .animate-testimonial-marquee {
+              animation: testimonialMarquee 40s linear infinite;
+          }
+          @keyframes testimonialMarquee {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+          }
+      `}</style>
     </div>
   );
 };
