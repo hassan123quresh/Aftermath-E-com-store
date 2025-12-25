@@ -83,10 +83,10 @@ const Home = () => {
   ];
 
   const previewImages = [
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766659171/image_6_xbcp7l.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766658178/image_2_afb7wq.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766658939/image_4_gtjbub.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766659072/image_5_kkzsh6.png"
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766659171/image_6_xbcp7l.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766658178/image_2_afb7wq.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766658939/image_4_gtjbub.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766659072/image_5_kkzsh6.png"
   ];
 
   // UPDATED GLOW COLORS:
