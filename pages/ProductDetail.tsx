@@ -122,8 +122,11 @@ const ProductDetail = () => {
     setActiveButton('cart');
     addToCart(product, selectedSize);
     
-    // Show toast
-    showToast("Added to Cart", { label: "Click to Proceed", onClick: toggleCart });
+    // Show toast with two actions
+    showToast("Added to Cart", [
+        { label: "View Cart", onClick: toggleCart },
+        { label: "Checkout", onClick: () => navigate('/checkout'), primary: true }
+    ]);
 
     // Reset button state after delay
     setTimeout(() => {

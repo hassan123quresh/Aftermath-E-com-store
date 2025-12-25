@@ -42,12 +42,15 @@ export interface AnalyticsData {
   orders: number;
 }
 
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+  primary?: boolean;
+}
+
 export interface ToastData {
   message: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
+  actions?: ToastAction[];
   id: number;
 }
 
@@ -78,6 +81,6 @@ export interface StoreContextType {
 
   // Toast
   toast: ToastData | null;
-  showToast: (message: string, action?: { label: string; onClick: () => void }) => void;
+  showToast: (message: string, actions?: ToastAction[]) => void;
   hideToast: () => void;
 }

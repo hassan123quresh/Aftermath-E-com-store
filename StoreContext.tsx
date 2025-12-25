@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData } from './types';
+import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction } from './types';
 import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT } from './constants';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -66,9 +66,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   };
 
   // Toast Logic
-  const showToast = (message: string, action?: { label: string; onClick: () => void }) => {
+  const showToast = (message: string, actions?: ToastAction[]) => {
     const id = Date.now();
-    setToast({ message, action, id });
+    setToast({ message, actions, id });
     
     // Auto hide after 4 seconds
     setTimeout(() => {
