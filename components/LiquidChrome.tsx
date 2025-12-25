@@ -24,12 +24,13 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
 
   useEffect(() => {
     if (!containerRef.current) return;
+    
+    // Capture ref value for cleanup
+    const container = containerRef.current;
 
     let renderer: any;
     let animationId: number;
     let gl: any;
-    
-    const container = containerRef.current;
 
     // Initialize renderer
     try {
@@ -37,7 +38,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
             powerPreference: "high-performance",
             antialias: false, 
             alpha: true, 
-            dpr: 1 
+            dpr: window.devicePixelRatio || 1 
         });
         gl = renderer.gl;
         gl.clearColor(0, 0, 0, 0);
@@ -46,7 +47,12 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         return;
     }
 
-    // Append canvas immediately so it's in the DOM for accurate sizing and painting
+    // Explicitly set canvas styles to fill parent immediately
+    // This fixes the "top left small" issue before the JS resize logic kicks in
+    gl.canvas.style.display = 'block';
+    gl.canvas.style.width = '100%';
+    gl.canvas.style.height = '100%';
+    
     container.appendChild(gl.canvas);
 
     const vertexShader = `
@@ -113,23 +119,24 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     });
     const mesh = new Mesh(gl, { geometry, program });
 
-    function resize() {
-        if (!container) return;
+    // Resize Observer for robust sizing
+    const resizeObserver = new ResizeObserver((entries) => {
+        if (!entries || entries.length === 0) return;
+        
+        // Use contentRect for precise fractional pixels if needed, or offsetWidth/Height
         const width = container.offsetWidth;
         const height = container.offsetHeight;
         
-        if (width === 0 || height === 0) return;
+        if (width > 0 && height > 0) {
+            renderer.setSize(width, height);
+            const resUniform = program.uniforms.uResolution.value;
+            resUniform[0] = gl.canvas.width;
+            resUniform[1] = gl.canvas.height;
+            resUniform[2] = gl.canvas.width / gl.canvas.height;
+        }
+    });
 
-        renderer.setSize(width, height);
-        const resUniform = program.uniforms.uResolution.value;
-        resUniform[0] = gl.canvas.width;
-        resUniform[1] = gl.canvas.height;
-        resUniform[2] = gl.canvas.width / gl.canvas.height;
-    }
-    window.addEventListener('resize', resize);
-    
-    // Initial resize to ensure uniforms are correct before first render
-    resize();
+    resizeObserver.observe(container);
 
     // Mouse handling
     const mouseTarget = { x: 0, y: 0 };
@@ -164,14 +171,13 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     // Start loop
     animationId = requestAnimationFrame(update);
 
-    // Initial warm-up render with non-zero time to avoid singularity at t=0
-    // This runs synchronously before the first paint to ensure no white flash
+    // Pre-render immediate frame
     program.uniforms.uTime.value = performance.now() * 0.001 * speed;
     renderer.render({ scene: mesh });
 
     return () => {
       if (animationId) cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
+      resizeObserver.disconnect();
       if (interactive && container) {
           container.removeEventListener('mousemove', handleMouseMove);
       }
@@ -189,7 +195,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
   return (
     <div 
         ref={containerRef} 
-        className="liquidChrome-container" 
+        className="liquidChrome-container w-full h-full relative" 
         style={{ backgroundColor: '#141414', ...props.style }} 
         {...props} 
     />

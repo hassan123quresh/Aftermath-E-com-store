@@ -5,6 +5,8 @@ import LiquidChrome from '../components/LiquidChrome';
 import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
+import { ProductPreview } from '../components/ProductPreview';
+import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box } from 'lucide-react';
 
 const Home = () => {
   const { products } = useStore();
@@ -34,24 +36,83 @@ const Home = () => {
       }
   };
 
+  const articleTop = [
+    {
+      title: { text: "Studio Fleece", className: "text-stone-100" },
+      description: { text: "The definitive silhouette. Drop shoulders, voluminous sleeves, and a cropped body for a structured aesthetic.", className: "" },
+      icon: <Layers className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "Heavyweight Knit", className: "text-stone-100" },
+      description: { text: "500 GSM French Terry construction. Dense, durable, and exceptionally soft against the skin.", className: "" },
+      icon: <Fingerprint className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "Modular Fit", className: "text-stone-100" },
+      description: { text: "Engineered for layering. A generous cut that maintains its shape while allowing freedom of motion.", className: "" },
+      icon: <Maximize className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "Artisanal Finish", className: "text-stone-100" },
+      description: { text: "Hand-distressed hems and reinforced double-stitching. Built to last a lifetime, not just a season.", className: "" },
+      icon: <Scissors className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+  ];
+
+  const articleBottom = [
+    {
+      title: { text: "Storm Grey", className: "text-stone-100" },
+      description: { text: "Cold-dyed for a weathered, industrial finish that captures the essence of the city.", className: "" },
+      icon: <Zap className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "Obsidian Dye", className: "text-stone-100" },
+      description: { text: "True black pigmentation that absorbs light. Pre-shrunk to ensure perfect fit retention.", className: "" },
+      icon: <Droplets className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "Bone Colorway", className: "text-stone-100" },
+      description: { text: "A soft, neutral tone inspired by raw cotton. Versatile enough for any rotation.", className: "" },
+      icon: <Box className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+    {
+      title: { text: "The Aftermath", className: "text-stone-100" },
+      description: { text: "Clothing for the quiet moments after the noise. Designed for stillness.", className: "" },
+      icon: <ShieldCheck className="w-8 h-8 md:w-12 md:h-12 stroke-1" />,
+    },
+  ];
+
+  const previewImages = [
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766659171/image_6_xbcp7l.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766658178/image_2_afb7wq.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766658939/image_4_gtjbub.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/v1766659072/image_5_kkzsh6.png"
+  ];
+
+  // UPDATED GLOW COLORS:
+  // 1: Red
+  // 2: White
+  // 3: Cream (Default)
+  // 4: White
+  const glowColors = [
+      "#dc2626", // RED
+      "#ffffff", // WHITE
+      "#d6d3d1", // CREAM
+      "#ffffff"  // WHITE
+  ];
+
   return (
     <div>
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden bg-obsidian">
-        {/* Liquid Chrome Background */}
         <LiquidChrome
             baseColor={[0.1, 0.1, 0.1]}
             speed={0.4}
             amplitude={0.3}
             interactive={true}
         />
-
-        {/* Cinematic Gradient Overlays to ensure text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/20 pointer-events-none"></div>
-        
-        {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-stone-100 z-10 px-4 pointer-events-none">
-          {/* Removed animate-fade-in-up for instant visibility */}
           <div className="text-center pointer-events-auto flex flex-col items-center">
              <h1 
                 className="text-6xl md:text-9xl font-serif tracking-tight mb-8 text-white"
@@ -62,7 +123,6 @@ const Home = () => {
              <p className="text-xs md:text-sm tracking-[0.2em] uppercase opacity-80 mb-12 font-light font-sans text-stone-200" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
                 Stillness in motion
              </p>
-             
              <HeroLiquidButton 
                 onClick={handleEnterStore}
                 className="px-12 py-4 min-w-[200px]"
@@ -98,11 +158,9 @@ const Home = () => {
         }
       `}</style>
 
-      {/* Featured Products Carousel - Redesigned for Luxury */}
+      {/* Featured Products */}
       <section id="shop" className="py-24 md:py-40 w-full bg-stone-50/50">
         <div className="max-w-7xl mx-auto">
-            
-            {/* Header - Fixed Alignment (items-start on mobile to align left) */}
             <div className="px-8 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 reveal-on-scroll">
                 <div className="max-w-xl">
                     <h2 className="font-serif text-4xl md:text-7xl text-obsidian mb-4 md:mb-6">The Collection</h2>
@@ -110,7 +168,6 @@ const Home = () => {
                         Essential pieces designed for the modern minimalist. Structured for presence, softened for comfort.
                     </p>
                 </div>
-                
                 <Link 
                     to="/collection" 
                     className="group hidden md:flex items-center gap-4 pb-1 border-b border-obsidian/20 hover:border-obsidian transition-colors duration-500"
@@ -120,7 +177,6 @@ const Home = () => {
                 </Link>
             </div>
             
-            {/* Scroll Container - Matching padding to header for perfect alignment */}
             <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar">
               {products.map((product, idx) => (
                 <Link 
@@ -129,7 +185,6 @@ const Home = () => {
                     className="relative flex-shrink-0 snap-start w-[80vw] md:w-[360px] group reveal-on-scroll cursor-pointer"
                     style={{ transitionDelay: `${idx * 100}ms` }}
                 >
-                  {/* Image */}
                   <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-stone-200 w-full">
                     <img 
                       src={product.images[0]} 
@@ -137,7 +192,6 @@ const Home = () => {
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                       loading={idx < 3 ? "eager" : "lazy"}
                     />
-                    {/* Hover Image */}
                     <img 
                       src={product.images[1] || product.images[0]} 
                       alt={product.name} 
@@ -145,8 +199,6 @@ const Home = () => {
                       loading="lazy"
                     />
                   </div>
-
-                  {/* Info - Clean & Editorial */}
                   <div className="flex flex-col items-start gap-2">
                       <div className="flex justify-between w-full items-start">
                           <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
@@ -157,16 +209,13 @@ const Home = () => {
                 </Link>
               ))}
               
-              {/* CTA Card at the end - Resized */}
               <Link to="/collection" className="flex-shrink-0 snap-start w-[80vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
                   <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>
                   <span className="text-xs uppercase tracking-widest border-b border-obsidian/20 group-hover:border-obsidian pb-1 transition-colors">Discover the archive</span>
               </Link>
-              
               <div className="w-8 md:w-12 flex-shrink-0" />
             </div>
             
-             {/* Mobile View All Link - Adjusted Padding */}
             <div className="px-8 md:px-12 md:hidden mt-8">
                  <Link 
                     to="/collection" 
@@ -179,22 +228,34 @@ const Home = () => {
         </div>
       </section>
 
-      {/* NEW ARTISTIC EDITORIAL SECTION: After Hours / 1 */}
+      {/* PRODUCT PREVIEW / SPECIFICATIONS SCROLL */}
+      <section className="w-full bg-obsidian border-t border-stone-800">
+        <div className="w-full h-40 bg-obsidian text-stone-300 flex justify-center items-center px-3 border-b border-stone-800/50">
+             <span className="text-xs uppercase tracking-[0.3em] opacity-80 animate-pulse">Scroll to Explore Details</span>
+        </div>
+        <ProductPreview
+            productImages={previewImages}
+            glowColors={glowColors}
+            articleTop={articleTop}
+            articleBottom={articleBottom}
+            start="top top"
+            rotate={0} 
+            scaleFactor={1}
+        />
+      </section>
+
+      {/* Editorial Section */}
       <section className="bg-[#E6E5E1] text-[#1a1918] relative w-full border-t border-stone-200">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-24 md:py-40">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-start">
-                
-                {/* LEFT COLUMN - STICKY (The Philosophy) */}
                 <div className="lg:col-span-5 lg:sticky lg:top-32 h-fit">
                     <div className="flex flex-col items-start reveal-on-scroll">
                         <span className="inline-block py-1 px-3 border border-[#1a1918]/20 rounded-full text-[10px] uppercase tracking-[0.2em] font-medium mb-8">
                             After Hours / 01
                         </span>
-                        
                         <h2 className="text-7xl md:text-[8rem] leading-[0.8] font-serif mb-12 -ml-1 text-obsidian tracking-tight">
                             Live<br/>within.
                         </h2>
-
                         <div className="prose prose-lg md:prose-xl font-serif text-[#1a1918]/80 leading-relaxed max-w-md">
                             <p>
                             In a world that feels increasingly externalised, overstimulated, and optimised, Aftermath centers the parts of you left behind by the pace.
@@ -209,10 +270,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN - SCROLLING (The Visuals & Details) */}
                 <div className="lg:col-span-7 flex flex-col gap-32 lg:pt-20">
-                    
-                    {/* Visual 1 - Main Hero */}
                     <div className="w-full relative group reveal-on-scroll">
                         <div className="aspect-[4/5] overflow-hidden bg-[#dcdbd7]">
                             <img 
@@ -230,14 +288,12 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* Text Block 1 - Interspersed */}
                     <div className="w-full md:w-2/3 self-end reveal-on-scroll">
                         <p className="font-sans text-sm md:text-base leading-loose tracking-wide opacity-80">
                             <span className="font-bold">Live within</span> is the idea that sits quietly behind Aftermath. Not a big moment or a dramatic shift, just the simple feeling of being back in your own head and in your own body, without needing to explain it.
                         </p>
                     </div>
 
-                    {/* Visual 2 & 3 - Asymmetric Grid */}
                     <div className="grid grid-cols-12 gap-6 items-end reveal-on-scroll">
                         <div className="col-span-5">
                             <div className="aspect-[3/4] overflow-hidden bg-[#dcdbd7] mb-4 relative group">
@@ -263,7 +319,6 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* Final Text Block - Philosophical Conclusion */}
                     <div className="w-full md:w-3/4 self-start reveal-on-scroll border-l-2 border-[#1a1918] pl-8 py-2">
                         <p className="font-serif text-xl md:text-2xl leading-relaxed text-[#1a1918]">
                             "The silhouettes stay clean so you do not have to think about them. The clothes are there to move with you while you read, make, reset, or simply sit."
@@ -275,7 +330,6 @@ const Home = () => {
                             It is a reminder that the inner world matters.
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -283,9 +337,7 @@ const Home = () => {
 
       {/* Philosophy Section */}
       <section id="philosophy" className="bg-stone-200 py-40 px-6 relative overflow-hidden">
-        {/* Subtle decorative element */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-stone-300/30 rounded-full blur-3xl -z-10"></div>
-        
         <div className="max-w-3xl mx-auto text-center reveal-on-scroll">
           <h2 className="text-xs uppercase tracking-[0.3em] opacity-40 mb-12 font-sans">The Philosophy</h2>
           <p className="font-serif text-3xl md:text-5xl leading-tight text-obsidian/90 mb-12">
