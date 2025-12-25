@@ -25,20 +25,19 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Capture ref value for cleanup
     const container = containerRef.current;
-
     let renderer: any;
     let animationId: number;
     let gl: any;
 
-    // Initialize renderer
     try {
         renderer = new Renderer({ 
             powerPreference: "high-performance",
             antialias: false, 
             alpha: true, 
-            dpr: window.devicePixelRatio || 1 
+            // Cap DPR to 2 to improve performance on high-res displays (Retina/Mobile)
+            // This significantly reduces initialization lag and frame stutter
+            dpr: Math.min(window.devicePixelRatio || 1, 2) 
         });
         gl = renderer.gl;
         gl.clearColor(0, 0, 0, 0);
@@ -47,8 +46,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         return;
     }
 
-    // Explicitly set canvas styles to fill parent immediately
-    // This fixes the "top left small" issue before the JS resize logic kicks in
+    // Ensure canvas fills container immediately via CSS
     gl.canvas.style.display = 'block';
     gl.canvas.style.width = '100%';
     gl.canvas.style.height = '100%';
@@ -91,7 +89,6 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         float ripple = sin(10.0 * dist - uTime * 2.0) * 0.03;
         uv += (diff / (dist + 0.0001)) * ripple * falloff;
 
-        // Add small epsilon to divisor to prevent infinity/white flash
         vec3 color = uBaseColor / (abs(sin(uTime - uv.y - uv.x)) + 0.001);
         return vec4(color, 1.0);
     }
@@ -103,30 +100,27 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
-    vertex: vertexShader,
-    fragment: fragmentShader,
-    uniforms: {
-        uTime: { value: 0 },
-        uResolution: {
-        value: new Float32Array([gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height])
-        },
-        uBaseColor: { value: new Float32Array(baseColor) },
-        uAmplitude: { value: amplitude },
-        uFrequencyX: { value: frequencyX },
-        uFrequencyY: { value: frequencyY },
-        uMouse: { value: new Float32Array([0, 0]) } 
-    }
+        vertex: vertexShader,
+        fragment: fragmentShader,
+        uniforms: {
+            uTime: { value: 0 },
+            // Initial resolution
+            uResolution: { value: new Float32Array([gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height]) },
+            uBaseColor: { value: new Float32Array(baseColor) },
+            uAmplitude: { value: amplitude },
+            uFrequencyX: { value: frequencyX },
+            uFrequencyY: { value: frequencyY },
+            uMouse: { value: new Float32Array([0, 0]) } 
+        }
     });
     const mesh = new Mesh(gl, { geometry, program });
 
-    // Resize Observer for robust sizing
-    const resizeObserver = new ResizeObserver((entries) => {
-        if (!entries || entries.length === 0) return;
-        
-        // Use contentRect for precise fractional pixels if needed, or offsetWidth/Height
+    // Efficient resize handler
+    const resize = () => {
         const width = container.offsetWidth;
         const height = container.offsetHeight;
         
+        // Only resize if dimensions are valid to prevent WebGL errors
         if (width > 0 && height > 0) {
             renderer.setSize(width, height);
             const resUniform = program.uniforms.uResolution.value;
@@ -134,11 +128,20 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
             resUniform[1] = gl.canvas.height;
             resUniform[2] = gl.canvas.width / gl.canvas.height;
         }
-    });
+    };
 
+    // 1. Initial Synchronous Resize
+    // Calculate dimensions immediately so we don't wait for the Observer callback
+    resize();
+
+    // 2. Warm up render (executes immediately to populate the buffer)
+    // This prevents the "black flash" by ensuring the first frame is ready before the browser paints
+    renderer.render({ scene: mesh });
+
+    // 3. Set up ResizeObserver for future changes
+    const resizeObserver = new ResizeObserver(() => resize());
     resizeObserver.observe(container);
 
-    // Mouse handling
     const mouseTarget = { x: 0, y: 0 };
     const mouseCurrent = { x: 0, y: 0 };
 
@@ -168,12 +171,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         renderer.render({ scene: mesh });
     }
     
-    // Start loop
     animationId = requestAnimationFrame(update);
-
-    // Pre-render immediate frame
-    program.uniforms.uTime.value = performance.now() * 0.001 * speed;
-    renderer.render({ scene: mesh });
 
     return () => {
       if (animationId) cancelAnimationFrame(animationId);
@@ -191,7 +189,6 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     };
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
-  // Set background color to match obsidian theme to prevent white flash if canvas lags
   return (
     <div 
         ref={containerRef} 

@@ -53,7 +53,8 @@ export function ProductPreview({
   start = "top top",
   articleTop,
   articleBottom,
-  length = (articleTop.length * 2 - 1) * 60, // Increased spacing slightly
+  // Adjusted length: 1 viewport height per product for comfortable scrolling
+  length = articleTop.length * 100, 
 }: ProductPreviewProps) {
   const mainRef = useRef<HTMLElement>(null)
   const dividerTopRef = useRef<HTMLSpanElement>(null)
@@ -70,42 +71,21 @@ export function ProductPreview({
   )
   const [forceUpdate, setForceUpdate] = useState(false)
 
-  // Active image is driven by the top index progression
+  // Active image matches the synchronized indices
   const activeImageIndex = Math.max(0, Math.min(currentTopIndex, productImages.length - 1));
 
   const handleProgress = (self: ScrollTrigger) => {
-    const direction = self.direction
-    const totalSteps = articleTop.length * 2 - 1
-    const progress = Math.min(Math.max(self.progress, 0), 1) 
-    const stepSize = 1 / totalSteps
-    // Use Math.round or similar to stabilize step calculation
-    const currentStep = Math.ceil(progress / stepSize)
-
-    if (currentStep <= 1) {
-      setCurrentBottomIndex(0)
-      setCurrentTopIndex(0)
-    } else {
-      if (direction === 1) {
-        // Scrolling down
-        const topIndex = Math.floor((currentStep + 1) / 2)
-        const bottomIndex = Math.floor(currentStep / 2)
-        
-        if (currentStep % 2 === 0) {
-            if(topIndex < articleTop.length) setCurrentTopIndex(topIndex)
-        } else {
-            if(bottomIndex < articleBottom.length) setCurrentBottomIndex(bottomIndex)
-        }
-      } else {
-        // Scrolling up
-        const topIndex = Math.floor(currentStep / 2)
-        const bottomIndex = Math.floor((currentStep - 1) / 2)
-        
-        if (currentStep % 2 === 0) {
-            setCurrentTopIndex(Math.max(topIndex, 0))
-        } else {
-            setCurrentBottomIndex(Math.max(bottomIndex, 0))
-        }
-      }
+    const progress = Math.max(0, Math.min(1, self.progress));
+    const total = articleTop.length;
+    
+    // Calculate synchronous index for all elements (Top, Bottom, Image)
+    // This ensures all details change exactly when the product changes
+    const index = Math.min(Math.floor(progress * total), total - 1);
+    
+    // Only update state if index actually changed to minimize re-renders
+    if (index !== currentTopIndex) {
+        setCurrentTopIndex(index);
+        setCurrentBottomIndex(index);
     }
   }
 
@@ -131,7 +111,7 @@ export function ProductPreview({
           trigger: mainRef.current,
           start,
           end: `${length}% top`,
-          scrub: 0.5, // Small scrub for smoothing
+          scrub: 0.5, // Small scrub for smoothing the visual pinning
           scroller: scroller?.current ?? window,
           pin: true,
           onUpdate: handleProgress,
