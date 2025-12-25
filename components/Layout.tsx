@@ -172,7 +172,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                         onClick={() => setIsSearchOpen(false)}
                                     >
                                         <div className="w-10 h-12 bg-stone-200 overflow-hidden rounded-sm">
-                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" width="40" height="48" loading="lazy" />
+                                            <img src={product.images[0]} alt="" className="w-full h-full object-cover transition-all" width="40" height="48" loading="lazy" />
                                         </div>
                                         <div className="flex flex-col">
                                             <span className="text-xs font-medium font-serif">{product.name}</span>
@@ -192,7 +192,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     <User className="w-5 h-5 stroke-1" style={textShadowStyle} />
                 </Link>
 
-                <button onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full" aria-label="Cart">
+                <button id="cart-icon-btn" onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full" aria-label="Cart">
                     <ShoppingBag className="w-5 h-5 stroke-1" style={textShadowStyle} />
                     {cart.length > 0 && (
                         <span className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isTransparent ? 'bg-white' : 'bg-obsidian'}`}></span>
@@ -393,7 +393,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               ) : (
                 cart.map((item, idx) => (
                   <div key={`${item.id}-${item.selectedSize}-${idx}`} className="flex gap-4">
-                    <img src={item.images[0]} alt={item.name} className="w-20 h-24 object-cover grayscale rounded-md" width="80" height="96" loading="lazy" />
+                    <img src={item.images[0]} alt={item.name} className="w-20 h-24 object-cover rounded-md" width="80" height="96" loading="lazy" />
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-1">
                         <h3 className="font-medium text-sm">{item.name}</h3>

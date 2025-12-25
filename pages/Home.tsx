@@ -340,7 +340,7 @@ const Home = () => {
                                 <img 
                                     src="https://aftermathstore.com/cdn/shop/files/blog_p_aftermathArtboard_1.jpg?v=1763682128&width=600" 
                                     alt="Texture"
-                                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                    className="w-full h-full object-cover transition-all duration-700"
                                     loading="lazy"
                                 />
                             </div>

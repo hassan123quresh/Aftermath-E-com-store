@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
 import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle } from 'lucide-react';
@@ -76,6 +76,9 @@ const ProductDetail = () => {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [showSizeError, setShowSizeError] = useState(false);
   
+  // Ref for main image to perform animation
+  const mainImageRef = useRef<HTMLImageElement>(null);
+  
   // State for button feedback
   const [activeButton, setActiveButton] = useState<'none' | 'cart' | 'buy'>('none');
 
@@ -116,6 +119,50 @@ const ProductDetail = () => {
     if (!selectedSize) {
       setShowSizeError(true);
       return;
+    }
+    
+    // Animation Logic
+    const imgElement = mainImageRef.current;
+    const cartIcon = document.getElementById('cart-icon-btn');
+
+    if (imgElement && cartIcon) {
+        const imgRect = imgElement.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
+
+        const flyingImg = imgElement.cloneNode() as HTMLImageElement;
+        
+        // Initial Styles
+        flyingImg.style.position = 'fixed';
+        flyingImg.style.left = `${imgRect.left}px`;
+        flyingImg.style.top = `${imgRect.top}px`;
+        flyingImg.style.width = `${imgRect.width}px`;
+        flyingImg.style.height = `${imgRect.height}px`;
+        flyingImg.style.zIndex = '1000';
+        flyingImg.style.pointerEvents = 'none';
+        flyingImg.style.transition = 'all 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
+        flyingImg.style.opacity = '1';
+        flyingImg.style.borderRadius = '0';
+        flyingImg.style.objectFit = 'cover';
+
+        document.body.appendChild(flyingImg);
+
+        // Force Reflow
+        void flyingImg.offsetHeight;
+
+        // Target Styles (Center of the cart button)
+        const targetX = cartRect.left + cartRect.width / 2 - 10;
+        const targetY = cartRect.top + cartRect.height / 2 - 10;
+
+        flyingImg.style.left = `${targetX}px`;
+        flyingImg.style.top = `${targetY}px`;
+        flyingImg.style.width = '20px';
+        flyingImg.style.height = '20px';
+        flyingImg.style.opacity = '0';
+        flyingImg.style.borderRadius = '50%';
+
+        setTimeout(() => {
+            flyingImg.remove();
+        }, 800);
     }
     
     // Provide visual feedback
@@ -279,6 +326,7 @@ const ProductDetail = () => {
                 onClick={toggleZoom}
             >
                 <img 
+                    ref={mainImageRef}
                     src={product.images[activeImgIndex]} 
                     alt={product.name} 
                     className="w-full h-full object-cover select-none"
@@ -353,6 +401,8 @@ const ProductDetail = () => {
                                 size="lg"
                                 variant={selectedSize === size ? 'solid' : 'outline'}
                                 className={`w-12 h-12 p-0 ${
+                                    selectedSize !== size ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
+                                } ${
                                     showSizeError && selectedSize !== size ? 'border-red-300 bg-red-50' : ''
                                 }`}
                             >
@@ -368,6 +418,8 @@ const ProductDetail = () => {
                         onClick={handleAddToCart}
                         variant={activeButton === 'cart' ? 'solid' : 'outline'}
                         className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
+                            activeButton !== 'cart' ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
+                        } ${
                             activeButton === 'cart' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
                         }`}
                         fullWidth
@@ -447,7 +499,7 @@ const ProductDetail = () => {
                 {relatedProducts.map(rp => (
                     <Link key={rp.id} to={`/product/${rp.id}`} className="group block flex flex-col items-start">
                          <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full">
-                             <img src={rp.images[0]} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
+                             <img src={rp.images[0]} className="w-full h-full object-cover transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
                          </div>
                          <h4 className="font-serif text-lg">{rp.name}</h4>
                          <PriceBadge price={rp.price} className="mt-2" />
