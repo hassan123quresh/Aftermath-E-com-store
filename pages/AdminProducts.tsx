@@ -1,110 +1,196 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { Product } from '../types';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Settings } from 'lucide-react';
 
 const AdminProducts = () => {
-  const { products, addProduct, deleteProduct } = useStore();
+  const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, deleteCategory } = useStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
   
-  // Basic form state
-  const [newProduct, setNewProduct] = useState<Partial<Product>>({
+  // Form State
+  const initialProductState: Partial<Product> = {
       name: '',
       price: 0,
-      category: '',
+      compareAtPrice: 0,
+      category: categories[0] || '',
       description: '',
       images: [],
       sizes: ['XS', 'S', 'M', 'L'],
       inStock: true
-  });
+  };
+  
+  const [productForm, setProductForm] = useState<Partial<Product>>(initialProductState);
   const [imgUrlInput, setImgUrlInput] = useState('');
+
+  // Handle entering Edit Mode
+  const handleEditClick = (product: Product) => {
+      setProductForm(product);
+      setIsEditing(true);
+      window.scrollTo(0, 0);
+  };
 
   const handleAddImage = () => {
       if(imgUrlInput) {
-          setNewProduct({...newProduct, images: [...(newProduct.images || []), imgUrlInput]});
+          setProductForm({...productForm, images: [...(productForm.images || []), imgUrlInput]});
           setImgUrlInput('');
       }
   };
 
+  const handleRemoveImage = (index: number) => {
+      const newImages = [...(productForm.images || [])];
+      newImages.splice(index, 1);
+      setProductForm({...productForm, images: newImages});
+  };
+
   const handleSave = () => {
-      if(newProduct.name && newProduct.price) {
-          const product: Product = {
-              id: `p-${Date.now()}`,
-              name: newProduct.name!,
-              price: Number(newProduct.price),
-              category: newProduct.category || 'Uncategorized',
-              description: newProduct.description || '',
-              images: newProduct.images?.length ? newProduct.images : ['https://picsum.photos/800/1000'],
-              sizes: newProduct.sizes || [],
-              inStock: true
+      if(productForm.name && productForm.price) {
+          const finalProduct: Product = {
+              id: productForm.id || `p-${Date.now()}`,
+              name: productForm.name!,
+              price: Number(productForm.price),
+              compareAtPrice: productForm.compareAtPrice ? Number(productForm.compareAtPrice) : undefined,
+              category: productForm.category || 'Uncategorized',
+              description: productForm.description || '',
+              images: productForm.images?.length ? productForm.images : ['https://picsum.photos/800/1000'],
+              sizes: productForm.sizes || [],
+              inStock: productForm.inStock !== undefined ? productForm.inStock : true
           };
-          addProduct(product);
+
+          if (productForm.id) {
+              updateProduct(finalProduct);
+          } else {
+              addProduct(finalProduct);
+          }
+
           setIsEditing(false);
-          setNewProduct({ name: '', price: 0, images: [] });
+          setProductForm(initialProductState);
       }
   };
 
+  const handleAddCategorySubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (newCategory) {
+          addCategory(newCategory);
+          setNewCategory('');
+      }
+  };
+
+  // Main Form UI
   if (isEditing) {
       return (
-          <div className="max-w-3xl mx-auto">
-              <h1 className="text-2xl font-serif mb-8">Add New Product</h1>
-              <div className="bg-white p-4 md:p-8 border border-stone-200 space-y-6 shadow-sm rounded-lg">
-                  <div>
-                      <label className="block text-xs uppercase opacity-50 mb-1">Product Name</label>
-                      <input 
-                        className="w-full border border-stone-300 p-2 text-sm rounded-md"
-                        value={newProduct.name}
-                        onChange={e => setNewProduct({...newProduct, name: e.target.value})}
-                      />
-                  </div>
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs uppercase opacity-50 mb-1">Price (PKR)</label>
+          <div className="max-w-3xl mx-auto animate-fade-in">
+              <div className="flex justify-between items-center mb-8">
+                <h1 className="text-2xl font-serif">{productForm.id ? 'Edit Product' : 'Add New Product'}</h1>
+                <button onClick={() => setIsEditing(false)} className="p-2 hover:bg-stone-200 rounded-full"><X className="w-6 h-6" /></button>
+              </div>
+              
+              <div className="bg-white p-6 md:p-8 border border-stone-200 space-y-6 shadow-sm rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="md:col-span-2">
+                          <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Product Name</label>
+                          <input 
+                            className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                            value={productForm.name}
+                            onChange={e => setProductForm({...productForm, name: e.target.value})}
+                            placeholder="e.g. Studio Cut Hoodie"
+                          />
+                      </div>
+                      
+                      {/* Price Section */}
+                      <div>
+                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Price (PKR)</label>
                             <input 
                                 type="number"
-                                className="w-full border border-stone-300 p-2 text-sm rounded-md"
-                                value={newProduct.price}
-                                onChange={e => setNewProduct({...newProduct, price: Number(e.target.value)})}
+                                className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                                value={productForm.price}
+                                onChange={e => setProductForm({...productForm, price: Number(e.target.value)})}
                             />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase opacity-50 mb-1">Category</label>
+                      </div>
+                      <div>
+                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Compare at Price (Optional)</label>
                             <input 
-                                className="w-full border border-stone-300 p-2 text-sm rounded-md"
-                                value={newProduct.category}
-                                onChange={e => setNewProduct({...newProduct, category: e.target.value})}
+                                type="number"
+                                className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                                value={productForm.compareAtPrice || ''}
+                                onChange={e => setProductForm({...productForm, compareAtPrice: Number(e.target.value)})}
+                                placeholder="Original Price"
                             />
-                        </div>
+                      </div>
+
+                      {/* Category Selection */}
+                      <div>
+                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Category</label>
+                            <div className="flex gap-2">
+                                <select 
+                                    className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none bg-white"
+                                    value={productForm.category}
+                                    onChange={e => setProductForm({...productForm, category: e.target.value})}
+                                >
+                                    <option value="" disabled>Select Category</option>
+                                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                                <button onClick={() => setShowCategoryModal(true)} className="p-3 border border-stone-300 rounded-md hover:bg-stone-100" title="Manage Categories">
+                                    <Settings className="w-4 h-4 text-stone-600" />
+                                </button>
+                            </div>
+                      </div>
+
+                      {/* Stock Status */}
+                      <div>
+                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Stock Status</label>
+                            <select 
+                                className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none bg-white"
+                                value={productForm.inStock ? "true" : "false"}
+                                onChange={e => setProductForm({...productForm, inStock: e.target.value === 'true'})}
+                            >
+                                <option value="true">In Stock</option>
+                                <option value="false">Out of Stock</option>
+                            </select>
+                      </div>
                    </div>
+
                    <div>
-                      <label className="block text-xs uppercase opacity-50 mb-1">Description (Markdown Supported)</label>
+                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Description (Markdown)</label>
                       <textarea 
-                        className="w-full border border-stone-300 p-2 h-40 font-mono text-xs md:text-sm rounded-md"
-                        value={newProduct.description}
-                        onChange={e => setNewProduct({...newProduct, description: e.target.value})}
-                        placeholder="# Header&#10;Product details..."
+                        className="w-full border border-stone-300 p-3 h-40 font-mono text-xs md:text-sm rounded-md focus:border-obsidian outline-none"
+                        value={productForm.description}
+                        onChange={e => setProductForm({...productForm, description: e.target.value})}
+                        placeholder="# Header&#10;* Bullet point&#10;Details..."
                       />
                   </div>
+
+                  {/* Image Management */}
                   <div>
-                      <label className="block text-xs uppercase opacity-50 mb-1">Images (URL)</label>
+                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Images (URL)</label>
                       <div className="flex gap-2">
                           <input 
-                            className="flex-1 border border-stone-300 p-2 text-sm rounded-md"
+                            className="flex-1 border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
                             value={imgUrlInput}
                             onChange={e => setImgUrlInput(e.target.value)}
                             placeholder="https://..."
                           />
-                          <button onClick={handleAddImage} className="btn-glass px-4 text-xs uppercase tracking-wider rounded-md">Add</button>
+                          <button onClick={handleAddImage} className="bg-obsidian text-white px-6 text-xs uppercase tracking-wider rounded-md">Add</button>
                       </div>
-                      <div className="flex gap-2 mt-2 overflow-x-auto pb-2">
-                          {newProduct.images?.map((img, i) => (
-                              <img key={i} src={img} className="w-12 h-16 object-cover border flex-shrink-0 rounded-sm" alt="" />
+                      <div className="grid grid-cols-4 md:grid-cols-6 gap-4 mt-4">
+                          {productForm.images?.map((img, i) => (
+                              <div key={i} className="relative group aspect-[3/4]">
+                                  <img src={img} className="w-full h-full object-cover border rounded-md" alt="" />
+                                  <button 
+                                    onClick={() => handleRemoveImage(i)}
+                                    className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                      <X className="w-3 h-3" />
+                                  </button>
+                              </div>
                           ))}
                       </div>
                   </div>
-                  <div className="flex gap-4 pt-4">
-                      <button onClick={handleSave} className="btn-glass-dark px-6 py-3 text-xs uppercase tracking-widest rounded-full">Save Product</button>
-                      <button onClick={() => setIsEditing(false)} className="btn-glass px-6 py-3 text-xs uppercase tracking-widest rounded-full">Cancel</button>
+
+                  <div className="flex gap-4 pt-6 border-t border-stone-100">
+                      <button onClick={handleSave} className="flex-1 bg-obsidian text-white py-4 text-xs uppercase tracking-widest rounded-lg font-bold shadow-lg hover:bg-stone-800 transition-colors">Save Product</button>
+                      <button onClick={() => setIsEditing(false)} className="px-8 py-4 text-xs uppercase tracking-widest rounded-lg border border-stone-200 hover:bg-stone-50 font-bold transition-colors">Cancel</button>
                   </div>
               </div>
           </div>
@@ -112,15 +198,26 @@ const AdminProducts = () => {
   }
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8 animate-fade-in relative">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl md:text-3xl font-serif">Products</h1>
-        <button 
-            onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 btn-glass-dark px-4 py-2 text-[10px] md:text-xs uppercase tracking-widest rounded-full"
-        >
-            <Plus className="w-4 h-4" /> <span className="hidden md:inline">Add Product</span><span className="md:hidden">Add</span>
-        </button>
+        <div className="flex gap-2">
+            <button 
+                onClick={() => setShowCategoryModal(true)}
+                className="flex items-center gap-2 border border-stone-300 bg-white px-4 py-2 text-[10px] md:text-xs uppercase tracking-widest rounded-full hover:bg-stone-50"
+            >
+                <Settings className="w-4 h-4" /> <span className="hidden md:inline">Categories</span>
+            </button>
+            <button 
+                onClick={() => {
+                    setProductForm(initialProductState);
+                    setIsEditing(true);
+                }}
+                className="flex items-center gap-2 bg-obsidian text-white px-4 py-2 text-[10px] md:text-xs uppercase tracking-widest rounded-full shadow-md hover:bg-stone-800"
+            >
+                <Plus className="w-4 h-4" /> <span className="hidden md:inline">Add Product</span><span className="md:hidden">Add</span>
+            </button>
+        </div>
       </div>
 
       <div className="bg-white border border-stone-200 overflow-hidden rounded-lg shadow-sm">
@@ -137,15 +234,21 @@ const AdminProducts = () => {
                 </thead>
                 <tbody>
                     {products.map(product => (
-                        <tr key={product.id} className="border-t border-stone-100 hover:bg-stone-50">
+                        <tr key={product.id} className="border-t border-stone-100 hover:bg-stone-50 transition-colors">
                             <td className="p-4">
                                 <img src={product.images[0]} alt="" className="w-10 h-12 object-cover bg-stone-200 rounded-sm" />
                             </td>
-                            <td className="p-4 font-medium text-sm">{product.name}</td>
+                            <td className="p-4 font-medium text-sm">
+                                {product.name}
+                                {!product.inStock && <span className="ml-2 text-[9px] bg-stone-200 px-1 rounded text-stone-500 uppercase">OOS</span>}
+                            </td>
                             <td className="p-4 text-stone-500 text-xs md:text-sm">{product.category}</td>
-                            <td className="p-4 text-sm">PKR {product.price.toLocaleString()}</td>
-                            <td className="p-4 text-right space-x-4 min-w-[100px]">
-                                <button className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors"><Edit2 className="w-4 h-4" /></button>
+                            <td className="p-4 text-sm">
+                                {product.compareAtPrice && <span className="text-stone-400 line-through text-xs mr-2">{product.compareAtPrice.toLocaleString()}</span>}
+                                PKR {product.price.toLocaleString()}
+                            </td>
+                            <td className="p-4 text-right space-x-2">
+                                <button onClick={() => handleEditClick(product)} className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors"><Edit2 className="w-4 h-4" /></button>
                                 <button onClick={() => deleteProduct(product.id)} className="text-stone-400 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4" /></button>
                             </td>
                         </tr>
@@ -154,6 +257,40 @@ const AdminProducts = () => {
             </table>
         </div>
       </div>
+
+      {/* Category Management Modal */}
+      {showCategoryModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-obsidian/50 backdrop-blur-sm p-4">
+              <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
+                  <div className="p-4 border-b border-stone-200 flex justify-between items-center bg-stone-50">
+                      <h3 className="font-serif text-lg">Manage Categories</h3>
+                      <button onClick={() => setShowCategoryModal(false)}><X className="w-5 h-5 text-stone-500" /></button>
+                  </div>
+                  <div className="p-6 space-y-6">
+                      <form onSubmit={handleAddCategorySubmit} className="flex gap-2">
+                          <input 
+                              className="flex-1 border border-stone-300 px-3 py-2 text-sm rounded-md focus:border-obsidian outline-none"
+                              placeholder="New Category Name"
+                              value={newCategory}
+                              onChange={(e) => setNewCategory(e.target.value)}
+                          />
+                          <button type="submit" className="bg-obsidian text-white px-4 py-2 text-xs uppercase tracking-wider rounded-md hover:bg-stone-800">Add</button>
+                      </form>
+                      
+                      <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                          {categories.map(cat => (
+                              <div key={cat} className="flex justify-between items-center p-3 border border-stone-100 rounded-md bg-stone-50 group hover:border-stone-300">
+                                  <span className="text-sm font-medium">{cat}</span>
+                                  <button onClick={() => deleteCategory(cat)} className="text-stone-400 hover:text-red-600 p-1 opacity-0 group-hover:opacity-100 transition-all">
+                                      <Trash2 className="w-4 h-4" />
+                                  </button>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
     </div>
   );
 };

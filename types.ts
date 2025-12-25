@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  compareAtPrice?: number; // For sales
   description: string; // Markdown supported
   category: string;
   images: string[];
@@ -56,6 +57,7 @@ export interface ToastData {
 
 export interface StoreContextType {
   products: Product[];
+  categories: string[];
   cart: CartItem[];
   isCartOpen: boolean;
   addToCart: (product: Product, size: string) => void;
@@ -74,6 +76,9 @@ export interface StoreContextType {
   updateOrderStatus: (id: string, status: Order['status']) => void;
   togglePromo: (code: string) => void;
   addPromo: (promo: PromoCode) => void;
+  deletePromo: (code: string) => void;
+  addCategory: (category: string) => void;
+  deleteCategory: (category: string) => void;
   
   // Config
   announcementText: string;

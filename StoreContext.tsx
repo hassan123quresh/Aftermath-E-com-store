@@ -6,6 +6,8 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  // Extract initial categories from mock products
+  const [categories, setCategories] = useState<string[]>(Array.from(new Set(MOCK_PRODUCTS.map(p => p.category))));
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [orders, setOrders] = useState<Order[]>(MOCK_ORDERS);
@@ -29,7 +31,6 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       }
       return [...prev, { ...product, selectedSize: size, quantity: 1 }];
     });
-    // Removed automatic setIsCartOpen(true) here to allow custom handling via Toast
   };
 
   const removeFromCart = (productId: string, size: string) => {
@@ -69,8 +70,6 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const showToast = (message: string, actions?: ToastAction[]) => {
     const id = Date.now();
     setToast({ message, actions, id });
-    
-    // Auto hide after 4 seconds
     setTimeout(() => {
       setToast(prev => (prev?.id === id ? null : prev));
     }, 4000);
@@ -94,12 +93,27 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const addPromo = (promo: PromoCode) => {
       setPromos(prev => [...prev, promo]);
   };
+
+  const deletePromo = (code: string) => {
+      setPromos(prev => prev.filter(p => p.code !== code));
+  };
+
+  const addCategory = (category: string) => {
+      if (!categories.includes(category)) {
+          setCategories(prev => [...prev, category]);
+      }
+  };
+
+  const deleteCategory = (category: string) => {
+      setCategories(prev => prev.filter(c => c !== category));
+  };
   
   const updateAnnouncementText = (text: string) => setAnnouncementText(text);
 
   return (
     <StoreContext.Provider value={{
       products,
+      categories,
       cart,
       isCartOpen,
       addToCart,
@@ -116,6 +130,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       updateOrderStatus,
       togglePromo,
       addPromo,
+      deletePromo,
+      addCategory,
+      deleteCategory,
       announcementText,
       updateAnnouncementText,
       toast,

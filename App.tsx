@@ -14,6 +14,7 @@ const Contact = React.lazy(() => import('./pages/Contact'));
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 const AdminProducts = React.lazy(() => import('./pages/AdminProducts'));
 const AdminOrders = React.lazy(() => import('./pages/AdminOrders'));
+const AdminDiscounts = React.lazy(() => import('./pages/AdminDiscounts'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 const RefundPolicy = React.lazy(() => import('./pages/RefundPolicy'));
 const ShippingPolicy = React.lazy(() => import('./pages/ShippingPolicy'));
@@ -154,6 +155,13 @@ const App = () => {
               <AdminRoute>
                 <Suspense fallback={<PageLoader />}>
                    <AdminOrders />
+                </Suspense>
+              </AdminRoute>
+            } />
+            <Route path="/admin/discounts" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminDiscounts />
                 </Suspense>
               </AdminRoute>
             } />
