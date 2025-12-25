@@ -289,6 +289,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <li><Link to="/shipping">Shipping Policy</Link></li>
               <li><Link to="/returns">Refund Policy</Link></li>
               <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><Link to="/faq">FAQ</Link></li>
               <li><Link to="/contact">Contact Us</Link></li>
             </ul>
           </div>

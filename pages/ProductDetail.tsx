@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
+import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
@@ -340,7 +340,7 @@ const ProductDetail = () => {
                         <span className={`text-xs uppercase tracking-widest transition-colors duration-300 ${showSizeError ? 'text-red-700 font-bold' : 'opacity-60 text-obsidian'}`}>
                             {showSizeError ? 'Please Select a Size' : 'Select Size'}
                         </span>
-                        <span className="text-xs underline opacity-40 cursor-pointer hover:text-obsidian transition-colors">Size Guide</span>
+                        <Link to="/faq" className="text-xs underline opacity-40 cursor-pointer hover:text-obsidian transition-colors">Size Guide & FAQ</Link>
                     </div>
                     <div className="flex gap-4">
                         {product.sizes.map(size => (
@@ -423,6 +423,15 @@ const ProductDetail = () => {
             {/* Description (Moved to bottom) */}
             <div className="mt-12 pt-12 border-t border-obsidian/10">
                 {renderDescription(product.description)}
+                
+                {/* FAQ Call to Action */}
+                <div className="mt-8 flex justify-center">
+                    <Link to="/faq" className="flex items-center gap-2 px-6 py-3 bg-stone-100 rounded-full hover:bg-stone-200 transition-colors text-xs font-medium uppercase tracking-widest text-stone-600 hover:text-obsidian group">
+                        <HelpCircle className="w-4 h-4 stroke-[1.5]" />
+                        <span>Have questions? Read our FAQ</span>
+                        <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1 opacity-50" />
+                    </Link>
+                </div>
             </div>
         </div>
       </div>

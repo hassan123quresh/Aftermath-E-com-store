@@ -17,6 +17,7 @@ const AdminOrders = React.lazy(() => import('./pages/AdminOrders'));
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 const RefundPolicy = React.lazy(() => import('./pages/RefundPolicy'));
 const ShippingPolicy = React.lazy(() => import('./pages/ShippingPolicy'));
+const FAQ = React.lazy(() => import('./pages/FAQ'));
 
 // Wrapper for Storefront routes to include standard Layout
 const StorefrontRoute = ({ children }: { children?: React.ReactNode }) => (
@@ -132,57 +133,61 @@ const App = () => {
                 </Suspense>
               </StorefrontRoute>
             } />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/dashboard" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminDashboard />
+                </Suspense>
+              </AdminRoute>
+            } />
+             <Route path="/admin/products" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminProducts />
+                </Suspense>
+              </AdminRoute>
+            } />
+             <Route path="/admin/orders" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminOrders />
+                </Suspense>
+              </AdminRoute>
+            } />
+
+            {/* Policy Pages */}
             <Route path="/privacy" element={
               <StorefrontRoute>
                 <Suspense fallback={<PageLoader />}>
-                  <PrivacyPolicy />
+                   <PrivacyPolicy />
                 </Suspense>
               </StorefrontRoute>
             } />
             <Route path="/returns" element={
               <StorefrontRoute>
                 <Suspense fallback={<PageLoader />}>
-                  <RefundPolicy />
+                   <RefundPolicy />
                 </Suspense>
               </StorefrontRoute>
             } />
             <Route path="/shipping" element={
               <StorefrontRoute>
                 <Suspense fallback={<PageLoader />}>
-                  <ShippingPolicy />
+                   <ShippingPolicy />
                 </Suspense>
               </StorefrontRoute>
             } />
-            
-            {/* Admin Panel */}
-            <Route path="/admin" element={
-              <AdminRoute>
+            <Route path="/faq" element={
+              <StorefrontRoute>
                 <Suspense fallback={<PageLoader />}>
-                  <AdminDashboard />
+                   <FAQ />
                 </Suspense>
-              </AdminRoute>
-            } />
-            <Route path="/admin/products" element={
-              <AdminRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminProducts />
-                </Suspense>
-              </AdminRoute>
-            } />
-            <Route path="/admin/orders" element={
-              <AdminRoute>
-                <Suspense fallback={<PageLoader />}>
-                  <AdminOrders />
-                </Suspense>
-              </AdminRoute>
-            } />
-            <Route path="/admin/discounts" element={
-              <AdminRoute>
-                <div className="text-2xl font-serif p-12">Discount Management Coming Soon.</div>
-              </AdminRoute>
+              </StorefrontRoute>
             } />
 
-            {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
