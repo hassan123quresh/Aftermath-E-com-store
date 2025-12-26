@@ -6,6 +6,7 @@ import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 import { ProductPreview } from '../components/ProductPreview';
+import ThreeDCarousel, { ThreeDCarouselItem } from '../components/ThreeDCarousel';
 import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 const Home = () => {
@@ -123,6 +124,41 @@ const Home = () => {
       { name: "sameer", comment: "packaging went hard ngl felt bad opening it." },
       { name: "fatima", comment: "dropped it in the wash and it didnt shrink, blessed." },
       { name: "hamza", comment: "need this in every color fr." }
+  ];
+
+  const magazineItems: ThreeDCarouselItem[] = [
+    {
+      id: 1,
+      title: "The Architecture of Silence",
+      category: "Philosophy",
+      description: "Exploring the quiet spaces between noise and how our environment shapes our internal rhythm.",
+      imageUrl: "https://cdn.shopify.com/s/files/1/0944/5933/0923/files/blog_p_aftermathArtboard_3_600x600.jpg?v=1763682137",
+      link: "/journal/1"
+    },
+    {
+      id: 2,
+      title: "Fabric as a Second Skin",
+      category: "Material",
+      description: "Why we chose 500 GSM French Terry for our Studio Collection. A deep dive into material science.",
+      imageUrl: "https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=800",
+      link: "/journal/2"
+    },
+    {
+      id: 3,
+      title: "Forms of Stillness",
+      category: "Editorial",
+      description: "A visual study of the human form at rest. How clothing interacts with the body in moments of pause.",
+      imageUrl: "https://cdn.shopify.com/s/files/1/0944/5933/0923/files/blog_p_aftermathArtboard_2_600x600.jpg?v=1763682123",
+      link: "/journal"
+    },
+    {
+      id: 4,
+      title: "The Texture of Time",
+      category: "Process",
+      description: "Understanding the aging process of high-quality cotton and why wear creates character.",
+      imageUrl: "https://aftermathstore.com/cdn/shop/files/blog_p_aftermathArtboard_1.jpg?v=1763682128&width=600",
+      link: "/journal"
+    }
   ];
 
   return (
@@ -321,56 +357,23 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className="lg:col-span-7 flex flex-col gap-32 lg:pt-20">
+                <div className="lg:col-span-7 flex flex-col gap-12 lg:pt-20">
+                    {/* Replaced static images with 3D Carousel */}
                     <div className="w-full relative group reveal-on-scroll">
-                        <div className="aspect-[4/5] overflow-hidden bg-[#dcdbd7]">
-                            <img 
-                                src="https://cdn.shopify.com/s/files/1/0944/5933/0923/files/blog_p_aftermathArtboard_3_600x600.jpg?v=1763682137" 
-                                alt="The Silence"
-                                className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
-                                loading="lazy"
-                            />
-                        </div>
-                        <div className="flex justify-between items-start mt-4 border-t border-[#1a1918]/10 pt-4">
-                            <span className="text-[10px] uppercase tracking-widest opacity-50">Fig. 01 — Stillness</span>
-                            <p className="text-sm font-serif italic max-w-xs text-right opacity-70">
-                                "It is the name for those hours when the pace drops, the noise fades a little."
-                            </p>
+                        <ThreeDCarousel items={magazineItems} />
+                        
+                        <div className="flex justify-center mt-12">
+                            <Link 
+                                to="/journal" 
+                                className="group relative inline-flex items-center gap-3 px-8 py-3 bg-transparent border border-obsidian rounded-full overflow-hidden transition-colors hover:bg-obsidian hover:text-white"
+                            >
+                                <span className="relative z-10 text-xs uppercase tracking-widest font-bold">Explore More Magazines</span>
+                                <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                            </Link>
                         </div>
                     </div>
 
-                    <div className="w-full md:w-2/3 self-end reveal-on-scroll">
-                        <p className="font-sans text-sm md:text-base leading-loose tracking-wide opacity-80">
-                            <span className="font-bold">Live within</span> is the idea that sits quietly behind Aftermath. Not a big moment or a dramatic shift, just the simple feeling of being back in your own head and in your own body, without needing to explain it.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-12 gap-6 items-end reveal-on-scroll">
-                        <div className="col-span-5">
-                            <div className="aspect-[3/4] overflow-hidden bg-[#dcdbd7] mb-4 relative group">
-                                <img 
-                                    src="https://aftermathstore.com/cdn/shop/files/blog_p_aftermathArtboard_1.jpg?v=1763682128&width=600" 
-                                    alt="Texture"
-                                    className="w-full h-full object-cover transition-all duration-700"
-                                    loading="lazy"
-                                />
-                            </div>
-                            <span className="text-[10px] uppercase tracking-widest opacity-50 block">Fig. 02 — Texture</span>
-                        </div>
-                        <div className="col-span-7 pb-12">
-                            <div className="aspect-square overflow-hidden bg-[#dcdbd7] mb-4 relative group">
-                                <img 
-                                    src="https://cdn.shopify.com/s/files/1/0944/5933/0923/files/blog_p_aftermathArtboard_2_600x600.jpg?v=1763682123" 
-                                    alt="Detail"
-                                    className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
-                                    loading="lazy"
-                                />
-                            </div>
-                            <span className="text-[10px] uppercase tracking-widest opacity-50 block text-right">Fig. 03 — Form</span>
-                        </div>
-                    </div>
-
-                    <div className="w-full md:w-3/4 self-start reveal-on-scroll border-l-2 border-[#1a1918] pl-8 py-2">
+                    <div className="w-full md:w-3/4 self-start reveal-on-scroll border-l-2 border-[#1a1918] pl-8 py-2 mt-12">
                         <p className="font-serif text-xl md:text-2xl leading-relaxed text-[#1a1918]">
                             "The silhouettes stay clean so you do not have to think about them. The clothes are there to move with you while you read, make, reset, or simply sit."
                         </p>

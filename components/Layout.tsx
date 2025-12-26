@@ -349,8 +349,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Footer */}
       <footer className="bg-obsidian text-stone-300 py-16 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="col-span-1 md:col-span-2">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+          
+          {/* Logo & Description Column */}
+          <div className="lg:col-span-1">
             <div className="mb-6">
                 {/* Footer Logo: Resized via Cloudinary (height ~150px source for retina) */}
                 <img 
@@ -362,28 +364,46 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     loading="lazy"
                 />
             </div>
-            <p className="text-sm opacity-70 max-w-sm leading-relaxed">
+            <p className="text-sm opacity-70 max-w-sm leading-relaxed mb-4">
               Clothing for stillness. Built for people who choose calm over noise.
               <br /><br />
               Lahore, Pakistan
             </p>
+            <p className="text-sm font-medium opacity-90 tracking-wide">
+               +92 307 9909749
+            </p>
           </div>
+
+          {/* Support */}
           <div>
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Support</h4>
             <ul className="space-y-4 text-sm opacity-80">
-              <li><Link to="/shipping">Shipping Policy</Link></li>
-              <li><Link to="/returns">Refund Policy</Link></li>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/faq">FAQ</Link></li>
-              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
+
+          {/* Policy */}
+          <div>
+            <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Policy</h4>
+            <ul className="space-y-4 text-sm opacity-80">
+              <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+              <li><Link to="/returns" className="hover:text-white transition-colors">Refund Policy</Link></li>
+              <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+            </ul>
+          </div>
+
+          {/* Explore */}
           <div>
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Explore</h4>
-            <div className="flex flex-col gap-4 mb-8">
-               <Link to="/collection" className="text-sm opacity-80 hover:text-white transition-colors">The Collection</Link>
-               <Link to="/journal" className="text-sm opacity-80 hover:text-white transition-colors">The Journal</Link>
-            </div>
+            <ul className="space-y-4 text-sm opacity-80">
+               <li><Link to="/collection" className="hover:text-white transition-colors">The Collection</Link></li>
+               <li><Link to="/journal" className="hover:text-white transition-colors">The Journal</Link></li>
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div>
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Connect</h4>
             <div className="flex flex-col gap-4">
                {/* Instagram */}
@@ -393,8 +413,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                  rel="noopener noreferrer" 
                  className="flex items-center gap-3 group"
                >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
-                    <Instagram className="w-4 h-4 stroke-[1.5] text-stone-300" />
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
+                    <Instagram className="w-3.5 h-3.5 stroke-[1.5] text-stone-300" />
                   </div>
                   <span className="text-sm text-stone-400 group-hover:text-stone-200 transition-colors tracking-wide">Instagram</span>
                </a>
@@ -406,8 +426,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                  rel="noopener noreferrer" 
                  className="flex items-center gap-3 group"
                >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
-                    <MessageCircle className="w-4 h-4 stroke-[1.5] text-stone-300" />
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
+                    <MessageCircle className="w-3.5 h-3.5 stroke-[1.5] text-stone-300" />
                   </div>
                   <span className="text-sm text-stone-400 group-hover:text-stone-200 transition-colors tracking-wide">WhatsApp</span>
                </a>
@@ -417,8 +437,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                  href="mailto:aftermathstore@hotmail.com" 
                  className="flex items-center gap-3 group"
                >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
-                    <Mail className="w-4 h-4 stroke-[1.5] text-stone-300" />
+                  <div className="w-8 h-8 flex items-center justify-center rounded-full border border-white/10 bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
+                    <Mail className="w-3.5 h-3.5 stroke-[1.5] text-stone-300" />
                   </div>
                   <span className="text-sm text-stone-400 group-hover:text-stone-200 transition-colors tracking-wide">Email Us</span>
                </a>

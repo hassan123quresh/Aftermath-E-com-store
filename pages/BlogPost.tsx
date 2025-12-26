@@ -5,6 +5,7 @@ import { ArrowLeft, Calendar, Clock, User, Share2 } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
+import { ScrollProgress } from '../components/ScrollProgress';
 
 // Initialize DOMPurify Factory
 const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
@@ -147,6 +148,8 @@ const BlogPost = () => {
   };
 
   return (
+    <>
+    <ScrollProgress className="top-[56px] md:top-[64px]" />
     <article className="min-h-screen pt-4 md:pt-10 pb-24 px-4 md:px-6 animate-fade-in">
         <div className="max-w-3xl mx-auto">
             {/* Back Link */}
@@ -203,6 +206,7 @@ const BlogPost = () => {
             </div>
         </div>
     </article>
+    </>
   );
 };
 
