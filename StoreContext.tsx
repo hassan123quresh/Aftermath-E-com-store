@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost } from './types';
-import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS } from './constants';
+import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost, Customer } from './types';
+import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS, MOCK_CUSTOMERS } from './constants';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
@@ -16,6 +16,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   
   // Blog State
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(MOCK_BLOG_POSTS);
+
+  // Customer State
+  const [customers, setCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
 
   // Toast State
   const [toast, setToast] = useState<ToastData | null>(null);
@@ -60,6 +63,41 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
     };
     setOrders(prev => [newOrder, ...prev]);
     setCart([]);
+    
+    // Update or Create Customer
+    const normalizedPhone = orderData.customerPhone.replace(/\D/g, '');
+    setCustomers(prev => {
+        const existingIndex = prev.findIndex(c => c.phone.replace(/\D/g, '') === normalizedPhone);
+        if (existingIndex >= 0) {
+            const updated = [...prev];
+            const cust = updated[existingIndex];
+            updated[existingIndex] = {
+                ...cust,
+                ordersCount: cust.ordersCount + 1,
+                totalSpend: cust.totalSpend + orderData.total,
+                lastOrderDate: newOrder.date,
+                // Update address if it's the newest one
+                address: orderData.address,
+                city: orderData.city
+            };
+            return updated;
+        } else {
+             const newCustomer: Customer = {
+                 id: `CUST-${Date.now()}`,
+                 name: orderData.customerName,
+                 email: orderData.customerEmail,
+                 phone: orderData.customerPhone,
+                 address: orderData.address,
+                 city: orderData.city,
+                 ordersCount: 1,
+                 totalSpend: orderData.total,
+                 lastOrderDate: newOrder.date,
+                 joinedDate: newOrder.date,
+                 isDHA: orderData.address.toLowerCase().includes('dha') || orderData.address.toLowerCase().includes('defence')
+             };
+             return [newCustomer, ...prev];
+        }
+    });
   };
 
   const validatePromo = (code: string): number => {
@@ -118,6 +156,11 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const updatePost = (post: BlogPost) => setBlogPosts(prev => prev.map(p => p.id === post.id ? post : p));
   const deletePost = (id: string) => setBlogPosts(prev => prev.filter(p => p.id !== id));
 
+  // Customer Actions
+  const addCustomer = (customer: Customer) => setCustomers(prev => [customer, ...prev]);
+  const updateCustomer = (customer: Customer) => setCustomers(prev => prev.map(c => c.id === customer.id ? customer : c));
+  const deleteCustomer = (id: string) => setCustomers(prev => prev.filter(c => c.id !== id));
+
   return (
     <StoreContext.Provider value={{
       products,
@@ -149,7 +192,11 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       blogPosts,
       addPost,
       updatePost,
-      deletePost
+      deletePost,
+      customers,
+      addCustomer,
+      deleteCustomer,
+      updateCustomer
     }}>
       {children}
     </StoreContext.Provider>

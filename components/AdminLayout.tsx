@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart3, Package, ShoppingCart, Tag, LogOut, LayoutDashboard, BookOpen } from 'lucide-react';
+import { BarChart3, Package, ShoppingCart, Tag, LogOut, LayoutDashboard, BookOpen, Users } from 'lucide-react';
 
 const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -9,6 +9,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: ShoppingCart, label: 'Orders', path: '/admin/orders' },
+    { icon: Users, label: 'Customers', path: '/admin/customers' },
     { icon: Tag, label: 'Discounts', path: '/admin/discounts' },
     { icon: BookOpen, label: 'Journal', path: '/admin/blog' },
   ];

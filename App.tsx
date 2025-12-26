@@ -20,6 +20,7 @@ const AdminOrders = React.lazy(() => import('./pages/AdminOrders'));
 const AdminDiscounts = React.lazy(() => import('./pages/AdminDiscounts'));
 const AdminBlog = React.lazy(() => import('./pages/AdminBlog'));
 const AdminBlogEditor = React.lazy(() => import('./pages/AdminBlogEditor'));
+const AdminCustomers = React.lazy(() => import('./pages/AdminCustomers'));
 
 const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
 const RefundPolicy = React.lazy(() => import('./pages/RefundPolicy'));
@@ -37,7 +38,6 @@ const AdminRoute = ({ children }: { children?: React.ReactNode }) => (
 );
 
 // Minimal fallback loader for route transitions using the new logo
-// Updated: Larger size, positioned at the top with padding
 const PageLoader = () => (
   <div className="w-full min-h-[60vh] flex justify-center pt-32 md:pt-40">
      <img 
@@ -66,7 +66,6 @@ const ScrollToTop = () => {
   useEffect(() => {
     // Handle hash scrolling for anchor links (e.g., #philosophy)
     if (hash) {
-      // Delay slightly to ensure content is rendered, especially with Suspense/lazy loading
       setTimeout(() => {
         const id = hash.replace('#', '');
         const element = document.getElementById(id);
@@ -97,11 +96,6 @@ const App = () => {
       {/* Loading Screen Overlay */}
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
-      {/* 
-        Main App Content 
-        Rendered immediately behind the loader.
-        Suspense ensures that code-split chunks load gracefully.
-      */}
       <HashRouter>
         <ScrollToTop />
         <Suspense fallback={null}>
@@ -177,6 +171,13 @@ const App = () => {
               <AdminRoute>
                 <Suspense fallback={<PageLoader />}>
                    <AdminOrders />
+                </Suspense>
+              </AdminRoute>
+            } />
+            <Route path="/admin/customers" element={
+              <AdminRoute>
+                <Suspense fallback={<PageLoader />}>
+                   <AdminCustomers />
                 </Suspense>
               </AdminRoute>
             } />

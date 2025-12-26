@@ -29,6 +29,20 @@ export interface Order {
   date: string;
 }
 
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  ordersCount: number;
+  totalSpend: number;
+  lastOrderDate: string;
+  joinedDate: string;
+  isDHA?: boolean;
+}
+
 export interface PromoCode {
   code: string;
   discountPercentage: number;
@@ -87,6 +101,12 @@ export interface StoreContextType {
   addPost: (post: BlogPost) => void;
   updatePost: (post: BlogPost) => void;
   deletePost: (id: string) => void;
+
+  // Customers
+  customers: Customer[];
+  addCustomer: (customer: Customer) => void;
+  deleteCustomer: (id: string) => void;
+  updateCustomer: (customer: Customer) => void;
 
   // Admin functions
   addProduct: (product: Product) => void;

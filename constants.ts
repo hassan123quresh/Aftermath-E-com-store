@@ -1,4 +1,4 @@
-import { Product, PromoCode, Order, BlogPost } from './types';
+import { Product, PromoCode, Order, BlogPost, Customer } from './types';
 
 export const INITIAL_ANNOUNCEMENT = "FREE SHIPPING ALL OVER PAKISTAN";
 
@@ -142,5 +142,47 @@ export const MOCK_BLOG_POSTS: BlogPost[] = [
     readTime: '4 min read',
     tags: ['Materials', 'Production'],
     isPublished: true,
+  }
+];
+
+export const MOCK_CUSTOMERS: Customer[] = [
+  {
+    id: 'CUST-001',
+    name: 'Ahmed Khan',
+    email: 'ahmed@example.com',
+    phone: '+923001234567',
+    address: 'House 12, Street 4, DHA Phase 6',
+    city: 'Lahore',
+    ordersCount: 5,
+    totalSpend: 54000,
+    lastOrderDate: '2023-10-15',
+    joinedDate: '2023-01-10',
+    isDHA: true,
+  },
+  {
+    id: 'CUST-002',
+    name: 'Sara Ali',
+    email: 'sara@example.com',
+    phone: '+923219876543',
+    address: 'Flat 4B, Askari 11',
+    city: 'Lahore',
+    ordersCount: 2,
+    totalSpend: 24497,
+    lastOrderDate: '2023-10-25',
+    joinedDate: '2023-09-01',
+    isDHA: false,
+  },
+  {
+    id: 'CUST-003',
+    name: 'Zainab Bibi',
+    email: 'zainab@example.com',
+    phone: '+923335555555',
+    address: 'Sector F-7/2',
+    city: 'Islamabad',
+    ordersCount: 1,
+    totalSpend: 7999,
+    lastOrderDate: '2023-10-26',
+    joinedDate: '2023-10-26',
+    isDHA: false,
   }
 ];
