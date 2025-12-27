@@ -33,6 +33,9 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Filter visible products for the storefront
+  const visibleProducts = products.filter(p => p.isVisible);
+
   const handleEnterStore = () => {
       const shopElement = document.getElementById('shop');
       if (shopElement) {
@@ -266,7 +269,7 @@ const Home = () => {
                     ref={scrollContainerRef}
                     className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar scroll-smooth"
                 >
-                {products.map((product, idx) => {
+                {visibleProducts.map((product, idx) => {
                     const isOnSale = product.compareAtPrice && product.compareAtPrice > product.price;
                     const discount = isOnSale ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100) : 0;
                     

@@ -13,6 +13,7 @@ export interface Product {
   images: string[];
   inventory: ProductVariant[]; // Replaces global stock and sizes array
   inStock: boolean; // Computed helper (true if any variant > 0)
+  isVisible: boolean; // Admin toggle to hide/show product on frontend
   video?: string; // URL for Unboxing Experience (Bottom)
   galleryVideo?: string; // URL for Gallery Video (Beside Images)
 }

@@ -109,7 +109,7 @@ const ProductDetail = () => {
 
   const product = products.find(p => p.id === id);
 
-  if (!product) return <div className="h-screen flex items-center justify-center">Product not found.</div>;
+  if (!product || !product.isVisible) return <div className="h-screen flex items-center justify-center font-serif text-lg">Product not found.</div>;
 
   // Global Stock Check
   const totalStock = product.inventory.reduce((acc, v) => acc + v.stock, 0);
@@ -129,8 +129,9 @@ const ProductDetail = () => {
 
   const activeMedia = mediaItems[activeMediaIndex];
 
+  // Only show related items that are visible
   const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id)
+    .filter(p => p.category === product.category && p.id !== product.id && p.isVisible)
     .slice(0, 3);
 
   const handleSizeSelect = (size: string) => {

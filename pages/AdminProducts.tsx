@@ -30,6 +30,7 @@ const AdminProducts = () => {
           { size: 'XL', stock: 0 }
       ],
       inStock: true,
+      isVisible: true,
       video: '',
       galleryVideo: ''
   };
@@ -107,7 +108,8 @@ const AdminProducts = () => {
               description: productForm.description || '',
               images: productForm.images?.length ? productForm.images : ['https://picsum.photos/800/1000'],
               inventory: productForm.inventory || [],
-              inStock: productForm.inStock !== undefined ? productForm.inStock : (totalStock > 0),
+              inStock: totalStock > 0, // Computed purely from stock
+              isVisible: productForm.isVisible !== undefined ? productForm.isVisible : true, // Manual toggle
               stock: totalStock, // Derived global stock count for backward compat if needed, mainly explicit inventory used now
               sizes: (productForm.inventory || []).map(v => v.size), // Derived sizes array
               video: productForm.video || '',
@@ -208,15 +210,15 @@ const AdminProducts = () => {
                             </div>
                       </div>
 
-                      {/* Global Status */}
+                      {/* Global Visibility */}
                       <div>
                             <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Visibility</label>
                             <select 
                                 className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none bg-white"
-                                value={productForm.inStock ? "true" : "false"}
-                                onChange={e => setProductForm({...productForm, inStock: e.target.value === 'true'})}
+                                value={productForm.isVisible ? "true" : "false"}
+                                onChange={e => setProductForm({...productForm, isVisible: e.target.value === 'true'})}
                             >
-                                <option value="true">Active</option>
+                                <option value="true">Visible</option>
                                 <option value="false">Hidden</option>
                             </select>
                       </div>
@@ -387,7 +389,7 @@ const AdminProducts = () => {
                             </td>
                             <td className="p-4 font-medium text-sm">
                                 {product.name}
-                                {!product.inStock && <span className="ml-2 text-[9px] bg-stone-200 px-1 rounded text-stone-500 uppercase">Hidden</span>}
+                                {!product.isVisible && <span className="ml-2 text-[9px] bg-red-100 text-red-700 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Hidden</span>}
                             </td>
                             <td className="p-4 text-stone-500 text-xs md:text-sm">{product.category}</td>
                             <td className="p-4 text-sm">

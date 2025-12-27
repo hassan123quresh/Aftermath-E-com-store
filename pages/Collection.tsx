@@ -31,22 +31,25 @@ const Collection = () => {
     }
   }, [isMobileFilterOpen]);
 
+  // Use only visible products for filtering/sorting/display
+  const visibleProducts = useMemo(() => products.filter(p => p.isVisible), [products]);
+
   // --- Dynamic Data Extraction ---
   const allColors = useMemo(() => {
       const colors = new Set<string>();
-      products.forEach(p => {
+      visibleProducts.forEach(p => {
           if (p.name.includes(' in ')) {
               colors.add(p.name.split(' in ')[1].trim());
           }
       });
       return Array.from(colors).sort();
-  }, [products]);
+  }, [visibleProducts]);
 
   const allMaterials = ['Fleece', 'French Terry', 'Cotton', 'Knit'];
   // Extract all unique sizes from all product inventories
   const allSizes = useMemo(() => {
       const sizes = new Set<string>();
-      products.forEach(p => {
+      visibleProducts.forEach(p => {
           p.inventory.forEach(v => sizes.add(v.size));
       });
       // Sort logic to keep standard sizes in order, then custom ones
@@ -59,11 +62,11 @@ const Collection = () => {
           if (idxB !== -1) return 1;
           return a.localeCompare(b);
       });
-  }, [products]);
+  }, [visibleProducts]);
 
   // --- Filtering Logic ---
   const filteredProducts = useMemo(() => {
-      return products.filter(product => {
+      return visibleProducts.filter(product => {
           // Color Filter
           if (selectedColors.length > 0) {
               const color = product.name.includes(' in ') ? product.name.split(' in ')[1].trim() : '';
@@ -85,7 +88,7 @@ const Collection = () => {
 
           return true;
       });
-  }, [products, selectedColors, selectedMaterials, selectedSizes]);
+  }, [visibleProducts, selectedColors, selectedMaterials, selectedSizes]);
 
   // --- Sorting Logic ---
   const sortedProducts = useMemo(() => {
