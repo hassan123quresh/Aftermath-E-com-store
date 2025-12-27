@@ -289,7 +289,7 @@ const ProductDetail = () => {
         const rawHtml = marked.parse(text) as string;
         // Use sanitizer if available, otherwise raw HTML (fallback)
         const cleanHtml = DOMPurify ? DOMPurify.sanitize(rawHtml, {
-             ADD_TAGS: ['iframe', 'u'], // Allow iframes and underline
+             ADD_TAGS: ['iframe', 'u', 'img'], // Allow iframes and underline
              ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
         }) : rawHtml;
         
@@ -357,91 +357,116 @@ const ProductDetail = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 py-4 md:py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
-        {/* Images - Sticky functionality moved here for better scrolling experience */}
-        <div className="space-y-2 lg:sticky lg:top-28">
-            {/* Main Media Container */}
-            <div 
-                className={`aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group ${activeMedia.type === 'image' ? 'md:cursor-zoom-in' : ''}`}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                onClick={toggleZoom}
-            >
-                {activeMedia.type === 'image' ? (
-                    <img 
-                        ref={mainImageRef}
-                        src={activeMedia.src} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover select-none"
-                        width="600"
-                        height="750"
-                        loading="eager"
-                        draggable="false"
-                    />
-                ) : (
-                    <video
-                        src={activeMedia.src}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        controls={true}
-                    />
-                )}
+        
+        {/* LEFT COLUMN: Images & Unboxing (Desktop Only) */}
+        <div className="flex flex-col gap-16">
+            {/* Images - Sticky removed for better flow with video below */}
+            <div className="space-y-2">
+                {/* Main Media Container */}
+                <div 
+                    className={`aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group ${activeMedia.type === 'image' ? 'md:cursor-zoom-in' : ''}`}
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                    onClick={toggleZoom}
+                >
+                    {activeMedia.type === 'image' ? (
+                        <img 
+                            ref={mainImageRef}
+                            src={activeMedia.src} 
+                            alt={product.name} 
+                            className="w-full h-full object-cover select-none"
+                            width="600"
+                            height="750"
+                            loading="eager"
+                            draggable="false"
+                        />
+                    ) : (
+                        <video
+                            src={activeMedia.src}
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            controls={true}
+                        />
+                    )}
 
-                {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
-                {mediaItems.length > 1 && (
-                    <>
-                        <button 
-                            onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
-                            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                            aria-label="Previous image"
-                        >
-                            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
-                        </button>
-                        <button 
-                            onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
-                            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
-                            aria-label="Next image"
-                        >
-                            <ChevronRight className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
-                        </button>
-                    </>
-                )}
+                    {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
+                    {mediaItems.length > 1 && (
+                        <>
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
+                                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                aria-label="Previous image"
+                            >
+                                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
+                            </button>
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
+                                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                aria-label="Next image"
+                            >
+                                <ChevronRight className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
+                            </button>
+                        </>
+                    )}
 
-                {/* Desktop Zoom Hint (Only for Images) */}
-                {activeMedia.type === 'image' && (
-                    <div className="hidden md:flex absolute bottom-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                        <ZoomIn className="w-5 h-5 text-obsidian drop-shadow-md" />
-                    </div>
-                )}
-            </div>
-            
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-2">
-                {mediaItems.map((item, idx) => (
-                    <button 
-                        key={idx} 
-                        onClick={() => setActiveMediaIndex(idx)}
-                        className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 relative group ${activeMediaIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
-                    >
-                        {item.type === 'image' ? (
-                            <img src={item.src} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
-                        ) : (
-                            <div className="w-full h-full bg-stone-900 flex items-center justify-center relative">
-                                <video src={item.src} className="w-full h-full object-cover opacity-50" muted />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <PlayCircle className="w-8 h-8 text-white opacity-80 group-hover:opacity-100" />
+                    {/* Desktop Zoom Hint (Only for Images) */}
+                    {activeMedia.type === 'image' && (
+                        <div className="hidden md:flex absolute bottom-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                            <ZoomIn className="w-5 h-5 text-obsidian drop-shadow-md" />
+                        </div>
+                    )}
+                </div>
+                
+                {/* Thumbnails */}
+                <div className="grid grid-cols-4 gap-2">
+                    {mediaItems.map((item, idx) => (
+                        <button 
+                            key={idx} 
+                            onClick={() => setActiveMediaIndex(idx)}
+                            className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 relative group ${activeMediaIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
+                        >
+                            {item.type === 'image' ? (
+                                <img src={item.src} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
+                            ) : (
+                                <div className="w-full h-full bg-stone-900 flex items-center justify-center relative">
+                                    <video src={item.src} className="w-full h-full object-cover opacity-50" muted />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <PlayCircle className="w-8 h-8 text-white opacity-80 group-hover:opacity-100" />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </button>
-                ))}
+                            )}
+                        </button>
+                    ))}
+                </div>
             </div>
+
+            {/* Unboxing Experience Section - DESKTOP ONLY (Left Column) */}
+            {product.video && (
+                <div className="w-full pt-8 border-t border-obsidian/5 hidden lg:block">
+                    <div className="mb-6">
+                        <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-2 block text-stone-500">The Ritual</span>
+                        <h2 className="font-serif text-2xl text-obsidian">Unboxing Experience</h2>
+                    </div>
+                    <div className="w-full overflow-hidden rounded-xl bg-black shadow-lg">
+                        <video 
+                            src={product.video}
+                            className="w-full h-auto block"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            controls={false}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
 
-        {/* Details Column - Scrolls naturally */}
+        {/* RIGHT COLUMN: Details & Reviews */}
         <div className="flex flex-col pt-4">
             {/* Header */}
             <div className="mb-12 border-b border-obsidian/10 pb-8">
@@ -512,7 +537,7 @@ const ProductDetail = () => {
                     </LiquidButton>
                 </div>
 
-                {/* Shipping & Returns Details - Single Row Layout on All Screens */}
+                {/* Shipping & Returns Details */}
                 <div className="mt-10 pt-8 border-t border-obsidian/10">
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                         {/* Free Shipping */}
@@ -549,11 +574,10 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            {/* Description (Moved to bottom) */}
+            {/* Description */}
             <div className="mt-12 pt-12 border-t border-obsidian/10">
                 {renderDescription(product.description)}
                 
-                {/* FAQ Call to Action */}
                 <div className="mt-8 flex justify-center">
                     <Link to="/faq" className="flex items-center gap-2 px-6 py-3 bg-stone-100 rounded-full hover:bg-stone-200 transition-colors text-xs font-medium uppercase tracking-widest text-stone-600 hover:text-obsidian group">
                         <HelpCircle className="w-4 h-4 stroke-[1.5]" />
@@ -562,100 +586,98 @@ const ProductDetail = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Unboxing Experience Section - MOBILE ONLY (Moved here) */}
+            {product.video && (
+                <div className="mt-12 pt-8 border-t border-obsidian/10 lg:hidden">
+                    <div className="mb-6">
+                        <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-2 block text-stone-500">The Ritual</span>
+                        <h2 className="font-serif text-2xl text-obsidian">Unboxing Experience</h2>
+                    </div>
+                    <div className="w-full overflow-hidden rounded-xl bg-black shadow-lg">
+                        <video 
+                            src={product.video}
+                            className="w-full h-auto block"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            controls={false}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* REVIEWS SECTION - Moved to Right Column */}
+            <div className="mt-16 pt-12 border-t border-obsidian/10">
+                <div className="flex items-center justify-between mb-8">
+                    <h2 className="font-serif text-2xl text-obsidian">Reviews</h2>
+                    <div className="flex items-center gap-2">
+                        <StarRating rating={avgRating} size={16} />
+                        <span className="text-sm font-medium">{avgRating.toFixed(1)} / 5</span>
+                    </div>
+                </div>
+
+                {/* Review List */}
+                <div className="space-y-6 mb-12">
+                    {productReviews.length === 0 ? (
+                        <div className="text-center text-stone-500 py-8 italic">No reviews yet. Be the first to share your thoughts.</div>
+                    ) : (
+                        productReviews.map(review => (
+                            <div key={review.id} className="border-b border-stone-100 pb-6 last:border-0">
+                                <div className="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 className="font-bold text-sm text-obsidian">{review.userName}</h4>
+                                        <StarRating rating={review.rating} size={12} className="mt-1" />
+                                    </div>
+                                    <span className="text-xs text-stone-400">{new Date(review.date).toLocaleDateString()}</span>
+                                </div>
+                                <p className="text-sm text-stone-600 leading-relaxed mt-2">{review.comment}</p>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {/* Review Form - Moved to Bottom */}
+                <div className="bg-stone-50 p-6 md:p-8 rounded-xl border border-stone-200">
+                    <h3 className="text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2"><MessageSquare className="w-4 h-4" /> Write a Review</h3>
+                    <form onSubmit={handleSubmitReview} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input 
+                                required
+                                placeholder="Your Name"
+                                className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian"
+                                value={newReview.name}
+                                onChange={e => setNewReview({...newReview, name: e.target.value})}
+                            />
+                            <div className="flex items-center gap-3 px-3 border border-stone-300 rounded bg-white h-[46px]">
+                                <span className="text-xs text-stone-500 uppercase font-bold">Rating:</span>
+                                <StarRating 
+                                    rating={newReview.rating} 
+                                    size={18} 
+                                    interactive 
+                                    onChange={r => setNewReview({...newReview, rating: r})} 
+                                />
+                            </div>
+                        </div>
+                        <textarea 
+                            required
+                            placeholder="Share your thoughts..."
+                            className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian h-24 resize-none"
+                            value={newReview.comment}
+                            onChange={e => setNewReview({...newReview, comment: e.target.value})}
+                        />
+                        <button 
+                            type="submit" 
+                            disabled={isSubmittingReview}
+                            className="w-full bg-obsidian text-white py-3 text-xs uppercase tracking-widest font-bold rounded hover:bg-stone-800 disabled:opacity-50 transition-colors"
+                        >
+                            {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-
-      {/* Unboxing Experience Section - Always at Bottom */}
-      {product.video && (
-          <div className="mt-24 md:mt-32 w-full">
-              <div className="text-center mb-8 md:mb-12">
-                   <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-3 block text-stone-500">The Ritual</span>
-                   <h2 className="font-serif text-3xl md:text-5xl text-obsidian">Unboxing Experience</h2>
-              </div>
-              <div className="w-full max-w-5xl mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-obsidian/5 bg-stone-100 flex justify-center bg-black">
-                  <video 
-                    src={product.video}
-                    className="w-full h-auto md:w-auto md:max-w-full md:max-h-[85vh] md:mx-auto block"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls={false}
-                  />
-              </div>
-          </div>
-      )}
-
-      {/* REVIEWS SECTION */}
-      <div className="mt-24 md:mt-32 max-w-3xl mx-auto border-t border-stone-200 pt-16">
-          <div className="text-center mb-12">
-              <h2 className="font-serif text-2xl md:text-4xl text-obsidian mb-2">Reviews</h2>
-              <div className="flex justify-center items-center gap-2">
-                  <StarRating rating={avgRating} size={20} />
-                  <span className="text-sm font-medium">{avgRating.toFixed(1)} / 5</span>
-              </div>
-          </div>
-
-          <div className="space-y-12">
-              {/* Review Form */}
-              <div className="bg-stone-50 p-6 md:p-8 rounded-xl border border-stone-200">
-                  <h3 className="text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2"><MessageSquare className="w-4 h-4" /> Write a Review</h3>
-                  <form onSubmit={handleSubmitReview} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <input 
-                              required
-                              placeholder="Your Name"
-                              className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian"
-                              value={newReview.name}
-                              onChange={e => setNewReview({...newReview, name: e.target.value})}
-                          />
-                          <div className="flex items-center gap-3 px-3 border border-stone-300 rounded bg-white h-[46px]">
-                              <span className="text-xs text-stone-500 uppercase font-bold">Rating:</span>
-                              <StarRating 
-                                  rating={newReview.rating} 
-                                  size={18} 
-                                  interactive 
-                                  onChange={r => setNewReview({...newReview, rating: r})} 
-                              />
-                          </div>
-                      </div>
-                      <textarea 
-                          required
-                          placeholder="Share your thoughts..."
-                          className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian h-24 resize-none"
-                          value={newReview.comment}
-                          onChange={e => setNewReview({...newReview, comment: e.target.value})}
-                      />
-                      <button 
-                          type="submit" 
-                          disabled={isSubmittingReview}
-                          className="w-full bg-obsidian text-white py-3 text-xs uppercase tracking-widest font-bold rounded hover:bg-stone-800 disabled:opacity-50 transition-colors"
-                      >
-                          {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
-                      </button>
-                  </form>
-              </div>
-
-              {/* Review List */}
-              <div className="space-y-6">
-                  {productReviews.length === 0 ? (
-                      <div className="text-center text-stone-500 py-8 italic">No reviews yet. Be the first to share your thoughts.</div>
-                  ) : (
-                      productReviews.map(review => (
-                          <div key={review.id} className="border-b border-stone-100 pb-6 last:border-0">
-                              <div className="flex justify-between items-start mb-2">
-                                  <div>
-                                      <h4 className="font-bold text-sm text-obsidian">{review.userName}</h4>
-                                      <StarRating rating={review.rating} size={12} className="mt-1" />
-                                  </div>
-                                  <span className="text-xs text-stone-400">{new Date(review.date).toLocaleDateString()}</span>
-                              </div>
-                              <p className="text-sm text-stone-600 leading-relaxed mt-2">{review.comment}</p>
-                          </div>
-                      ))
-                  )}
-              </div>
-          </div>
       </div>
 
       {/* Related */}
