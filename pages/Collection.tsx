@@ -280,7 +280,7 @@ const Collection = () => {
                                     </div>
                                 )}
                                 {isOnSale && (
-                                    <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
+                                    <div className="absolute top-2 left-2 bg-[#415941]/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
                                         {discount}% OFF
                                     </div>
                                 )}
