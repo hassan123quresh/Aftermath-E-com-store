@@ -87,6 +87,10 @@ const ThreeDCarousel: React.FC<ThreeDCarouselProps> = ({
     const nextIndex = (active + 1) % total;
     const prevIndex = (active - 1 + total) % total;
 
+    // Mobile adjustments: Reduce translation to prevent overflow and overlap
+    const xOffset = isMobile ? '12%' : '40%';
+    const sideScale = isMobile ? 0.92 : 0.85;
+
     if (index === active) {
         return {
             zIndex: 20,
@@ -98,15 +102,15 @@ const ThreeDCarousel: React.FC<ThreeDCarouselProps> = ({
         return {
             zIndex: 10,
             opacity: 0.6,
-            transform: 'translateX(40%) scale(0.85)',
-            filter: 'blur(2px)'
+            transform: `translateX(${xOffset}) scale(${sideScale})`,
+            filter: 'blur(1px)'
         };
     } else if (index === prevIndex) {
         return {
             zIndex: 10,
             opacity: 0.6,
-            transform: 'translateX(-40%) scale(0.85)',
-            filter: 'blur(2px)'
+            transform: `translateX(-${xOffset}) scale(${sideScale})`,
+            filter: 'blur(1px)'
         };
     } else {
         return {
@@ -121,7 +125,7 @@ const ThreeDCarousel: React.FC<ThreeDCarouselProps> = ({
   return (
     <div 
         ref={carouselRef}
-        className="relative w-full h-[500px] flex items-center justify-center perspective-1000"
+        className="relative w-full h-[500px] flex items-center justify-center perspective-1000 overflow-hidden" // Added overflow-hidden
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         onTouchStart={onTouchStart}
@@ -129,13 +133,13 @@ const ThreeDCarousel: React.FC<ThreeDCarouselProps> = ({
         onTouchEnd={onTouchEnd}
     >
         {/* Cards */}
-        <div className="relative w-full max-w-md h-[450px] flex justify-center items-center">
+        <div className="relative w-full max-w-md h-[450px] flex justify-center items-center px-4 md:px-0">
             {items.map((item, index) => {
                 const style = getCardStyle(index);
                 return (
                     <div
                         key={item.id}
-                        className="absolute top-0 w-full h-full transition-all duration-500 ease-out p-4"
+                        className="absolute top-0 w-full h-full transition-all duration-500 ease-out p-4 md:p-4"
                         style={style as React.CSSProperties}
                     >
                         <div className="w-full h-full bg-stone-50 border border-stone-200 shadow-2xl rounded-xl overflow-hidden flex flex-col">
@@ -184,7 +188,7 @@ const ThreeDCarousel: React.FC<ThreeDCarouselProps> = ({
         )}
 
         {/* Indicators */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 z-30">
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 z-30">
             {items.map((_, idx) => (
                 <button
                     key={idx}
