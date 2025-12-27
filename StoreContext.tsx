@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost, Customer } from './types';
-import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS, MOCK_CUSTOMERS } from './constants';
+import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost, Customer, Review } from './types';
+import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS, MOCK_CUSTOMERS, MOCK_REVIEWS } from './constants';
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
@@ -19,6 +19,9 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
 
   // Customer State
   const [customers, setCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
+
+  // Review State
+  const [reviews, setReviews] = useState<Review[]>(MOCK_REVIEWS);
 
   // Toast State
   const [toast, setToast] = useState<ToastData | null>(null);
@@ -167,6 +170,10 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   const updateCustomer = (customer: Customer) => setCustomers(prev => prev.map(c => c.id === customer.id ? customer : c));
   const deleteCustomer = (id: string) => setCustomers(prev => prev.filter(c => c.id !== id));
 
+  // Review Actions
+  const addReview = (review: Review) => setReviews(prev => [review, ...prev]);
+  const deleteReview = (id: string) => setReviews(prev => prev.filter(r => r.id !== id));
+
   return (
     <StoreContext.Provider value={{
       products,
@@ -203,7 +210,10 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       customers,
       addCustomer,
       deleteCustomer,
-      updateCustomer
+      updateCustomer,
+      reviews,
+      addReview,
+      deleteReview
     }}>
       {children}
     </StoreContext.Provider>

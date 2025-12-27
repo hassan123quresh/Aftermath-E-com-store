@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
-import { Product } from '../types';
-import { Plus, Trash2, Edit2, X, Settings } from 'lucide-react';
+import { Product, Review } from '../types';
+import { Plus, Trash2, Edit2, X, Settings, MessageSquare } from 'lucide-react';
+import StarRating from '../components/StarRating';
 
 const AdminProducts = () => {
-  const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, deleteCategory } = useStore();
+  const { products, categories, addProduct, updateProduct, deleteProduct, addCategory, deleteCategory, reviews, addReview, deleteReview } = useStore();
   const [isEditing, setIsEditing] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   
+  // Review Management State
+  const [selectedProductForReviews, setSelectedProductForReviews] = useState<Product | null>(null);
+  const [newReviewForm, setNewReviewForm] = useState({ name: '', rating: 5, comment: '' });
+
   // Form State
   const initialProductState: Partial<Product> = {
       name: '',
@@ -78,6 +83,21 @@ const AdminProducts = () => {
       if (newCategory) {
           addCategory(newCategory);
           setNewCategory('');
+      }
+  };
+
+  const handleAddReviewSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedProductForReviews && newReviewForm.name && newReviewForm.comment) {
+          addReview({
+              id: `REV-ADMIN-${Date.now()}`,
+              productId: selectedProductForReviews.id,
+              userName: newReviewForm.name,
+              rating: newReviewForm.rating,
+              comment: newReviewForm.comment,
+              date: new Date().toISOString().split('T')[0]
+          });
+          setNewReviewForm({ name: '', rating: 5, comment: '' });
       }
   };
 
@@ -276,8 +296,9 @@ const AdminProducts = () => {
                                 PKR {product.price.toLocaleString()}
                             </td>
                             <td className="p-4 text-right space-x-2">
-                                <button onClick={() => handleEditClick(product)} className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors"><Edit2 className="w-4 h-4" /></button>
-                                <button onClick={() => deleteProduct(product.id)} className="text-stone-400 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                                <button onClick={() => setSelectedProductForReviews(product)} className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors" title="Manage Reviews"><MessageSquare className="w-4 h-4" /></button>
+                                <button onClick={() => handleEditClick(product)} className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors" title="Edit"><Edit2 className="w-4 h-4" /></button>
+                                <button onClick={() => deleteProduct(product.id)} className="text-stone-400 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors" title="Delete"><Trash2 className="w-4 h-4" /></button>
                             </td>
                         </tr>
                     ))}
@@ -314,6 +335,84 @@ const AdminProducts = () => {
                                   </button>
                               </div>
                           ))}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Review Management Modal */}
+      {selectedProductForReviews && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-obsidian/60 backdrop-blur-sm p-4 animate-fade-in">
+              <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[85vh]">
+                  {/* Header */}
+                  <div className="p-6 bg-stone-50 border-b border-stone-200 flex justify-between items-center">
+                      <div>
+                          <h3 className="font-serif text-xl">Manage Reviews</h3>
+                          <p className="text-xs text-stone-500 mt-1">{selectedProductForReviews.name}</p>
+                      </div>
+                      <button onClick={() => setSelectedProductForReviews(null)}><X className="w-5 h-5 text-stone-600" /></button>
+                  </div>
+
+                  {/* Content Area */}
+                  <div className="flex-1 overflow-y-auto p-6 space-y-8">
+                      
+                      {/* Add Review Manual Form */}
+                      <div className="bg-stone-50 border border-stone-200 rounded-lg p-4">
+                          <h4 className="text-xs font-bold uppercase mb-4 text-stone-600">Add Manual Review</h4>
+                          <form onSubmit={handleAddReviewSubmit} className="space-y-3">
+                              <div className="flex gap-4">
+                                  <input 
+                                      className="flex-1 border border-stone-300 rounded p-2 text-sm" 
+                                      placeholder="Customer Name"
+                                      value={newReviewForm.name}
+                                      onChange={e => setNewReviewForm({...newReviewForm, name: e.target.value})}
+                                      required
+                                  />
+                                  <div className="flex items-center gap-2 border border-stone-300 rounded px-2 bg-white">
+                                      <span className="text-xs font-bold uppercase text-stone-500">Rating</span>
+                                      <StarRating rating={newReviewForm.rating} interactive onChange={r => setNewReviewForm({...newReviewForm, rating: r})} />
+                                  </div>
+                              </div>
+                              <textarea 
+                                  className="w-full border border-stone-300 rounded p-2 text-sm h-20 resize-none"
+                                  placeholder="Review comment..."
+                                  value={newReviewForm.comment}
+                                  onChange={e => setNewReviewForm({...newReviewForm, comment: e.target.value})}
+                                  required
+                              />
+                              <button type="submit" className="bg-obsidian text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider w-full hover:bg-stone-800">Add Review</button>
+                          </form>
+                      </div>
+
+                      {/* Review List */}
+                      <div>
+                          <h4 className="text-xs font-bold uppercase mb-4 text-stone-600">Existing Reviews</h4>
+                          <div className="space-y-4">
+                              {reviews.filter(r => r.productId === selectedProductForReviews.id).length === 0 ? (
+                                  <p className="text-stone-400 italic text-sm text-center py-4">No reviews for this product.</p>
+                              ) : (
+                                  reviews.filter(r => r.productId === selectedProductForReviews.id).map(review => (
+                                      <div key={review.id} className="border border-stone-200 rounded-lg p-4 flex justify-between items-start hover:bg-stone-50 transition-colors">
+                                          <div>
+                                              <div className="flex items-center gap-2 mb-1">
+                                                  <span className="font-bold text-sm">{review.userName}</span>
+                                                  <StarRating rating={review.rating} size={10} />
+                                                  <span className="text-xs text-stone-400">| {review.date}</span>
+                                              </div>
+                                              <p className="text-sm text-stone-600">{review.comment}</p>
+                                          </div>
+                                          <button 
+                                              onClick={() => deleteReview(review.id)}
+                                              className="text-stone-400 hover:text-red-600 p-1 transition-colors"
+                                              title="Delete Review"
+                                          >
+                                              <Trash2 className="w-4 h-4" />
+                                          </button>
+                                      </div>
+                                  ))
+                              )}
+                          </div>
                       </div>
                   </div>
               </div>

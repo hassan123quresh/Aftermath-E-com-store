@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle, PlayCircle } from 'lucide-react';
+import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle, PlayCircle, Star, MessageSquare } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
+import StarRating from '../components/StarRating';
 
 // Initialize DOMPurify Factory
 const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
@@ -71,10 +72,14 @@ try {
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, addToCart, toggleCart, showToast } = useStore();
+  const { products, addToCart, toggleCart, showToast, reviews, addReview } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [showSizeError, setShowSizeError] = useState(false);
+  
+  // Review Form State
+  const [newReview, setNewReview] = useState({ name: '', rating: 5, comment: '' });
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   
   // Ref for main image to perform animation
   const mainImageRef = useRef<HTMLImageElement>(null);
@@ -105,6 +110,12 @@ const ProductDetail = () => {
   const product = products.find(p => p.id === id);
 
   if (!product) return <div className="h-screen flex items-center justify-center">Product not found.</div>;
+
+  // Calculate Ratings
+  const productReviews = reviews.filter(r => r.productId === product.id);
+  const avgRating = productReviews.length > 0 
+      ? productReviews.reduce((acc, r) => acc + r.rating, 0) / productReviews.length 
+      : 0;
 
   // Construct mixed media array
   const mediaItems = [
@@ -215,6 +226,27 @@ const ProductDetail = () => {
 
   const handlePrevMedia = () => {
       setActiveMediaIndex((prev) => (prev - 1 + mediaItems.length) % mediaItems.length);
+  };
+
+  const handleSubmitReview = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (newReview.name && newReview.comment) {
+          setIsSubmittingReview(true);
+          // Simulate network delay
+          setTimeout(() => {
+              addReview({
+                  id: `REV-${Date.now()}`,
+                  productId: product.id,
+                  userName: newReview.name,
+                  rating: newReview.rating,
+                  comment: newReview.comment,
+                  date: new Date().toISOString().split('T')[0]
+              });
+              setNewReview({ name: '', rating: 5, comment: '' });
+              setIsSubmittingReview(false);
+              showToast("Review submitted successfully");
+          }, 800);
+      }
   };
 
   // Swipe Handlers
@@ -414,7 +446,16 @@ const ProductDetail = () => {
             {/* Header */}
             <div className="mb-12 border-b border-obsidian/10 pb-8">
                 <h1 className="font-serif text-3xl md:text-4xl mb-4">{product.name}</h1>
-                <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="text-lg md:text-xl px-6 py-2" />
+                <div className="flex flex-col items-start gap-3">
+                    <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="text-lg md:text-xl px-6 py-2" />
+                    {/* Stars */}
+                    <div className="flex items-center gap-2 mt-1">
+                        <StarRating rating={avgRating} size={16} />
+                        <span className="text-xs text-stone-500 underline decoration-stone-300 underline-offset-4">
+                            {productReviews.length} {productReviews.length === 1 ? 'Review' : 'Reviews'}
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <div className="space-y-8">
@@ -545,25 +586,101 @@ const ProductDetail = () => {
           </div>
       )}
 
+      {/* REVIEWS SECTION */}
+      <div className="mt-24 md:mt-32 max-w-3xl mx-auto border-t border-stone-200 pt-16">
+          <div className="text-center mb-12">
+              <h2 className="font-serif text-2xl md:text-4xl text-obsidian mb-2">Reviews</h2>
+              <div className="flex justify-center items-center gap-2">
+                  <StarRating rating={avgRating} size={20} />
+                  <span className="text-sm font-medium">{avgRating.toFixed(1)} / 5</span>
+              </div>
+          </div>
+
+          <div className="space-y-12">
+              {/* Review Form */}
+              <div className="bg-stone-50 p-6 md:p-8 rounded-xl border border-stone-200">
+                  <h3 className="text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2"><MessageSquare className="w-4 h-4" /> Write a Review</h3>
+                  <form onSubmit={handleSubmitReview} className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <input 
+                              required
+                              placeholder="Your Name"
+                              className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian"
+                              value={newReview.name}
+                              onChange={e => setNewReview({...newReview, name: e.target.value})}
+                          />
+                          <div className="flex items-center gap-3 px-3 border border-stone-300 rounded bg-white h-[46px]">
+                              <span className="text-xs text-stone-500 uppercase font-bold">Rating:</span>
+                              <StarRating 
+                                  rating={newReview.rating} 
+                                  size={18} 
+                                  interactive 
+                                  onChange={r => setNewReview({...newReview, rating: r})} 
+                              />
+                          </div>
+                      </div>
+                      <textarea 
+                          required
+                          placeholder="Share your thoughts..."
+                          className="w-full bg-white border border-stone-300 rounded p-3 text-sm focus:outline-none focus:border-obsidian h-24 resize-none"
+                          value={newReview.comment}
+                          onChange={e => setNewReview({...newReview, comment: e.target.value})}
+                      />
+                      <button 
+                          type="submit" 
+                          disabled={isSubmittingReview}
+                          className="w-full bg-obsidian text-white py-3 text-xs uppercase tracking-widest font-bold rounded hover:bg-stone-800 disabled:opacity-50 transition-colors"
+                      >
+                          {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
+                      </button>
+                  </form>
+              </div>
+
+              {/* Review List */}
+              <div className="space-y-6">
+                  {productReviews.length === 0 ? (
+                      <div className="text-center text-stone-500 py-8 italic">No reviews yet. Be the first to share your thoughts.</div>
+                  ) : (
+                      productReviews.map(review => (
+                          <div key={review.id} className="border-b border-stone-100 pb-6 last:border-0">
+                              <div className="flex justify-between items-start mb-2">
+                                  <div>
+                                      <h4 className="font-bold text-sm text-obsidian">{review.userName}</h4>
+                                      <StarRating rating={review.rating} size={12} className="mt-1" />
+                                  </div>
+                                  <span className="text-xs text-stone-400">{new Date(review.date).toLocaleDateString()}</span>
+                              </div>
+                              <p className="text-sm text-stone-600 leading-relaxed mt-2">{review.comment}</p>
+                          </div>
+                      ))
+                  )}
+              </div>
+          </div>
+      </div>
+
       {/* Related */}
       {relatedProducts.length > 0 && (
           <div className="mt-32 pt-16 border-t border-obsidian/5">
               <h3 className="font-serif text-2xl mb-12">You may also like</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedProducts.map(rp => (
+                {relatedProducts.map(rp => {
+                    const isOnSale = rp.compareAtPrice && rp.compareAtPrice > rp.price;
+                    const discount = isOnSale ? Math.round(((rp.compareAtPrice! - rp.price) / rp.compareAtPrice!) * 100) : 0;
+
+                    return (
                     <Link key={rp.id} to={`/product/${rp.id}`} className="group block flex flex-col items-start">
                          <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full relative">
                              <img src={rp.images[0]} className="w-full h-full object-cover transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
-                             {rp.compareAtPrice && rp.compareAtPrice > rp.price && (
+                             {isOnSale && (
                                 <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
-                                    Sale
+                                    {discount}% OFF
                                 </div>
                             )}
                          </div>
                          <h4 className="font-serif text-lg">{rp.name}</h4>
                          <PriceBadge price={rp.price} compareAtPrice={rp.compareAtPrice} className="mt-2" />
                     </Link>
-                ))}
+                )})}
               </div>
           </div>
       )}

@@ -102,7 +102,7 @@ const AdminDiscounts = () => {
           if (productsToUpdate.length > 0) {
               console.log("Updating products:", productsToUpdate);
               updateProducts(productsToUpdate);
-              showToast(`Success! Sale applied to ${productsToUpdate.length} items.`);
+              showToast(`Successfully applied sale on ${productsToUpdate.length} items.`);
               setSelectedProductIds(new Set());
           }
       } catch (error) {

@@ -1,4 +1,4 @@
-import { Product, PromoCode, Order, BlogPost, Customer } from './types';
+import { Product, PromoCode, Order, BlogPost, Customer, Review } from './types';
 
 export const INITIAL_ANNOUNCEMENT = "FREE SHIPPING ALL OVER PAKISTAN";
 
@@ -189,5 +189,40 @@ export const MOCK_CUSTOMERS: Customer[] = [
     lastOrderDate: '2023-10-26',
     joinedDate: '2023-10-26',
     isDHA: false,
+  }
+];
+
+export const MOCK_REVIEWS: Review[] = [
+  {
+    id: 'r1',
+    productId: 'p1',
+    userName: 'Hassan R.',
+    rating: 5,
+    comment: 'The quality is unmatched. The 500 GSM fleece feels incredibly premium.',
+    date: '2023-11-15'
+  },
+  {
+    id: 'r2',
+    productId: 'p1',
+    userName: 'Bilal K.',
+    rating: 5,
+    comment: 'Perfect boxy fit. Worth every penny.',
+    date: '2023-11-18'
+  },
+  {
+    id: 'r3',
+    productId: 'p1',
+    userName: 'Zain A.',
+    rating: 4,
+    comment: 'Sleeves are a bit long but I like the aesthetic.',
+    date: '2023-11-20'
+  },
+  {
+    id: 'r4',
+    productId: 'p6',
+    userName: 'Sara M.',
+    rating: 5,
+    comment: 'The color is exactly as shown. So soft!',
+    date: '2023-11-22'
   }
 ];

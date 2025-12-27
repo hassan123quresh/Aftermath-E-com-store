@@ -12,6 +12,15 @@ export interface Product {
   galleryVideo?: string; // URL for Gallery Video (Beside Images)
 }
 
+export interface Review {
+  id: string;
+  productId: string;
+  userName: string;
+  rating: number; // 1-5
+  comment: string;
+  date: string;
+}
+
 export interface CartItem extends Product {
   selectedSize: string;
   quantity: number;
@@ -98,6 +107,11 @@ export interface StoreContextType {
   promos: PromoCode[];
   validatePromo: (code: string) => number; // returns discount multiplier (e.g., 0.10 for 10%)
   
+  // Reviews
+  reviews: Review[];
+  addReview: (review: Review) => void;
+  deleteReview: (id: string) => void;
+
   // Blog
   blogPosts: BlogPost[];
   addPost: (post: BlogPost) => void;

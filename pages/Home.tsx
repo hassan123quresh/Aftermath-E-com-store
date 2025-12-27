@@ -7,10 +7,11 @@ import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 import { ProductPreview } from '../components/ProductPreview';
 import ThreeDCarousel, { ThreeDCarouselItem } from '../components/ThreeDCarousel';
+import StarRating from '../components/StarRating';
 import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 const Home = () => {
-  const { products } = useStore();
+  const { products, reviews } = useStore();
   const navigate = useNavigate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -264,7 +265,16 @@ const Home = () => {
                     ref={scrollContainerRef}
                     className="flex overflow-x-auto snap-x snap-mandatory gap-6 md:gap-12 px-8 md:px-12 pb-12 w-full no-scrollbar scroll-smooth"
                 >
-                {products.map((product, idx) => (
+                {products.map((product, idx) => {
+                    const isOnSale = product.compareAtPrice && product.compareAtPrice > product.price;
+                    const discount = isOnSale ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100) : 0;
+                    
+                    const productReviews = reviews.filter(r => r.productId === product.id);
+                    const avgRating = productReviews.length > 0 
+                        ? productReviews.reduce((acc, r) => acc + r.rating, 0) / productReviews.length 
+                        : 0;
+
+                    return (
                     <Link 
                         key={product.id} 
                         to={`/product/${product.id}`} 
@@ -285,9 +295,9 @@ const Home = () => {
                         loading="lazy"
                         />
                         {/* Sale Badge */}
-                        {product.compareAtPrice && product.compareAtPrice > product.price && (
+                        {isOnSale && (
                             <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-20">
-                                Sale
+                                {discount}% OFF
                             </div>
                         )}
                     </div>
@@ -296,10 +306,13 @@ const Home = () => {
                             <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
                             <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} />
                         </div>
-                        <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
+                        <div className="flex justify-between w-full items-center">
+                            <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
+                            {avgRating > 0 && <StarRating rating={avgRating} size={10} />}
+                        </div>
                     </div>
                     </Link>
-                ))}
+                )})}
                 
                 <Link to="/collection" className="flex-shrink-0 snap-start w-[80vw] md:w-[360px] aspect-[3/4] flex flex-col items-center justify-center bg-stone-100 border border-stone-200 hover:bg-stone-200 transition-colors group cursor-pointer">
                     <span className="font-serif text-3xl md:text-4xl mb-4 text-obsidian">View All</span>

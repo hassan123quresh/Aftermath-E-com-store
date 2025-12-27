@@ -2,10 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useStore } from '../StoreContext';
 import { Link } from 'react-router-dom';
 import { PriceBadge } from '../components/PriceBadge';
+import StarRating from '../components/StarRating';
 import { Filter, X, ChevronDown, Check, ArrowUpDown, SlidersHorizontal } from 'lucide-react';
 
 const Collection = () => {
-  const { products, orders } = useStore();
+  const { products, orders, reviews } = useStore();
   
   // UI State
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -239,55 +240,65 @@ const Collection = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16">
-                        {sortedProducts.map((product, idx) => (
-                        <Link 
-                            key={product.id} 
-                            to={`/product/${product.id}`} 
-                            className="group block opacity-0 animate-fade-in-up"
-                            style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'forwards' }}
-                        >
-                            {/* Image Container */}
-                            <div className="relative aspect-[3/4] overflow-hidden mb-3 md:mb-6 bg-stone-300">
-                            <img 
-                                src={product.images[0]} 
-                                alt={product.name} 
-                                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 group-hover:opacity-0"
-                                loading="lazy"
-                                width="400"
-                                height="533"
-                            />
-                            <img 
-                                src={product.images[1] || product.images[0]} 
-                                alt={`${product.name} Alt`} 
-                                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
-                                loading="lazy"
-                                width="400"
-                                height="533"
-                            />
-                            {!product.inStock && (
-                                <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10">
-                                    Sold Out
-                                </div>
-                            )}
-                            {product.compareAtPrice && product.compareAtPrice > product.price && (
-                                <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
-                                    Sale
-                                </div>
-                            )}
-                            </div>
+                        {sortedProducts.map((product, idx) => {
+                            const isOnSale = product.compareAtPrice && product.compareAtPrice > product.price;
+                            const discount = isOnSale ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100) : 0;
+                            
+                            const productReviews = reviews.filter(r => r.productId === product.id);
+                            const avgRating = productReviews.length > 0 
+                                ? productReviews.reduce((acc, r) => acc + r.rating, 0) / productReviews.length 
+                                : 0;
 
-                            {/* Info */}
-                            <div className="flex flex-col items-start space-y-1">
-                            <h3 className="font-serif text-sm md:text-xl leading-tight group-hover:text-stone-600 transition-colors">
-                                {product.name}
-                            </h3>
-                            <p className="text-[10px] md:text-xs uppercase tracking-widest opacity-40">
-                                {product.category}
-                            </p>
-                            <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="mt-2" />
-                            </div>
-                        </Link>
-                        ))}
+                            return (
+                            <Link 
+                                key={product.id} 
+                                to={`/product/${product.id}`} 
+                                className="group block opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'forwards' }}
+                            >
+                                {/* Image Container */}
+                                <div className="relative aspect-[3/4] overflow-hidden mb-3 md:mb-6 bg-stone-300">
+                                <img 
+                                    src={product.images[0]} 
+                                    alt={product.name} 
+                                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-100 group-hover:opacity-0"
+                                    loading="lazy"
+                                    width="400"
+                                    height="533"
+                                />
+                                <img 
+                                    src={product.images[1] || product.images[0]} 
+                                    alt={`${product.name} Alt`} 
+                                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
+                                    loading="lazy"
+                                    width="400"
+                                    height="533"
+                                />
+                                {!product.inStock && (
+                                    <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10">
+                                        Sold Out
+                                    </div>
+                                )}
+                                {isOnSale && (
+                                    <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
+                                        {discount}% OFF
+                                    </div>
+                                )}
+                                </div>
+
+                                {/* Info */}
+                                <div className="flex flex-col items-start space-y-1">
+                                <h3 className="font-serif text-sm md:text-xl leading-tight group-hover:text-stone-600 transition-colors">
+                                    {product.name}
+                                </h3>
+                                <p className="text-[10px] md:text-xs uppercase tracking-widest opacity-40">
+                                    {product.category}
+                                </p>
+                                <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="mt-2" />
+                                {avgRating > 0 && <StarRating rating={avgRating} size={10} className="mt-1" />}
+                                </div>
+                            </Link>
+                        )})}
                     </div>
                 )}
           </div>
