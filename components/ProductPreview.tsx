@@ -1,10 +1,6 @@
-import React, { RefObject, useRef, useState, useEffect } from "react"
+import React, { useState } from "react"
 import { cn } from "../lib/utils"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
-import ScrollTrigger from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export interface ProductPreviewProps {
   className?: string
@@ -15,7 +11,7 @@ export interface ProductPreviewProps {
   scaleFactor?: number
   rotate?: number
   length?: number
-  scroller?: RefObject<HTMLElement>
+  scroller?: any
   start?: string
   articleTop: {
     title: {
@@ -47,151 +43,122 @@ export function ProductPreview({
   glowColors = [],
   scaleFactor = 1,
   rotate = 0,
-  scroller,
-  start = "top top",
   articleTop,
   articleBottom,
-  // Default length calculation for Desktop scroll distance
-  length = articleTop.length * 60, 
 }: ProductPreviewProps) {
-  // DESKTOP REFS & STATE
-  const desktopContainerRef = useRef<HTMLElement>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
-  
-  // Active image matches the synchronized indices
-  const activeImageIndex = Math.max(0, Math.min(currentIndex, productImages.length - 1));
 
-  // GSAP Logic for Desktop Only
-  useGSAP(() => {
-    const mm = gsap.matchMedia();
-    
-    mm.add("(min-width: 768px)", () => {
-        if (!desktopContainerRef.current) return;
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % productImages.length)
+  }
 
-        const handleProgress = (self: ScrollTrigger) => {
-            const progress = Math.max(0, Math.min(1, self.progress));
-            const total = articleTop.length;
-            const index = Math.min(Math.floor(progress * total), total - 1);
-            
-            if (index !== currentIndex) {
-                setCurrentIndex(index);
-            }
-        };
-
-        const trigger = ScrollTrigger.create({
-            trigger: desktopContainerRef.current,
-            start: start,
-            end: `${length}% top`,
-            scrub: 0.1,
-            pin: true,
-            scroller: scroller?.current ?? window,
-            onUpdate: handleProgress,
-            fastScrollEnd: true,
-            invalidateOnRefresh: true,
-        });
-
-        return () => {
-            trigger.kill();
-        };
-    });
-  }, [length, start, articleTop.length]);
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + productImages.length) % productImages.length)
+  }
 
   return (
     <div className={cn("relative bg-obsidian w-full", className)}>
         
         {/* =========================================
-            DESKTOP VIEW (Restored Vertical Pinning)
-            Hidden on Mobile
+            DESKTOP VIEW (Interactive Carousel)
            ========================================= */}
-        <div 
-            ref={desktopContainerRef}
-            className="hidden md:flex h-screen w-full relative overflow-hidden flex-col justify-between items-center py-10"
-        >
-             {/* Background Ambient */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-stone-900/40 rounded-full blur-[120px] pointer-events-none z-0" />
+        <div className="hidden md:flex h-[800px] w-full relative items-center justify-center overflow-hidden">
+             {/* Background Ambient - Dynamic based on active index */}
+            <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[120px] pointer-events-none transition-colors duration-700 ease-in-out z-0"
+                style={{ backgroundColor: (glowColors[currentIndex] || '#292524') + '40' }} // 25% opacity
+            />
 
-            <div className="relative flex justify-between flex-col w-full max-w-7xl h-full z-10">
-                {/* TOP ARTICLE SECTION */}
-                <article className="mt-10 w-1/2 flex flex-col items-start pl-12">
-                    <Translate
-                        arr={articleTop}
-                        index={currentIndex}
-                        type={"icon"}
-                        pos={1}
-                    />
-                    <div className="w-[80%] mr-auto mt-6">
-                        <Translate
-                            arr={articleTop}
-                            index={currentIndex}
-                            type={"title"}
-                            pos={1}
-                        />
-                        <Translate
-                            arr={articleTop}
-                            index={currentIndex}
-                            type={"description"}
-                            pos={1}
-                        />
+            {/* Content Grid */}
+            <div className="relative w-full max-w-7xl px-12 grid grid-cols-12 items-center z-10 h-full">
+                
+                {/* LEFT CONTENT (Article Top) */}
+                <div className="col-span-3 flex flex-col items-start space-y-8">
+                    {/* Wrapper with key to trigger animation on change */}
+                    <div key={`top-${currentIndex}`} className="animate-fade-in-up flex flex-col items-start duration-500">
+                         <div className="text-stone-300 opacity-80 mb-4 scale-110 origin-left">
+                             {articleTop[currentIndex]?.icon}
+                         </div>
+                         <h2 className={cn("font-serif text-5xl mb-4 text-stone-100 leading-tight", articleTop[currentIndex]?.title.className)}>
+                             {articleTop[currentIndex]?.title.text}
+                         </h2>
+                         <p className={cn("font-sans text-sm text-stone-400 leading-relaxed font-medium", articleTop[currentIndex]?.description.className)}>
+                             {articleTop[currentIndex]?.description.text}
+                         </p>
                     </div>
-                </article>
+                </div>
 
-                {/* IMAGE CENTER */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] aspect-square flex items-center justify-center pointer-events-none">
+                {/* CENTER IMAGE */}
+                <div className="col-span-6 relative h-full flex items-center justify-center">
                     {productImages.map((src, i) => (
                         <div 
                             key={i}
                             className={cn(
-                                "absolute inset-0 w-full h-full flex items-center justify-center transition-all duration-500 ease-out will-change-transform will-change-opacity",
-                                i === activeImageIndex ? "opacity-100 scale-100 blur-0 z-10" : "opacity-0 scale-95 blur-sm z-0"
+                                "absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out",
+                                i === currentIndex ? "opacity-100 scale-100 blur-0 z-10" : "opacity-0 scale-90 blur-sm z-0"
                             )}
                         >
-                            <div 
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full blur-[90px] opacity-60 transition-colors duration-500"
-                                style={{ backgroundColor: glowColors[i] || '#292524' }} 
-                            />
                             <img
                                 src={src}
-                                alt="Product"
-                                className="relative w-full h-full object-contain drop-shadow-2xl"
+                                alt=""
+                                className="max-h-[80%] w-auto object-contain drop-shadow-2xl"
                                 style={{ 
                                     transform: `rotate(${rotate}deg) scale(${scaleFactor})`, 
-                                    transformOrigin: "top" 
                                 }}
                             />
                         </div>
                     ))}
                 </div>
 
-                {/* BOTTOM ARTICLE SECTION */}
-                <article className="ml-auto mb-10 w-1/2 flex flex-col items-end pr-12 text-right">
-                    <Translate
-                        arr={articleBottom}
-                        index={currentIndex}
-                        type={"icon"}
-                        pos={2}
-                    />
-                    <div className="w-[80%] ml-auto mt-6">
-                        <Translate
-                            arr={articleBottom}
-                            index={currentIndex}
-                            type={"title"}
-                            pos={2}
-                        />
-                        <Translate
-                            arr={articleBottom}
-                            index={currentIndex}
-                            type={"description"}
-                            pos={2}
-                        />
+                {/* RIGHT CONTENT (Article Bottom) */}
+                <div className="col-span-3 flex flex-col items-end text-right space-y-8">
+                    <div key={`btm-${currentIndex}`} className="animate-fade-in-up flex flex-col items-end duration-500" style={{ animationDelay: '100ms' }}>
+                         <div className="text-stone-300 opacity-80 mb-4 scale-110 origin-right">
+                             {articleBottom[currentIndex]?.icon}
+                         </div>
+                         <h2 className={cn("font-serif text-5xl mb-4 text-stone-100 leading-tight", articleBottom[currentIndex]?.title.className)}>
+                             {articleBottom[currentIndex]?.title.text}
+                         </h2>
+                         <p className={cn("font-sans text-sm text-stone-400 leading-relaxed font-medium", articleBottom[currentIndex]?.description.className)}>
+                             {articleBottom[currentIndex]?.description.text}
+                         </p>
                     </div>
-                </article>
+                </div>
+            </div>
+
+            {/* NAVIGATION BUTTONS */}
+            <button 
+                onClick={handlePrev}
+                className="absolute left-8 z-30 p-4 rounded-full border border-stone-800 bg-obsidian/50 hover:bg-stone-800 text-stone-400 hover:text-white transition-all backdrop-blur-sm group"
+            >
+                <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+            </button>
+            <button 
+                onClick={handleNext}
+                className="absolute right-8 z-30 p-4 rounded-full border border-stone-800 bg-obsidian/50 hover:bg-stone-800 text-stone-400 hover:text-white transition-all backdrop-blur-sm group"
+            >
+                <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            {/* INDICATORS */}
+            <div className="absolute bottom-10 flex gap-3 z-30">
+                {productImages.map((_, i) => (
+                    <button 
+                        key={i}
+                        onClick={() => setCurrentIndex(i)}
+                        className={cn(
+                            "h-1 rounded-full transition-all duration-300",
+                            i === currentIndex ? "w-8 bg-white" : "w-2 bg-stone-700 hover:bg-stone-500"
+                        )}
+                        aria-label={`Go to slide ${i + 1}`}
+                    />
+                ))}
             </div>
         </div>
 
 
         {/* =========================================
             MOBILE VIEW (Horizontal Swipe Carousel)
-            Hidden on Desktop
            ========================================= */}
         <div className="flex md:hidden w-full overflow-x-auto snap-x snap-mandatory no-scrollbar h-[85vh]">
             {productImages.map((src, index) => (
@@ -257,96 +224,6 @@ export function ProductPreview({
                 </div>
             ))}
         </div>
-    </div>
-  )
-}
-
-/* 
-   Sub-component for Desktop Text Animations
-   Used only in the Desktop view to handle the smooth entry/exit of text
-*/
-interface TranslateProps {
-  arr: ProductPreviewProps["articleTop"]
-  index: number
-  type: "title" | "description" | "icon"
-  pos: 1 | 2
-}
-
-const Translate: React.FC<TranslateProps> = ({ arr, index, type, pos }) => {
-  const previousIndex = useRef<number | null>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const safeIndex = Math.max(index, 0)
-
-  const direction =
-    previousIndex.current !== null && safeIndex < previousIndex.current
-      ? "backward"
-      : "forward"
-
-  useGSAP(() => {
-    if (!contentRef.current) return
-    const height = contentRef.current.offsetHeight || 50
-    const ease = "power2.out"
-    const duration = 0.4
-
-    // Only animate if index changed
-    if (previousIndex.current !== safeIndex) {
-        if (direction === "forward") {
-        gsap.fromTo(
-            contentRef.current,
-            { y: height, opacity: 0 },
-            { y: 0, opacity: 1, duration, ease }
-        )
-        } else {
-        gsap.fromTo(
-            contentRef.current,
-            { y: -height, opacity: 0 },
-            { y: 0, opacity: 1, duration, ease }
-        )
-        }
-    }
-  }, [safeIndex])
-
-  useEffect(() => {
-    previousIndex.current = safeIndex
-  }, [safeIndex])
-
-  if (index < 0) return null
-
-  const renderContent = () => {
-    if (safeIndex >= arr.length) return null
-    switch (type) {
-      case "title":
-        return arr[safeIndex].title.text
-      case "description":
-        return arr[safeIndex].description.text
-      case "icon":
-        return arr[safeIndex].icon
-      default:
-        return null
-    }
-  }
-
-  const getClassName = () => {
-    switch (type) {
-      case "title":
-        return cn("font-serif text-3xl md:text-5xl mb-2 leading-none will-change-transform", arr[safeIndex]?.title.className)
-      case "description":
-        return cn("font-sans text-xs md:text-sm text-stone-400 leading-relaxed font-medium will-change-transform", arr[safeIndex]?.description.className)
-      case "icon":
-        return cn(
-            "text-stone-300 md:scale-125 opacity-80 will-change-transform",
-            pos === 1 ? "py-2 origin-left" : "py-2 origin-right"
-        )
-      default:
-        return ""
-    }
-  }
-
-  return (
-    <div className="overflow-hidden">
-      <div ref={contentRef} className={getClassName()}>
-        {renderContent()}
-      </div>
     </div>
   )
 }

@@ -334,11 +334,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* PRODUCT PREVIEW / SPECIFICATIONS SCROLL */}
+      {/* PRODUCT PREVIEW */}
       <section className="w-full bg-obsidian border-t border-stone-800">
-        <div className="w-full h-40 bg-obsidian text-stone-300 flex justify-center items-center px-3 border-b border-stone-800/50">
-             <span className="text-xs uppercase tracking-[0.3em] opacity-80 animate-pulse">Scroll to Explore Details</span>
-        </div>
         <ProductPreview
             productImages={previewImages}
             glowColors={glowColors}

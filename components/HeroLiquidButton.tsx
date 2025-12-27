@@ -34,8 +34,11 @@ const liquidbuttonVariants = cva(
 )
 
 export interface HeroLiquidButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof liquidbuttonVariants> {}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
+  size?: "default" | "sm" | "lg" | "xl" | "xxl" | "icon" | null | undefined;
+  asChild?: boolean;
+}
 
 export const HeroLiquidButton = React.forwardRef<HTMLButtonElement, HeroLiquidButtonProps>(
   ({ className, variant, size, children, ...props }, ref) => {
