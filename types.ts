@@ -8,6 +8,8 @@ export interface Product {
   images: string[];
   sizes: string[];
   inStock: boolean;
+  video?: string; // URL for Unboxing Experience (Bottom)
+  galleryVideo?: string; // URL for Gallery Video (Beside Images)
 }
 
 export interface CartItem extends Product {

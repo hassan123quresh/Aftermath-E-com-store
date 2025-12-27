@@ -18,7 +18,9 @@ const AdminProducts = () => {
       description: '',
       images: [],
       sizes: ['XS', 'S', 'M', 'L'],
-      inStock: true
+      inStock: true,
+      video: '',
+      galleryVideo: ''
   };
   
   const [productForm, setProductForm] = useState<Partial<Product>>(initialProductState);
@@ -55,7 +57,9 @@ const AdminProducts = () => {
               description: productForm.description || '',
               images: productForm.images?.length ? productForm.images : ['https://picsum.photos/800/1000'],
               sizes: productForm.sizes || [],
-              inStock: productForm.inStock !== undefined ? productForm.inStock : true
+              inStock: productForm.inStock !== undefined ? productForm.inStock : true,
+              video: productForm.video || '',
+              galleryVideo: productForm.galleryVideo || ''
           };
 
           if (productForm.id) {
@@ -188,6 +192,28 @@ const AdminProducts = () => {
                               </div>
                           ))}
                       </div>
+                  </div>
+
+                  {/* Video URL Input - Unboxing */}
+                  <div>
+                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Unboxing Video URL (Bottom Section)</label>
+                      <input 
+                          className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                          value={productForm.video || ''}
+                          onChange={e => setProductForm({...productForm, video: e.target.value})}
+                          placeholder="https://..."
+                      />
+                  </div>
+
+                  {/* Video URL Input - Gallery */}
+                  <div>
+                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Gallery Video URL (Beside Images)</label>
+                      <input 
+                          className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                          value={productForm.galleryVideo || ''}
+                          onChange={e => setProductForm({...productForm, galleryVideo: e.target.value})}
+                          placeholder="https://..."
+                      />
                   </div>
 
                   <div className="flex gap-4 pt-6 border-t border-stone-100">

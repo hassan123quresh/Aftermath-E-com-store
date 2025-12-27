@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle } from 'lucide-react';
+import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle, PlayCircle } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
@@ -73,7 +73,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { products, addToCart, toggleCart, showToast } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [activeImgIndex, setActiveImgIndex] = useState(0);
+  const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [showSizeError, setShowSizeError] = useState(false);
   
   // Ref for main image to perform animation
@@ -106,6 +106,14 @@ const ProductDetail = () => {
 
   if (!product) return <div className="h-screen flex items-center justify-center">Product not found.</div>;
 
+  // Construct mixed media array
+  const mediaItems = [
+      ...product.images.map(src => ({ type: 'image' as const, src })),
+      ...(product.galleryVideo ? [{ type: 'video' as const, src: product.galleryVideo }] : [])
+  ];
+
+  const activeMedia = mediaItems[activeMediaIndex];
+
   const relatedProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
@@ -121,48 +129,50 @@ const ProductDetail = () => {
       return;
     }
     
-    // Animation Logic
-    const imgElement = mainImageRef.current;
-    const cartIcon = document.getElementById('cart-icon-btn');
+    // Animation Logic - Only if current media is an image
+    if (activeMedia.type === 'image') {
+        const imgElement = mainImageRef.current;
+        const cartIcon = document.getElementById('cart-icon-btn');
 
-    if (imgElement && cartIcon) {
-        const imgRect = imgElement.getBoundingClientRect();
-        const cartRect = cartIcon.getBoundingClientRect();
+        if (imgElement && cartIcon) {
+            const imgRect = imgElement.getBoundingClientRect();
+            const cartRect = cartIcon.getBoundingClientRect();
 
-        const flyingImg = imgElement.cloneNode() as HTMLImageElement;
-        
-        // Initial Styles
-        flyingImg.style.position = 'fixed';
-        flyingImg.style.left = `${imgRect.left}px`;
-        flyingImg.style.top = `${imgRect.top}px`;
-        flyingImg.style.width = `${imgRect.width}px`;
-        flyingImg.style.height = `${imgRect.height}px`;
-        flyingImg.style.zIndex = '1000';
-        flyingImg.style.pointerEvents = 'none';
-        flyingImg.style.transition = 'all 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
-        flyingImg.style.opacity = '1';
-        flyingImg.style.borderRadius = '0';
-        flyingImg.style.objectFit = 'cover';
+            const flyingImg = imgElement.cloneNode() as HTMLImageElement;
+            
+            // Initial Styles
+            flyingImg.style.position = 'fixed';
+            flyingImg.style.left = `${imgRect.left}px`;
+            flyingImg.style.top = `${imgRect.top}px`;
+            flyingImg.style.width = `${imgRect.width}px`;
+            flyingImg.style.height = `${imgRect.height}px`;
+            flyingImg.style.zIndex = '1000';
+            flyingImg.style.pointerEvents = 'none';
+            flyingImg.style.transition = 'all 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
+            flyingImg.style.opacity = '1';
+            flyingImg.style.borderRadius = '0';
+            flyingImg.style.objectFit = 'cover';
 
-        document.body.appendChild(flyingImg);
+            document.body.appendChild(flyingImg);
 
-        // Force Reflow
-        void flyingImg.offsetHeight;
+            // Force Reflow
+            void flyingImg.offsetHeight;
 
-        // Target Styles (Center of the cart button)
-        const targetX = cartRect.left + cartRect.width / 2 - 10;
-        const targetY = cartRect.top + cartRect.height / 2 - 10;
+            // Target Styles (Center of the cart button)
+            const targetX = cartRect.left + cartRect.width / 2 - 10;
+            const targetY = cartRect.top + cartRect.height / 2 - 10;
 
-        flyingImg.style.left = `${targetX}px`;
-        flyingImg.style.top = `${targetY}px`;
-        flyingImg.style.width = '20px';
-        flyingImg.style.height = '20px';
-        flyingImg.style.opacity = '0';
-        flyingImg.style.borderRadius = '50%';
+            flyingImg.style.left = `${targetX}px`;
+            flyingImg.style.top = `${targetY}px`;
+            flyingImg.style.width = '20px';
+            flyingImg.style.height = '20px';
+            flyingImg.style.opacity = '0';
+            flyingImg.style.borderRadius = '50%';
 
-        setTimeout(() => {
-            flyingImg.remove();
-        }, 800);
+            setTimeout(() => {
+                flyingImg.remove();
+            }, 800);
+        }
     }
     
     // Provide visual feedback
@@ -199,12 +209,12 @@ const ProductDetail = () => {
       }, 500);
   };
 
-  const handleNextImage = () => {
-      setActiveImgIndex((prev) => (prev + 1) % product.images.length);
+  const handleNextMedia = () => {
+      setActiveMediaIndex((prev) => (prev + 1) % mediaItems.length);
   };
 
-  const handlePrevImage = () => {
-      setActiveImgIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+  const handlePrevMedia = () => {
+      setActiveMediaIndex((prev) => (prev - 1 + mediaItems.length) % mediaItems.length);
   };
 
   // Swipe Handlers
@@ -226,16 +236,16 @@ const ProductDetail = () => {
       const isRightSwipe = distance < -minSwipeDistance;
       
       if (isLeftSwipe) {
-          handleNextImage();
+          handleNextMedia();
       }
       if (isRightSwipe) {
-          handlePrevImage();
+          handlePrevMedia();
       }
   };
 
   const toggleZoom = () => {
-      // Only allow zoom on desktop view (md and up)
-      if (window.innerWidth >= 768) {
+      // Only allow zoom on desktop view (md and up) and if it's an image
+      if (window.innerWidth >= 768 && activeMedia.type === 'image') {
           setIsZoomed(!isZoomed);
       }
   };
@@ -317,37 +327,49 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* Images - Sticky functionality moved here for better scrolling experience */}
         <div className="space-y-2 lg:sticky lg:top-28">
-            {/* Main Image Container */}
+            {/* Main Media Container */}
             <div 
-                className="aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group md:cursor-zoom-in"
+                className={`aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group ${activeMedia.type === 'image' ? 'md:cursor-zoom-in' : ''}`}
                 onTouchStart={onTouchStart}
                 onTouchMove={onTouchMove}
                 onTouchEnd={onTouchEnd}
                 onClick={toggleZoom}
             >
-                <img 
-                    ref={mainImageRef}
-                    src={product.images[activeImgIndex]} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover select-none"
-                    width="600"
-                    height="750"
-                    loading="eager"
-                    draggable="false"
-                />
+                {activeMedia.type === 'image' ? (
+                    <img 
+                        ref={mainImageRef}
+                        src={activeMedia.src} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover select-none"
+                        width="600"
+                        height="750"
+                        loading="eager"
+                        draggable="false"
+                    />
+                ) : (
+                    <video
+                        src={activeMedia.src}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        controls={true}
+                    />
+                )}
 
                 {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
-                {product.images.length > 1 && (
+                {mediaItems.length > 1 && (
                     <>
                         <button 
-                            onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                            onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
                             className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                             aria-label="Previous image"
                         >
                             <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
                         </button>
                         <button 
-                            onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                            onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
                             className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
                             aria-label="Next image"
                         >
@@ -356,21 +378,32 @@ const ProductDetail = () => {
                     </>
                 )}
 
-                {/* Desktop Zoom Hint */}
-                <div className="hidden md:flex absolute bottom-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
-                    <ZoomIn className="w-5 h-5 text-obsidian drop-shadow-md" />
-                </div>
+                {/* Desktop Zoom Hint (Only for Images) */}
+                {activeMedia.type === 'image' && (
+                    <div className="hidden md:flex absolute bottom-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                        <ZoomIn className="w-5 h-5 text-obsidian drop-shadow-md" />
+                    </div>
+                )}
             </div>
             
             {/* Thumbnails */}
             <div className="grid grid-cols-4 gap-2">
-                {product.images.map((img, idx) => (
+                {mediaItems.map((item, idx) => (
                     <button 
                         key={idx} 
-                        onClick={() => setActiveImgIndex(idx)}
-                        className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 ${activeImgIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
+                        onClick={() => setActiveMediaIndex(idx)}
+                        className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 relative group ${activeMediaIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
                     >
-                        <img src={img} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
+                        {item.type === 'image' ? (
+                            <img src={item.src} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
+                        ) : (
+                            <div className="w-full h-full bg-stone-900 flex items-center justify-center relative">
+                                <video src={item.src} className="w-full h-full object-cover opacity-50" muted />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <PlayCircle className="w-8 h-8 text-white opacity-80 group-hover:opacity-100" />
+                                </div>
+                            </div>
+                        )}
                     </button>
                 ))}
             </div>
@@ -491,24 +524,26 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Unboxing Experience Section */}
-      <div className="mt-24 md:mt-32 w-full">
-          <div className="text-center mb-8 md:mb-12">
-               <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-3 block text-stone-500">The Ritual</span>
-               <h2 className="font-serif text-3xl md:text-5xl text-obsidian">Unboxing Experience</h2>
+      {/* Unboxing Experience Section - Always at Bottom */}
+      {product.video && (
+          <div className="mt-24 md:mt-32 w-full">
+              <div className="text-center mb-8 md:mb-12">
+                   <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-3 block text-stone-500">The Ritual</span>
+                   <h2 className="font-serif text-3xl md:text-5xl text-obsidian">Unboxing Experience</h2>
+              </div>
+              <div className="w-full max-w-5xl mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-obsidian/5 bg-stone-100 flex justify-center bg-black">
+                  <video 
+                    src={product.video}
+                    className="w-full h-auto md:w-auto md:max-w-full md:max-h-[85vh] md:mx-auto block"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls={false}
+                  />
+              </div>
           </div>
-          <div className="w-full max-w-5xl mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-obsidian/5 bg-stone-100">
-              <video 
-                src="https://res.cloudinary.com/dacyy7rkn/video/upload/v1766844054/CanafeelingstartbeforetheproductdoesYouknowhowsomethingsalreadyfeelconsideredbef1-FPS-Videobolt.net-ezgif.com-video-cutter_jda8zx.mp4"
-                className="w-full h-auto block"
-                autoPlay
-                loop
-                muted
-                playsInline
-                controls={false}
-              />
-          </div>
-      </div>
+      )}
 
       {/* Related */}
       {relatedProducts.length > 0 && (
@@ -533,8 +568,8 @@ const ProductDetail = () => {
           </div>
       )}
 
-      {/* Desktop Zoom Modal */}
-      {isZoomed && (
+      {/* Desktop Zoom Modal - Only active for images */}
+      {isZoomed && activeMedia.type === 'image' && (
         <div 
             className="fixed inset-0 z-[100] bg-obsidian/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
             onClick={() => setIsZoomed(false)}
@@ -549,7 +584,7 @@ const ProductDetail = () => {
 
             {/* Navigation Buttons */}
             <button 
-                onClick={(e) => { e.stopPropagation(); handlePrevImage(); }}
+                onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
                 className="hidden md:block absolute left-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
             >
                 <ChevronLeft className="w-12 h-12 stroke-[0.5]" />
@@ -557,14 +592,14 @@ const ProductDetail = () => {
 
             {/* Zoomed Image */}
             <img 
-                src={product.images[activeImgIndex]} 
+                src={activeMedia.src} 
                 alt={product.name}
                 className="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl cursor-default select-none"
                 onClick={(e) => e.stopPropagation()} 
             />
 
             <button 
-                onClick={(e) => { e.stopPropagation(); handleNextImage(); }}
+                onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
                 className="hidden md:block absolute right-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
             >
                 <ChevronRight className="w-12 h-12 stroke-[0.5]" />
@@ -572,7 +607,7 @@ const ProductDetail = () => {
             
             {/* Image Counter */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest uppercase font-sans">
-                {activeImgIndex + 1} / {product.images.length}
+                {activeMediaIndex + 1} / {mediaItems.length}
             </div>
         </div>
       )}

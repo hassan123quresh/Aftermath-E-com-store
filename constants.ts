@@ -23,6 +23,8 @@ export const MOCK_PRODUCTS: Product[] = [
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
+    video: 'https://res.cloudinary.com/dacyy7rkn/video/upload/v1766844054/CanafeelingstartbeforetheproductdoesYouknowhowsomethingsalreadyfeelconsideredbef1-FPS-Videobolt.net-ezgif.com-video-cutter_jda8zx.mp4',
+    galleryVideo: 'https://res.cloudinary.com/dacyy7rkn/video/upload/v1766845175/It_is_always_the_small_things_that_set_a_piece_apart._Fine_details_take_time_and_attention_and_isobwr.mp4',
   },
   {
     id: 'p6',
