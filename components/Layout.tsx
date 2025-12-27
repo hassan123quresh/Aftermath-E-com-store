@@ -375,7 +375,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
 
           {/* Support */}
-          <div>
+          <div className="lg:pt-6">
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Support</h4>
             <ul className="space-y-4 text-sm opacity-80">
               <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
@@ -384,7 +384,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
 
           {/* Policy */}
-          <div>
+          <div className="lg:pt-6">
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Policy</h4>
             <ul className="space-y-4 text-sm opacity-80">
               <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
@@ -394,7 +394,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
 
           {/* Explore */}
-          <div>
+          <div className="lg:pt-6">
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Explore</h4>
             <ul className="space-y-4 text-sm opacity-80">
                <li><Link to="/collection" className="hover:text-white transition-colors">The Collection</Link></li>
@@ -403,7 +403,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
 
           {/* Connect */}
-          <div>
+          <div className="lg:pt-6">
             <h4 className="text-xs uppercase tracking-widest mb-6 opacity-50">Connect</h4>
             <div className="flex flex-col gap-4">
                {/* Instagram */}
