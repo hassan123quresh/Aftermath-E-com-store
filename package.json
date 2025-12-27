@@ -22,7 +22,8 @@
     "tailwind-merge": "^3.4.0",
     "class-variance-authority": "^0.7.1",
     "gsap": "^3.14.2",
-    "@gsap/react": "2.1.0"
+    "@gsap/react": "2.1.0",
+    "framer-motion": "^12.23.26"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

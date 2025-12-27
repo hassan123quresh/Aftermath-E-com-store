@@ -7,6 +7,7 @@ import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 import { ProductPreview } from '../components/ProductPreview';
 import ThreeDCarousel, { ThreeDCarouselItem } from '../components/ThreeDCarousel';
+import CraftingSection from '../components/CraftingSection';
 import StarRating from '../components/StarRating';
 import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
@@ -404,6 +405,9 @@ const Home = () => {
             </div>
         </div>
       </section>
+
+      {/* Crafting Section */}
+      <CraftingSection />
 
       {/* Philosophy Section */}
       <section id="philosophy" className="bg-stone-200 py-40 px-6 relative overflow-hidden">
