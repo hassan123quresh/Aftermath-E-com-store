@@ -111,6 +111,10 @@ const ProductDetail = () => {
 
   if (!product) return <div className="h-screen flex items-center justify-center">Product not found.</div>;
 
+  // Global Stock Check
+  const totalStock = product.inventory.reduce((acc, v) => acc + v.stock, 0);
+  const isCompletelySoldOut = totalStock <= 0;
+
   // Calculate Ratings
   const productReviews = reviews.filter(r => r.productId === product.id);
   const avgRating = productReviews.length > 0 
@@ -135,6 +139,8 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
+    if (isCompletelySoldOut) return;
+
     if (!selectedSize) {
       setShowSizeError(true);
       return;
@@ -203,6 +209,7 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
+      if (isCompletelySoldOut) return;
       if (!selectedSize) {
         setShowSizeError(true);
         return;
@@ -375,7 +382,7 @@ const ProductDetail = () => {
                             ref={mainImageRef}
                             src={activeMedia.src} 
                             alt={product.name} 
-                            className="w-full h-full object-cover select-none"
+                            className={`w-full h-full object-cover select-none ${isCompletelySoldOut ? 'opacity-80' : ''}`}
                             width="600"
                             height="750"
                             loading="eager"
@@ -391,6 +398,12 @@ const ProductDetail = () => {
                             playsInline
                             controls={true}
                         />
+                    )}
+
+                    {isCompletelySoldOut && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-obsidian/10">
+                            <span className="bg-white/90 px-6 py-3 text-sm font-bold uppercase tracking-widest text-obsidian border border-obsidian/10 shadow-lg">Sold Out</span>
+                        </div>
                     )}
 
                     {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
@@ -430,7 +443,7 @@ const ProductDetail = () => {
                             className={`aspect-[3/4] overflow-hidden rounded-md transition-all duration-300 relative group ${activeMediaIndex === idx ? 'ring-2 ring-obsidian opacity-100' : 'opacity-60 hover:opacity-80'}`}
                         >
                             {item.type === 'image' ? (
-                                <img src={item.src} className="w-full h-full object-cover" alt="" width="150" height="200" loading="lazy" />
+                                <img src={item.src} className={`w-full h-full object-cover ${isCompletelySoldOut ? 'opacity-50' : ''}`} alt="" width="150" height="200" loading="lazy" />
                             ) : (
                                 <div className="w-full h-full bg-stone-900 flex items-center justify-center relative">
                                     <video src={item.src} className="w-full h-full object-cover opacity-50" muted />
@@ -479,6 +492,11 @@ const ProductDetail = () => {
                         <span className="text-xs text-stone-500 underline decoration-stone-300 underline-offset-4">
                             {productReviews.length} {productReviews.length === 1 ? 'Review' : 'Reviews'}
                         </span>
+                        {totalStock < 10 && totalStock > 0 && (
+                             <span className="text-[10px] font-bold uppercase tracking-widest text-amber-700 ml-3 bg-amber-50 px-2 py-0.5 rounded">
+                                 Only {totalStock} Left
+                             </span>
+                        )}
                     </div>
                 </div>
             </div>
@@ -488,26 +506,31 @@ const ProductDetail = () => {
                 <div>
                     <div className="flex justify-between mb-4">
                         <span className={`text-xs uppercase tracking-widest transition-colors duration-300 ${showSizeError ? 'text-red-700 font-bold' : 'opacity-60 text-obsidian'}`}>
-                            {showSizeError ? 'Please Select a Size' : 'Select Size'}
+                            {isCompletelySoldOut ? 'Sold Out' : (showSizeError ? 'Please Select a Size' : 'Select Size')}
                         </span>
                         <Link to="/faq" className="text-xs underline opacity-40 cursor-pointer hover:text-obsidian transition-colors">Size Guide & FAQ</Link>
                     </div>
-                    <div className="flex gap-4">
-                        {product.sizes.map(size => (
-                            <LiquidButton
-                                key={size}
-                                onClick={() => handleSizeSelect(size)}
-                                size="lg"
-                                variant={selectedSize === size ? 'solid' : 'outline'}
-                                className={`w-12 h-12 p-0 ${
-                                    selectedSize !== size ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
-                                } ${
-                                    showSizeError && selectedSize !== size ? 'border-red-300 bg-red-50' : ''
-                                }`}
-                            >
-                                {size}
-                            </LiquidButton>
-                        ))}
+                    <div className="flex flex-wrap gap-4">
+                        {product.inventory.map(variant => {
+                            const isVariantSoldOut = variant.stock <= 0;
+                            return (
+                                <LiquidButton
+                                    key={variant.size}
+                                    onClick={() => !isVariantSoldOut && handleSizeSelect(variant.size)}
+                                    size="lg"
+                                    variant={selectedSize === variant.size ? 'solid' : 'outline'}
+                                    className={`min-w-[48px] h-12 p-0 px-2 ${
+                                        selectedSize !== variant.size ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
+                                    } ${
+                                        showSizeError && selectedSize !== variant.size ? 'border-red-300 bg-red-50' : ''
+                                    } ${isVariantSoldOut ? 'opacity-40 cursor-not-allowed hover:border-obsidian/30 border-dashed bg-stone-100' : ''}`}
+                                    disabled={isVariantSoldOut}
+                                    title={isVariantSoldOut ? 'Out of Stock' : `${variant.stock} left`}
+                                >
+                                    {variant.size}
+                                </LiquidButton>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -520,20 +543,22 @@ const ProductDetail = () => {
                             activeButton !== 'cart' ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
                         } ${
                             activeButton === 'cart' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
-                        }`}
+                        } ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed hover:border-obsidian/30' : ''}`}
                         fullWidth
+                        disabled={isCompletelySoldOut}
                     >
-                        {activeButton === 'cart' ? 'Added' : 'Add to Cart'}
+                        {isCompletelySoldOut ? 'Sold Out' : (activeButton === 'cart' ? 'Added' : 'Add to Cart')}
                     </LiquidButton>
                     <LiquidButton
                         onClick={handleBuyNow}
                         variant="solid"
                         className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
                              activeButton === 'buy' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
-                        }`}
+                        } ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                         fullWidth
+                        disabled={isCompletelySoldOut}
                     >
-                        {activeButton === 'buy' ? 'Proceeding...' : 'Buy Now'}
+                        {isCompletelySoldOut ? 'Sold Out' : (activeButton === 'buy' ? 'Proceeding...' : 'Buy Now')}
                     </LiquidButton>
                 </div>
 

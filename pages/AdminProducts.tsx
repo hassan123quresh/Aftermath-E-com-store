@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
-import { Product, Review } from '../types';
-import { Plus, Trash2, Edit2, X, Settings, MessageSquare } from 'lucide-react';
+import { Product, ProductVariant } from '../types';
+import { Plus, Trash2, Edit2, X, Settings, MessageSquare, AlertCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 
 const AdminProducts = () => {
@@ -22,7 +22,13 @@ const AdminProducts = () => {
       category: categories[0] || '',
       description: '',
       images: [],
-      sizes: ['XS', 'S', 'M', 'L'],
+      inventory: [
+          { size: 'XS', stock: 0 },
+          { size: 'S', stock: 0 },
+          { size: 'M', stock: 0 },
+          { size: 'L', stock: 0 },
+          { size: 'XL', stock: 0 }
+      ],
       inStock: true,
       video: '',
       galleryVideo: ''
@@ -30,6 +36,10 @@ const AdminProducts = () => {
   
   const [productForm, setProductForm] = useState<Partial<Product>>(initialProductState);
   const [imgUrlInput, setImgUrlInput] = useState('');
+  
+  // Inventory Manager State
+  const [newVariantSize, setNewVariantSize] = useState('');
+  const [newVariantStock, setNewVariantStock] = useState(0);
 
   // Handle entering Edit Mode
   const handleEditClick = (product: Product) => {
@@ -51,8 +61,43 @@ const AdminProducts = () => {
       setProductForm({...productForm, images: newImages});
   };
 
+  // Inventory Handlers
+  const handleAddVariant = () => {
+      if (newVariantSize) {
+          const updatedInventory = [...(productForm.inventory || [])];
+          // Check if size already exists
+          const existingIndex = updatedInventory.findIndex(v => v.size.toLowerCase() === newVariantSize.toLowerCase());
+          
+          if (existingIndex >= 0) {
+              // Update stock if exists
+              updatedInventory[existingIndex].stock = newVariantStock;
+          } else {
+              // Add new
+              updatedInventory.push({ size: newVariantSize.toUpperCase(), stock: newVariantStock });
+          }
+          
+          setProductForm({ ...productForm, inventory: updatedInventory });
+          setNewVariantSize('');
+          setNewVariantStock(0);
+      }
+  };
+
+  const handleRemoveVariant = (index: number) => {
+      const updatedInventory = [...(productForm.inventory || [])];
+      updatedInventory.splice(index, 1);
+      setProductForm({ ...productForm, inventory: updatedInventory });
+  };
+
+  const handleVariantStockChange = (index: number, val: number) => {
+      const updatedInventory = [...(productForm.inventory || [])];
+      updatedInventory[index].stock = val;
+      setProductForm({ ...productForm, inventory: updatedInventory });
+  };
+
   const handleSave = () => {
       if(productForm.name && productForm.price) {
+          const totalStock = (productForm.inventory || []).reduce((acc, v) => acc + v.stock, 0);
+          
           const finalProduct: Product = {
               id: productForm.id || `p-${Date.now()}`,
               name: productForm.name!,
@@ -61,11 +106,13 @@ const AdminProducts = () => {
               category: productForm.category || 'Uncategorized',
               description: productForm.description || '',
               images: productForm.images?.length ? productForm.images : ['https://picsum.photos/800/1000'],
-              sizes: productForm.sizes || [],
-              inStock: productForm.inStock !== undefined ? productForm.inStock : true,
+              inventory: productForm.inventory || [],
+              inStock: productForm.inStock !== undefined ? productForm.inStock : (totalStock > 0),
+              stock: totalStock, // Derived global stock count for backward compat if needed, mainly explicit inventory used now
+              sizes: (productForm.inventory || []).map(v => v.size), // Derived sizes array
               video: productForm.video || '',
               galleryVideo: productForm.galleryVideo || ''
-          };
+          } as Product; // Cast to Product to satisfy legacy generic type check if needed, though we updated interface
 
           if (productForm.id) {
               updateProduct(finalProduct);
@@ -161,18 +208,67 @@ const AdminProducts = () => {
                             </div>
                       </div>
 
-                      {/* Stock Status */}
+                      {/* Global Status */}
                       <div>
-                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Stock Status</label>
+                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Visibility</label>
                             <select 
                                 className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none bg-white"
                                 value={productForm.inStock ? "true" : "false"}
                                 onChange={e => setProductForm({...productForm, inStock: e.target.value === 'true'})}
                             >
-                                <option value="true">In Stock</option>
-                                <option value="false">Out of Stock</option>
+                                <option value="true">Active</option>
+                                <option value="false">Hidden</option>
                             </select>
                       </div>
+                   </div>
+
+                   {/* Inventory Manager */}
+                   <div className="border-t border-b border-stone-100 py-6 my-2">
+                       <label className="block text-xs uppercase opacity-50 mb-3 font-bold">Inventory by Size</label>
+                       
+                       {/* Add Variant Form */}
+                       <div className="flex gap-2 mb-4 bg-stone-50 p-3 rounded-lg border border-stone-200">
+                           <input 
+                               placeholder="Size (e.g. XXL or Custom)"
+                               className="flex-1 border border-stone-300 p-2 text-sm rounded focus:border-obsidian outline-none"
+                               value={newVariantSize}
+                               onChange={e => setNewVariantSize(e.target.value)}
+                           />
+                           <input 
+                               type="number"
+                               placeholder="Stock"
+                               className="w-24 border border-stone-300 p-2 text-sm rounded focus:border-obsidian outline-none"
+                               min="0"
+                               value={newVariantStock}
+                               onChange={e => setNewVariantStock(Number(e.target.value))}
+                           />
+                           <button onClick={handleAddVariant} className="bg-obsidian text-white px-4 py-2 text-xs uppercase font-bold rounded">Add</button>
+                       </div>
+
+                       {/* Variant List */}
+                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                           {productForm.inventory?.map((variant, idx) => (
+                               <div key={idx} className="flex items-center justify-between p-3 border border-stone-200 rounded bg-white">
+                                   <div className="flex flex-col">
+                                       <span className="font-bold text-sm">{variant.size}</span>
+                                       <span className="text-[10px] text-stone-400 uppercase tracking-wider">Size</span>
+                                   </div>
+                                   <div className="flex items-center gap-2">
+                                       <input 
+                                           type="number" 
+                                           className="w-16 border border-stone-300 p-1 text-sm rounded text-center focus:border-obsidian outline-none"
+                                           value={variant.stock}
+                                           onChange={(e) => handleVariantStockChange(idx, Number(e.target.value))}
+                                           min="0"
+                                       />
+                                       <button onClick={() => handleRemoveVariant(idx)} className="text-stone-400 hover:text-red-600"><X className="w-4 h-4" /></button>
+                                   </div>
+                               </div>
+                           ))}
+                           {(!productForm.inventory || productForm.inventory.length === 0) && (
+                               <p className="col-span-full text-center text-sm text-stone-400 italic py-2">No sizes defined. Add one above.</p>
+                           )}
+                       </div>
                    </div>
 
                    <div>
@@ -270,30 +366,44 @@ const AdminProducts = () => {
 
       <div className="bg-white border border-stone-200 overflow-hidden rounded-lg shadow-sm">
         <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[600px]">
+            <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>
                     <tr className="bg-stone-100 text-xs uppercase tracking-widest text-stone-500">
                         <th className="p-4 font-normal">Image</th>
                         <th className="p-4 font-normal">Name</th>
                         <th className="p-4 font-normal">Category</th>
                         <th className="p-4 font-normal">Price</th>
+                        <th className="p-4 font-normal">Total Stock</th>
                         <th className="p-4 font-normal text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map(product => (
+                    {products.map(product => {
+                        const totalStock = product.inventory.reduce((acc, v) => acc + v.stock, 0);
+                        return (
                         <tr key={product.id} className="border-t border-stone-100 hover:bg-stone-50 transition-colors">
                             <td className="p-4">
                                 <img src={product.images[0]} alt="" className="w-10 h-12 object-cover bg-stone-200 rounded-sm" />
                             </td>
                             <td className="p-4 font-medium text-sm">
                                 {product.name}
-                                {!product.inStock && <span className="ml-2 text-[9px] bg-stone-200 px-1 rounded text-stone-500 uppercase">OOS</span>}
+                                {!product.inStock && <span className="ml-2 text-[9px] bg-stone-200 px-1 rounded text-stone-500 uppercase">Hidden</span>}
                             </td>
                             <td className="p-4 text-stone-500 text-xs md:text-sm">{product.category}</td>
                             <td className="p-4 text-sm">
                                 {product.compareAtPrice && <span className="text-stone-400 line-through text-xs mr-2">{product.compareAtPrice.toLocaleString()}</span>}
                                 PKR {product.price.toLocaleString()}
+                            </td>
+                            <td className="p-4 text-sm">
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                    totalStock === 0 ? 'bg-red-100 text-red-700' :
+                                    totalStock < 10 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'
+                                }`}>
+                                    {totalStock} Units
+                                </span>
+                                <div className="text-[9px] text-stone-400 mt-1 max-w-[150px] truncate">
+                                    {product.inventory.map(v => `${v.size}:${v.stock}`).join(', ')}
+                                </div>
                             </td>
                             <td className="p-4 text-right space-x-2">
                                 <button onClick={() => setSelectedProductForReviews(product)} className="text-stone-400 hover:text-obsidian p-2 rounded-full hover:bg-stone-200 transition-colors" title="Manage Reviews"><MessageSquare className="w-4 h-4" /></button>
@@ -301,7 +411,7 @@ const AdminProducts = () => {
                                 <button onClick={() => deleteProduct(product.id)} className="text-stone-400 hover:text-red-900 p-2 rounded-full hover:bg-red-50 transition-colors" title="Delete"><Trash2 className="w-4 h-4" /></button>
                             </td>
                         </tr>
-                    ))}
+                    )})}
                 </tbody>
             </table>
         </div>

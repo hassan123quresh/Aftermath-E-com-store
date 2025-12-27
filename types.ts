@@ -1,3 +1,8 @@
+export interface ProductVariant {
+  size: string;
+  stock: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -6,8 +11,8 @@ export interface Product {
   description: string; // Markdown supported
   category: string;
   images: string[];
-  sizes: string[];
-  inStock: boolean;
+  inventory: ProductVariant[]; // Replaces global stock and sizes array
+  inStock: boolean; // Computed helper (true if any variant > 0)
   video?: string; // URL for Unboxing Experience (Bottom)
   galleryVideo?: string; // URL for Gallery Video (Beside Images)
 }
@@ -35,7 +40,7 @@ export interface Order {
   city: string;
   items: CartItem[];
   total: number;
-  status: 'Pending' | 'Confirmed' | 'Shipped' | 'Delivered';
+  status: 'Pending' | 'Confirmed' | 'Shipped' | 'Delivered' | 'Cancelled';
   paymentMethod: 'COD' | 'BankTransfer';
   date: string;
 }

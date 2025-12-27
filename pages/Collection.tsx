@@ -43,7 +43,23 @@ const Collection = () => {
   }, [products]);
 
   const allMaterials = ['Fleece', 'French Terry', 'Cotton', 'Knit'];
-  const allSizes = ['XS', 'S', 'M', 'L', 'XL'];
+  // Extract all unique sizes from all product inventories
+  const allSizes = useMemo(() => {
+      const sizes = new Set<string>();
+      products.forEach(p => {
+          p.inventory.forEach(v => sizes.add(v.size));
+      });
+      // Sort logic to keep standard sizes in order, then custom ones
+      const standardOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      return Array.from(sizes).sort((a, b) => {
+          const idxA = standardOrder.indexOf(a.toUpperCase());
+          const idxB = standardOrder.indexOf(b.toUpperCase());
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          return a.localeCompare(b);
+      });
+  }, [products]);
 
   // --- Filtering Logic ---
   const filteredProducts = useMemo(() => {
@@ -61,9 +77,9 @@ const Collection = () => {
               if (!hasMaterial) return false;
           }
 
-          // Size Filter
+          // Size Filter - Check if product has ANY of the selected sizes in its inventory
           if (selectedSizes.length > 0) {
-              const hasSize = product.sizes.some(s => selectedSizes.includes(s));
+              const hasSize = product.inventory.some(v => selectedSizes.includes(v.size));
               if (!hasSize) return false;
           }
 
@@ -243,6 +259,8 @@ const Collection = () => {
                         {sortedProducts.map((product, idx) => {
                             const isOnSale = product.compareAtPrice && product.compareAtPrice > product.price;
                             const discount = isOnSale ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100) : 0;
+                            const totalStock = product.inventory.reduce((acc, v) => acc + v.stock, 0);
+                            const isSoldOut = totalStock <= 0;
                             
                             const productReviews = reviews.filter(r => r.productId === product.id);
                             const avgRating = productReviews.length > 0 
@@ -274,7 +292,7 @@ const Collection = () => {
                                     width="400"
                                     height="533"
                                 />
-                                {!product.inStock && (
+                                {isSoldOut && (
                                     <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10">
                                         Sold Out
                                     </div>

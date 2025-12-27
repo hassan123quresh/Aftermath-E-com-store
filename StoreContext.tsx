@@ -64,8 +64,41 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       date: new Date().toISOString().split('T')[0],
       status: 'Pending',
     };
+    
+    // Add new order
     setOrders(prev => [newOrder, ...prev]);
+    
+    // Clear Cart
     setCart([]);
+    
+    // Update Product Stock (Size Specific)
+    setProducts(prevProducts => {
+      return prevProducts.map(product => {
+        // Find items in the order that match this product
+        const orderedItems = orderData.items.filter(item => item.id === product.id);
+
+        if (orderedItems.length > 0) {
+          // Clone inventory to avoid mutation
+          const newInventory = product.inventory.map(variant => {
+             // Check if this variant (size) was ordered
+             const orderedVariant = orderedItems.find(item => item.selectedSize === variant.size);
+             if (orderedVariant) {
+                 return { ...variant, stock: Math.max(0, variant.stock - orderedVariant.quantity) };
+             }
+             return variant;
+          });
+
+          const totalStock = newInventory.reduce((acc, v) => acc + v.stock, 0);
+
+          return {
+            ...product,
+            inventory: newInventory,
+            inStock: totalStock > 0
+          };
+        }
+        return product;
+      });
+    });
     
     // Update or Create Customer
     const normalizedPhone = orderData.customerPhone.replace(/\D/g, '');

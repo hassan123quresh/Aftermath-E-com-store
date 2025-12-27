@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useStore } from '../StoreContext';
 import { Order } from '../types';
-import { Eye, Download, X, Printer, Archive, Activity } from 'lucide-react';
+import { Eye, Download, X, Printer, Archive, Activity, Ban } from 'lucide-react';
 
 const AdminOrders = () => {
   const { orders, updateOrderStatus } = useStore();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
+  const [activeTab, setActiveTab] = useState<'active' | 'history' | 'cancelled'>('active');
 
   // Filter orders based on status
-  const activeOrders = orders.filter(o => o.status !== 'Delivered');
+  const activeOrders = orders.filter(o => !['Delivered', 'Cancelled'].includes(o.status));
   const deliveredOrders = orders.filter(o => o.status === 'Delivered');
+  const cancelledOrders = orders.filter(o => o.status === 'Cancelled');
 
-  const displayedOrders = activeTab === 'active' ? activeOrders : deliveredOrders;
+  const displayedOrders = activeTab === 'active' ? activeOrders : (activeTab === 'history' ? deliveredOrders : cancelledOrders);
 
   // Helper function to export orders to CSV
   const exportToCSV = () => {
@@ -195,6 +196,12 @@ const AdminOrders = () => {
                   >
                       <Archive className="w-3 h-3" /> Delivered ({deliveredOrders.length})
                   </button>
+                  <button 
+                      onClick={() => setActiveTab('cancelled')}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'cancelled' ? 'bg-red-900 text-white' : 'text-stone-500 hover:text-red-900'}`}
+                  >
+                      <Ban className="w-3 h-3" /> Cancelled ({cancelledOrders.length})
+                  </button>
               </div>
 
              <button 
@@ -234,6 +241,7 @@ const AdminOrders = () => {
                                     order.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' :
                                     order.status === 'Pending' ? 'bg-amber-100 text-amber-800' :
                                     order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                                    order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
                                     'bg-stone-200 text-stone-800'
                                 }`}>
                                     {order.status}
@@ -251,6 +259,7 @@ const AdminOrders = () => {
                                     <option value="Confirmed">Confirmed</option>
                                     <option value="Shipped">Shipped</option>
                                     <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
                                 </select>
                             </td>
                         </tr>
