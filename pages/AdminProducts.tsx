@@ -163,7 +163,9 @@ const AdminProducts = () => {
 
                   {/* Image Management */}
                   <div>
-                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Images (URL)</label>
+                      <label className="block text-xs uppercase opacity-50 mb-1 font-bold">
+                          Images (URL) <span className="normal-case font-medium text-stone-400 ml-1">- Rec: 3:4 Portrait (e.g. 1200x1600px)</span>
+                      </label>
                       <div className="flex gap-2">
                           <input 
                             className="flex-1 border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"

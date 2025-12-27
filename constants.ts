@@ -18,7 +18,8 @@ export const MOCK_PRODUCTS: Product[] = [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=800',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=800',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard2copy4.jpg?v=1763585095&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy5_8a6af684-d339-4b6a-b182-98dc5453ae4e.jpg?v=1763585095&width=800'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy5_8a6af684-d339-4b6a-b182-98dc5453ae4e.jpg?v=1763585095&width=800',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840067/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_wmbq5a.jpg'
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
@@ -32,7 +33,8 @@ export const MOCK_PRODUCTS: Product[] = [
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1_7a132423-3efa-4f07-bcca-69ba437b394e.jpg?v=1763591134&width=800',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy_1ca85ebc-9107-439c-9c50-f3bb58d37ecb.jpg?v=1763591134&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy3_fb280b84-80e9-42ea-94a7-1fc5eb48a131.jpg?v=1763591134&width=800'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy3_fb280b84-80e9-42ea-94a7-1fc5eb48a131.jpg?v=1763591134&width=800',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840208/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_2_zkkruc.jpg'
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,
@@ -61,7 +63,8 @@ export const MOCK_PRODUCTS: Product[] = [
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2.jpg?v=1763591103&width=800',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2_2.jpg?v=1763591103&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy2.jpg?v=1763591103&width=800'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy2.jpg?v=1763591103&width=800',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840206/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_1_nd9qbu.jpg'
     ],
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     inStock: true,

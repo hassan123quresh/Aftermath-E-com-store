@@ -284,11 +284,17 @@ const Home = () => {
                         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100"
                         loading="lazy"
                         />
+                        {/* Sale Badge */}
+                        {product.compareAtPrice && product.compareAtPrice > product.price && (
+                            <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-20">
+                                Sale
+                            </div>
+                        )}
                     </div>
                     <div className="flex flex-col items-start gap-2">
                         <div className="flex justify-between w-full items-start">
                             <h3 className="font-serif text-2xl md:text-3xl text-obsidian leading-none group-hover:underline underline-offset-4 decoration-1 decoration-stone-300 transition-all max-w-[60%]">{product.name}</h3>
-                            <PriceBadge price={product.price} />
+                            <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} />
                         </div>
                         <p className="text-[10px] uppercase tracking-widest text-stone-400 font-medium">{product.category}</p>
                     </div>

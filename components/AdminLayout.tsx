@@ -6,7 +6,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
 
   const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
     { icon: Package, label: 'Products', path: '/admin/products' },
     { icon: ShoppingCart, label: 'Orders', path: '/admin/orders' },
     { icon: Users, label: 'Customers', path: '/admin/customers' },
@@ -17,43 +17,42 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-stone-50 text-obsidian font-sans">
       
-      {/* MOBILE TOP NAVBAR (Horizontal) */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-40 bg-obsidian text-stone-300 shadow-md">
-         {/* Top Row: Brand & Exit */}
-         <div className="flex items-center justify-between px-4 py-3 border-b border-stone-800">
-             <div className="flex flex-col">
-                <Link to="/" className="block mb-1">
-                     <img 
-                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
-                        alt="Aftermath" 
-                        className="h-8 w-auto object-contain invert"
-                     />
-                </Link>
-                <span className="text-[9px] uppercase tracking-[0.2em] opacity-50">Admin Panel</span>
-             </div>
-             <Link to="/" className="p-2 -mr-2 text-stone-400 hover:text-white transition-colors">
-                <LogOut className="w-5 h-5" />
-             </Link>
+      {/* MOBILE TOP HEADER: Brand & Exit */}
+      <header className="md:hidden fixed top-0 inset-x-0 z-50 bg-obsidian text-stone-300 shadow-sm h-14 flex items-center justify-between px-4 border-b border-stone-800">
+         <div className="flex items-center gap-3">
+            <Link to="/" className="block">
+                 <img 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    alt="Aftermath" 
+                    className="h-6 w-auto object-contain invert"
+                 />
+            </Link>
+            <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 border-l border-stone-700 pl-3">Admin</span>
          </div>
-         
-         {/* Bottom Row: Navigation Items */}
-         <nav className="flex items-center justify-between px-2 overflow-x-auto no-scrollbar">
+         <Link to="/" className="p-2 -mr-2 text-stone-400 hover:text-white transition-colors">
+            <LogOut className="w-5 h-5" />
+         </Link>
+      </header>
+
+      {/* MOBILE BOTTOM NAVBAR: Navigation */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-obsidian text-stone-300 border-t border-stone-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+         <div className="flex items-center justify-between">
             {navItems.map(item => (
                 <Link 
                     key={item.path}
                     to={item.path}
-                    className={`flex-1 flex flex-col items-center justify-center py-3 min-w-[70px] border-b-2 transition-all duration-200 ${
+                    className={`flex-1 flex flex-col items-center justify-center py-3 active:bg-white/10 transition-colors ${
                         location.pathname === item.path || location.pathname.startsWith(item.path + '/')
-                        ? 'border-white text-white bg-white/5' 
-                        : 'border-transparent text-stone-500 hover:text-stone-300'
+                        ? 'text-white bg-white/5' 
+                        : 'text-stone-500 hover:text-stone-300'
                     }`}
                 >
                     <item.icon className={`w-5 h-5 mb-1 ${location.pathname === item.path || location.pathname.startsWith(item.path + '/') ? 'stroke-2' : 'stroke-1'}`} />
-                    <span className="text-[9px] uppercase tracking-wider font-medium">{item.label}</span>
+                    <span className="text-[8px] uppercase tracking-wider font-medium truncate max-w-full px-0.5">{item.label}</span>
                 </Link>
             ))}
-         </nav>
-      </header>
+         </div>
+      </nav>
 
       {/* DESKTOP SIDEBAR (Vertical) - Unchanged */}
       <aside className="hidden md:flex w-64 bg-obsidian text-stone-300 flex-col fixed inset-y-0 z-50">
@@ -93,8 +92,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content - Increased top padding for mobile to clear fixed header */}
-      <main className="flex-1 md:ml-64 pt-[160px] md:pt-12 p-4 md:p-12 overflow-y-auto w-full">
+      {/* Main Content - Adjusted padding for top header and bottom nav on mobile */}
+      <main className="flex-1 md:ml-64 pt-16 pb-24 md:py-12 p-4 md:p-12 overflow-y-auto w-full">
         {children}
       </main>
     </div>

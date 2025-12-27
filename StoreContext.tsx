@@ -121,6 +121,12 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   // Admin Actions
   const addProduct = (product: Product) => setProducts(prev => [product, ...prev]);
   const updateProduct = (product: Product) => setProducts(prev => prev.map(p => p.id === product.id ? product : p));
+  const updateProducts = (updatedProducts: Product[]) => {
+      setProducts(prev => {
+          const updatesMap = new Map(updatedProducts.map(p => [p.id, p]));
+          return prev.map(p => updatesMap.has(p.id) ? updatesMap.get(p.id)! : p);
+      });
+  };
   const deleteProduct = (id: string) => setProducts(prev => prev.filter(p => p.id !== id));
   
   const updateOrderStatus = (id: string, status: Order['status']) => {
@@ -177,6 +183,7 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       validatePromo,
       addProduct,
       updateProduct,
+      updateProducts,
       deleteProduct,
       updateOrderStatus,
       togglePromo,

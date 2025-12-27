@@ -163,7 +163,9 @@ const AdminBlogEditor = () => {
                 </div>
                 
                 <div className="col-span-1 md:col-span-2">
-                    <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Cover Image URL (Thumbnail)</label>
+                    <label className="block text-xs uppercase opacity-50 mb-1 font-bold">
+                        Cover Image URL (Thumbnail) <span className="normal-case font-medium text-stone-400 ml-1">- Rec: 16:9 Landscape (e.g. 1920x1080px)</span>
+                    </label>
                     <div className="flex gap-2">
                         <input 
                             className="flex-1 border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none font-mono"

@@ -381,7 +381,7 @@ const ProductDetail = () => {
             {/* Header */}
             <div className="mb-12 border-b border-obsidian/10 pb-8">
                 <h1 className="font-serif text-3xl md:text-4xl mb-4">{product.name}</h1>
-                <PriceBadge price={product.price} className="text-lg md:text-xl px-6 py-2" />
+                <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="text-lg md:text-xl px-6 py-2" />
             </div>
 
             <div className="space-y-8">
@@ -491,6 +491,25 @@ const ProductDetail = () => {
         </div>
       </div>
 
+      {/* Unboxing Experience Section */}
+      <div className="mt-24 md:mt-32 w-full">
+          <div className="text-center mb-8 md:mb-12">
+               <span className="text-[10px] uppercase tracking-[0.2em] opacity-50 mb-3 block text-stone-500">The Ritual</span>
+               <h2 className="font-serif text-3xl md:text-5xl text-obsidian">Unboxing Experience</h2>
+          </div>
+          <div className="w-full max-w-5xl mx-auto rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border border-obsidian/5 bg-stone-100">
+              <video 
+                src="https://res.cloudinary.com/dacyy7rkn/video/upload/v1766844054/CanafeelingstartbeforetheproductdoesYouknowhowsomethingsalreadyfeelconsideredbef1-FPS-Videobolt.net-ezgif.com-video-cutter_jda8zx.mp4"
+                className="w-full h-auto block"
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls={false}
+              />
+          </div>
+      </div>
+
       {/* Related */}
       {relatedProducts.length > 0 && (
           <div className="mt-32 pt-16 border-t border-obsidian/5">
@@ -498,11 +517,16 @@ const ProductDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {relatedProducts.map(rp => (
                     <Link key={rp.id} to={`/product/${rp.id}`} className="group block flex flex-col items-start">
-                         <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full">
+                         <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full relative">
                              <img src={rp.images[0]} className="w-full h-full object-cover transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
+                             {rp.compareAtPrice && rp.compareAtPrice > rp.price && (
+                                <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
+                                    Sale
+                                </div>
+                            )}
                          </div>
                          <h4 className="font-serif text-lg">{rp.name}</h4>
-                         <PriceBadge price={rp.price} className="mt-2" />
+                         <PriceBadge price={rp.price} compareAtPrice={rp.compareAtPrice} className="mt-2" />
                     </Link>
                 ))}
               </div>

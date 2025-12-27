@@ -265,8 +265,13 @@ const Collection = () => {
                                 height="533"
                             />
                             {!product.inStock && (
-                                <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest">
+                                <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10">
                                     Sold Out
+                                </div>
+                            )}
+                            {product.compareAtPrice && product.compareAtPrice > product.price && (
+                                <div className="absolute top-2 left-2 bg-red-900/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
+                                    Sale
                                 </div>
                             )}
                             </div>
@@ -279,7 +284,7 @@ const Collection = () => {
                             <p className="text-[10px] md:text-xs uppercase tracking-widest opacity-40">
                                 {product.category}
                             </p>
-                            <PriceBadge price={product.price} className="mt-2" />
+                            <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="mt-2" />
                             </div>
                         </Link>
                         ))}

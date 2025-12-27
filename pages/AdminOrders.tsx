@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { useStore } from '../StoreContext';
 import { Order } from '../types';
-import { Eye, Download, X, Printer } from 'lucide-react';
+import { Eye, Download, X, Printer, Archive, Activity } from 'lucide-react';
 
 const AdminOrders = () => {
   const { orders, updateOrderStatus } = useStore();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [activeTab, setActiveTab] = useState<'active' | 'history'>('active');
+
+  // Filter orders based on status
+  const activeOrders = orders.filter(o => o.status !== 'Delivered');
+  const deliveredOrders = orders.filter(o => o.status === 'Delivered');
+
+  const displayedOrders = activeTab === 'active' ? activeOrders : deliveredOrders;
 
   // Helper function to export orders to CSV
   const exportToCSV = () => {
     const headers = ["Order ID", "Date", "Customer", "Email", "Phone", "City", "Address", "Payment", "Total", "Status", "Items"];
     
+    // Export ALL orders regardless of tab
     const rows = orders.map(order => [
         order.id,
         order.date,
@@ -166,15 +174,36 @@ const AdminOrders = () => {
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in relative">
-      <div className="flex justify-between items-center">
-         <h1 className="text-2xl md:text-3xl font-serif">Orders</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+         <div>
+            <h1 className="text-2xl md:text-3xl font-serif">Order Management</h1>
+            <p className="text-xs text-stone-500 mt-1">Manage active shipments and view delivery history.</p>
+         </div>
          
-         <button 
-            onClick={exportToCSV}
-            className="flex items-center gap-2 bg-emerald-700 text-white px-5 py-2.5 text-[10px] md:text-xs uppercase tracking-widest rounded-full shadow-md hover:bg-emerald-800 transition-colors"
-         >
-            <Download className="w-4 h-4" /> <span>Export CSV</span>
-         </button>
+         <div className="flex gap-4">
+             {/* Tabs */}
+             <div className="bg-white border border-stone-200 p-1 rounded-lg flex">
+                  <button 
+                      onClick={() => setActiveTab('active')}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'active' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
+                  >
+                      <Activity className="w-3 h-3" /> Active ({activeOrders.length})
+                  </button>
+                  <button 
+                      onClick={() => setActiveTab('history')}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'history' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
+                  >
+                      <Archive className="w-3 h-3" /> Delivered ({deliveredOrders.length})
+                  </button>
+              </div>
+
+             <button 
+                onClick={exportToCSV}
+                className="flex items-center gap-2 bg-emerald-700 text-white px-5 py-2.5 text-[10px] md:text-xs uppercase tracking-widest rounded-full shadow-md hover:bg-emerald-800 transition-colors"
+             >
+                <Download className="w-4 h-4" /> <span>Export All</span>
+             </button>
+         </div>
       </div>
 
       <div className="bg-white border border-stone-200 overflow-hidden rounded-lg shadow-sm">
@@ -192,7 +221,7 @@ const AdminOrders = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders.map(order => (
+                    {displayedOrders.map(order => (
                         <tr key={order.id} className="border-t border-stone-100 hover:bg-stone-50 text-sm transition-colors cursor-pointer" onClick={() => setSelectedOrder(order)}>
                             <td className="p-4 font-mono text-xs text-stone-600">{order.id}</td>
                             <td className="p-4 text-xs text-stone-500">{order.date}</td>
@@ -226,6 +255,13 @@ const AdminOrders = () => {
                             </td>
                         </tr>
                     ))}
+                    {displayedOrders.length === 0 && (
+                        <tr>
+                            <td colSpan={7} className="p-12 text-center text-stone-400 border-t border-stone-100">
+                                No {activeTab} orders found.
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

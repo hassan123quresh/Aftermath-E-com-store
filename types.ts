@@ -111,6 +111,7 @@ export interface StoreContextType {
   // Admin functions
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
+  updateProducts: (products: Product[]) => void; // Bulk update
   deleteProduct: (id: string) => void;
   updateOrderStatus: (id: string, status: Order['status']) => void;
   togglePromo: (code: string) => void;

@@ -109,7 +109,16 @@ const AdminCustomers = () => {
   const handleExportCSV = () => {
     const headers = ["ID", "Name", "Phone", "Email", "Address", "City", "DHA", "Orders", "Total Spend", "Last Visit"];
     const rows = processedCustomers.map(c => [
-        c.id, `"${c.name}"`, c.phone, c.email, `"${c.address}"`, c.city, c.isDHA ? 'Yes' : 'No', c.ordersCount, c.totalSpend, c.lastOrderDate
+        c.id, 
+        `"${c.name}"`, 
+        `="${c.phone}"`, // Forces Excel/Numbers to treat as text, preserving leading zeros
+        c.email, 
+        `"${c.address}"`, 
+        c.city, 
+        c.isDHA ? 'Yes' : 'No', 
+        c.ordersCount, 
+        c.totalSpend, 
+        c.lastOrderDate
     ]);
     const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
     const link = document.createElement("a");
@@ -268,8 +277,8 @@ const AdminCustomers = () => {
               <button onClick={() => fileInputRef.current?.click()} className="flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-lg text-xs uppercase font-bold text-stone-600 hover:bg-stone-50">
                   <Upload className="w-4 h-4" /> Import
               </button>
-              <button onClick={handleExportCSV} className="flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-lg text-xs uppercase font-bold text-stone-600 hover:bg-stone-50">
-                  <Download className="w-4 h-4" /> Export
+              <button onClick={handleExportCSV} className="flex items-center gap-2 px-4 py-2 bg-[#1D6F42] border border-[#1D6F42] rounded-lg text-xs uppercase font-bold text-white hover:bg-[#155231] shadow-sm">
+                  <Download className="w-4 h-4" /> Export CSV
               </button>
               <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 px-4 py-2 bg-obsidian text-white rounded-lg text-xs uppercase font-bold hover:bg-stone-800 shadow-md">
                   <UserPlus className="w-4 h-4" /> Add New
@@ -327,6 +336,26 @@ const AdminCustomers = () => {
                        <span className="text-stone-400">-</span>
                        <input type="number" placeholder="Max" className="w-16 p-2 text-xs border rounded" value={orderRange.max} onChange={e => setOrderRange({...orderRange, max: e.target.value})} />
                    </div>
+              </div>
+              
+              {/* Definitions Legend */}
+              <div className="bg-white border border-stone-200 rounded-lg p-3 flex flex-col justify-center space-y-1.5 shadow-sm">
+                  <div className="flex justify-between items-center text-[9px] text-stone-500 border-b border-stone-100 pb-1">
+                      <span className="font-bold uppercase text-obsidian">VIP</span>
+                      <span className="font-mono">Spend &gt; 50k</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[9px] text-stone-500 border-b border-stone-100 pb-1">
+                      <span className="font-bold uppercase text-obsidian">Regular</span>
+                      <span className="font-mono">&gt; 3 Orders</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[9px] text-stone-500 border-b border-stone-100 pb-1">
+                      <span className="font-bold uppercase text-obsidian">New</span>
+                      <span className="font-mono">1-3 Orders</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[9px] text-stone-500">
+                      <span className="font-bold uppercase text-obsidian">Churned</span>
+                      <span className="font-mono">&gt; 30 Days Absent</span>
+                  </div>
               </div>
           </div>
       )}
