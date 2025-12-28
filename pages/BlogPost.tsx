@@ -6,6 +6,7 @@ import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
 import { ScrollProgress } from '../components/ScrollProgress';
+import { loadKatex } from '../lib/utils';
 
 // Initialize DOMPurify Factory
 const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
@@ -74,6 +75,8 @@ const BlogPost = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Lazily load KaTeX CSS if markdown contains math
+    loadKatex();
   }, [id]);
 
   const post = blogPosts.find(p => p.id === id);

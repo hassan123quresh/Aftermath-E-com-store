@@ -8,6 +8,7 @@ import createDOMPurify from 'dompurify';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
 import StarRating from '../components/StarRating';
+import { loadKatex } from '../lib/utils';
 
 // Initialize DOMPurify Factory
 const DOMPurify = typeof window !== 'undefined' ? createDOMPurify(window) : null;
@@ -95,6 +96,8 @@ const ProductDetail = () => {
   // Fix: Scroll to top when product page is opened or changed
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Lazily load KaTeX CSS if markdown contains math
+    loadKatex();
   }, [id]);
 
   // Lock body scroll when zoomed
@@ -705,33 +708,6 @@ const ProductDetail = () => {
             </div>
         </div>
       </div>
-
-      {/* Related */}
-      {relatedProducts.length > 0 && (
-          <div className="mt-32 pt-16 border-t border-obsidian/5">
-              <h3 className="font-serif text-2xl mb-12">You may also like</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedProducts.map(rp => {
-                    const isOnSale = rp.compareAtPrice && rp.compareAtPrice > rp.price;
-                    const discount = isOnSale ? Math.round(((rp.compareAtPrice! - rp.price) / rp.compareAtPrice!) * 100) : 0;
-
-                    return (
-                    <Link key={rp.id} to={`/product/${rp.id}`} className="group block flex flex-col items-start">
-                         <div className="aspect-[3/4] bg-stone-300 mb-4 overflow-hidden rounded-md w-full relative">
-                             <img src={rp.images[0]} className="w-full h-full object-cover transition-all duration-500" alt={rp.name} width="400" height="533" loading="lazy" />
-                             {isOnSale && (
-                                <div className="absolute top-2 left-2 bg-[#415941]/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest text-white rounded-sm shadow-sm z-10">
-                                    {discount}% OFF
-                                </div>
-                            )}
-                         </div>
-                         <h4 className="font-serif text-lg">{rp.name}</h4>
-                         <PriceBadge price={rp.price} compareAtPrice={rp.compareAtPrice} className="mt-2" />
-                    </Link>
-                )})}
-              </div>
-          </div>
-      )}
 
       {/* Desktop Zoom Modal - Only active for images */}
       {isZoomed && activeMedia.type === 'image' && (

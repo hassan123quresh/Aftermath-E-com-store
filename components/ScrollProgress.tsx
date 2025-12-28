@@ -15,13 +15,21 @@ export const ScrollProgress: React.FC<ScrollProgressProps> = ({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      
-      if (scrollHeight > 0) {
-        const scrolled = scrollTop / scrollHeight;
-        setProgress(Math.min(Math.max(scrolled, 0), 1));
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+          const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          
+          if (scrollHeight > 0) {
+            const scrolled = scrollTop / scrollHeight;
+            setProgress(Math.min(Math.max(scrolled, 0), 1));
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

@@ -17,6 +17,7 @@ const Collection = () => {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -86,9 +87,20 @@ const Collection = () => {
               if (!hasSize) return false;
           }
 
+          // Availability Filter
+          if (selectedAvailability.length > 0) {
+              const totalStock = product.inventory.reduce((acc, v) => acc + v.stock, 0);
+              const isSoldOut = totalStock <= 0;
+              
+              const matchesInStock = selectedAvailability.includes('In Stock') && !isSoldOut;
+              const matchesOutOfStock = selectedAvailability.includes('Out of Stock') && isSoldOut;
+
+              if (!matchesInStock && !matchesOutOfStock) return false;
+          }
+
           return true;
       });
-  }, [visibleProducts, selectedColors, selectedMaterials, selectedSizes]);
+  }, [visibleProducts, selectedColors, selectedMaterials, selectedSizes, selectedAvailability]);
 
   // --- Sorting Logic ---
   const sortedProducts = useMemo(() => {
@@ -131,9 +143,10 @@ const Collection = () => {
       setSelectedColors([]);
       setSelectedMaterials([]);
       setSelectedSizes([]);
+      setSelectedAvailability([]);
   };
 
-  const activeFilterCount = selectedColors.length + selectedMaterials.length + selectedSizes.length;
+  const activeFilterCount = selectedColors.length + selectedMaterials.length + selectedSizes.length + selectedAvailability.length;
 
   const sortOptions = [
       { label: 'Featured', value: 'featured' },
@@ -172,7 +185,7 @@ const Collection = () => {
   );
 
   return (
-    <div className="min-h-screen pt-4 md:pt-8 pb-24 px-4 md:px-6 max-w-[1600px] mx-auto animate-fade-in relative">
+    <div className="min-h-screen pt-4 md:pt-8 pb-24 px-4 md:px-6 max-w-[1600px] mx-auto animate-fade-in relative bg-stone-200">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-obsidian/10 pb-6">
@@ -187,13 +200,13 @@ const Collection = () => {
         
         {/* Desktop Sort & Count */}
         <div className="hidden md:flex items-center gap-8 mt-6 md:mt-0">
-            <span className="text-xs tracking-[0.2em] uppercase opacity-50">
+            <span className="text-xs tracking-[0.2em] uppercase opacity-50 text-obsidian">
             {sortedProducts.length} Artifacts
             </span>
             <div className="relative">
                 <button 
                     onClick={() => setActiveSortDropdown(!activeSortDropdown)}
-                    className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold hover:text-stone-600"
+                    className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold hover:text-stone-600 text-obsidian"
                 >
                     Sort by: <span className="opacity-50">{sortOptions.find(o => o.value === sortBy)?.label}</span>
                     <ChevronDown className={`w-3 h-3 transition-transform ${activeSortDropdown ? 'rotate-180' : ''}`} />
@@ -219,7 +232,7 @@ const Collection = () => {
       <div className="md:hidden flex items-center justify-between py-4 sticky top-14 z-20 bg-stone-200/95 backdrop-blur border-b border-obsidian/5 -mx-4 px-4 mb-6">
           <button 
             onClick={() => setIsMobileFilterOpen(true)}
-            className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold"
+            className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold text-obsidian"
           >
               <SlidersHorizontal className="w-4 h-4" /> 
               Filter {activeFilterCount > 0 && <span className="w-4 h-4 bg-obsidian text-white rounded-full flex items-center justify-center text-[9px]">{activeFilterCount}</span>}
@@ -227,7 +240,7 @@ const Collection = () => {
           
           <div className="flex items-center gap-4">
              <span className="text-[10px] uppercase text-stone-500 tracking-wider">{sortedProducts.length} items</span>
-             <button onClick={() => setIsMobileFilterOpen(true)} className="flex items-center gap-1 text-xs uppercase tracking-widest font-bold">
+             <button onClick={() => setIsMobileFilterOpen(true)} className="flex items-center gap-1 text-xs uppercase tracking-widest font-bold text-obsidian">
                  Sort <ArrowUpDown className="w-3 h-3" />
              </button>
           </div>
@@ -238,12 +251,13 @@ const Collection = () => {
           {/* Desktop Filter Sidebar */}
           <aside className="hidden md:block w-64 sticky top-32 flex-shrink-0 pr-8 border-r border-obsidian/5 min-h-[50vh]">
               <div className="flex justify-between items-center mb-8">
-                  <span className="text-xs uppercase tracking-widest opacity-50">Filters</span>
+                  <span className="text-xs uppercase tracking-widest opacity-50 text-obsidian">Filters</span>
                   {activeFilterCount > 0 && (
                       <button onClick={clearAllFilters} className="text-[10px] uppercase underline text-stone-500 hover:text-obsidian">Clear All</button>
                   )}
               </div>
               
+              <FilterSection title="Availability" items={['In Stock', 'Out of Stock']} selected={selectedAvailability} setter={setSelectedAvailability} />
               <FilterSection title="Color" items={allColors} selected={selectedColors} setter={setSelectedColors} />
               <FilterSection title="Material" items={allMaterials} selected={selectedMaterials} setter={setSelectedMaterials} />
               <FilterSection title="Size" items={allSizes} selected={selectedSizes} setter={setSelectedSizes} />
@@ -274,7 +288,7 @@ const Collection = () => {
                             <Link 
                                 key={product.id} 
                                 to={`/product/${product.id}`} 
-                                className="group block opacity-0 animate-fade-in-up"
+                                className="group block animate-fade-in-up"
                                 style={{ animationDelay: `${idx * 50}ms`, animationFillMode: 'forwards' }}
                             >
                                 {/* Image Container */}
@@ -296,7 +310,7 @@ const Collection = () => {
                                     height="533"
                                 />
                                 {isSoldOut && (
-                                    <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10">
+                                    <div className="absolute top-2 right-2 bg-stone-200/90 backdrop-blur px-2 py-1 text-[10px] uppercase tracking-widest z-10 text-obsidian">
                                         Sold Out
                                     </div>
                                 )}
@@ -308,7 +322,7 @@ const Collection = () => {
                                 </div>
 
                                 {/* Info */}
-                                <div className="flex flex-col items-start space-y-1">
+                                <div className="flex flex-col items-start space-y-1 text-obsidian">
                                 <h3 className="font-serif text-sm md:text-xl leading-tight group-hover:text-stone-600 transition-colors">
                                     {product.name}
                                 </h3>
@@ -334,7 +348,7 @@ const Collection = () => {
               {/* Drawer Content */}
               <div className="absolute inset-x-0 bottom-0 top-20 bg-stone-50 rounded-t-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
                   {/* Header */}
-                  <div className="px-6 py-4 border-b border-stone-200 flex justify-between items-center bg-white">
+                  <div className="px-6 py-4 border-b border-stone-200 flex justify-between items-center bg-white text-obsidian">
                       <h2 className="font-serif text-xl">Filter & Sort</h2>
                       <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 -mr-2 text-stone-500">
                           <X className="w-6 h-6" />
@@ -364,6 +378,7 @@ const Collection = () => {
                       </div>
 
                       {/* Filters */}
+                      <FilterSection title="Availability" items={['In Stock', 'Out of Stock']} selected={selectedAvailability} setter={setSelectedAvailability} />
                       <FilterSection title="Color" items={allColors} selected={selectedColors} setter={setSelectedColors} />
                       <FilterSection title="Material" items={allMaterials} selected={selectedMaterials} setter={setSelectedMaterials} />
                       <FilterSection title="Size" items={allSizes} selected={selectedSizes} setter={setSelectedSizes} />
@@ -373,7 +388,7 @@ const Collection = () => {
                   <div className="p-4 border-t border-stone-200 bg-white flex gap-4">
                       <button 
                         onClick={clearAllFilters}
-                        className="flex-1 py-3 text-xs uppercase tracking-widest font-bold border border-stone-300 rounded hover:bg-stone-50"
+                        className="flex-1 py-3 text-xs uppercase tracking-widest font-bold border border-stone-300 rounded hover:bg-stone-50 text-obsidian"
                       >
                           Clear ({activeFilterCount})
                       </button>

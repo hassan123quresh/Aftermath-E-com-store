@@ -7,6 +7,7 @@ export const INITIAL_PROMOS: PromoCode[] = [
   { code: 'SILENCE', discountPercentage: 20, usageLimit: 50, usedCount: 45, isActive: true },
 ];
 
+// Replaced &width=800 with &width=500 for grid optimization
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'p1',
@@ -15,11 +16,11 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Hoodies',
     description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish\n\n| SIZE | XS | S | M | L |\n| :--- | :---: | :---: | :---: | :---: |\n| BODY LENGTH | 25 | 26 | 27 | 28 |\n| CHEST | 27 | 28 | 29 | 30 |\n| SLEEVE | 18.5 | 19 | 19.5 | 20 |\n| SHOULDER | 27.5 | 28.5 | 29.5 | 30.5 |\n| ARM HOLE | 11.5 | 12 | 12.5 | 13 |",
     images: [
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard2copy4.jpg?v=1763585095&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy5_8a6af684-d339-4b6a-b182-98dc5453ae4e.jpg?v=1763585095&width=800',
-      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840067/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_wmbq5a.jpg'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard2copy4.jpg?v=1763585095&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy5_8a6af684-d339-4b6a-b182-98dc5453ae4e.jpg?v=1763585095&width=500',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766840067/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_wmbq5a.jpg'
     ],
     inventory: [
       { size: 'XS', stock: 5 },
@@ -40,10 +41,10 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Sweatshirts',
     description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1_7a132423-3efa-4f07-bcca-69ba437b394e.jpg?v=1763591134&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy_1ca85ebc-9107-439c-9c50-f3bb58d37ecb.jpg?v=1763591134&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy3_fb280b84-80e9-42ea-94a7-1fc5eb48a131.jpg?v=1763591134&width=800',
-      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840208/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_2_zkkruc.jpg'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1_7a132423-3efa-4f07-bcca-69ba437b394e.jpg?v=1763591134&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy_1ca85ebc-9107-439c-9c50-f3bb58d37ecb.jpg?v=1763591134&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy3_fb280b84-80e9-42ea-94a7-1fc5eb48a131.jpg?v=1763591134&width=500',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766840208/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_2_zkkruc.jpg'
     ],
     inventory: [
       { size: 'XS', stock: 10 },
@@ -61,10 +62,10 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Hoodies',
     description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut zipper is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard1copy2.jpg?v=1763332847&width=800',
-      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard2copy2.jpg?v=1763332847&width=800',
-      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard3copy2.jpg?v=1763332847&width=800',
-      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard4copy2.jpg?v=1763332848&width=800'
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard1copy2.jpg?v=1763332847&width=500',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard2copy2.jpg?v=1763332847&width=500',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard3copy2.jpg?v=1763332847&width=500',
+      'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard4copy2.jpg?v=1763332848&width=500'
     ],
     inventory: [
       { size: 'S', stock: 5 },
@@ -81,10 +82,10 @@ export const MOCK_PRODUCTS: Product[] = [
     category: 'Sweatshirts',
     description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2.jpg?v=1763591103&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2_2.jpg?v=1763591103&width=800',
-      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy2.jpg?v=1763591103&width=800',
-      'https://res.cloudinary.com/dacyy7rkn/image/upload/v1766840206/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_1_nd9qbu.jpg'
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2.jpg?v=1763591103&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2_2.jpg?v=1763591103&width=500',
+      'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard3copy2.jpg?v=1763591103&width=500',
+      'https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766840206/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_1_nd9qbu.jpg'
     ],
     inventory: [
       { size: 'XS', stock: 3 },

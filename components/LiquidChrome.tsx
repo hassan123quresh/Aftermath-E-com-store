@@ -29,6 +29,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     let renderer: any;
     let animationId: number;
     let gl: any;
+    let isVisible = true;
 
     try {
         renderer = new Renderer({ 
@@ -131,14 +132,12 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     };
 
     // 1. Initial Synchronous Resize
-    // Calculate dimensions immediately so we don't wait for the Observer callback
     resize();
 
-    // 2. Warm up render (executes immediately to populate the buffer)
-    // This prevents the "black flash" by ensuring the first frame is ready before the browser paints
+    // 2. Warm up render
     renderer.render({ scene: mesh });
 
-    // 3. Set up ResizeObserver for future changes
+    // 3. Set up ResizeObserver
     const resizeObserver = new ResizeObserver(() => resize());
     resizeObserver.observe(container);
 
@@ -157,7 +156,21 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         container.addEventListener('mousemove', handleMouseMove);
     }
 
+    // 4. Set up IntersectionObserver to pause loop when out of viewport
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationId) {
+            animationId = requestAnimationFrame(update);
+        }
+    });
+    intersectionObserver.observe(container);
+
     function update(t: number) {
+        if (!isVisible) {
+            animationId = 0;
+            return;
+        }
+
         animationId = requestAnimationFrame(update);
         
         const ease = 0.05; 
@@ -171,11 +184,13 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         renderer.render({ scene: mesh });
     }
     
+    // Start loop
     animationId = requestAnimationFrame(update);
 
     return () => {
       if (animationId) cancelAnimationFrame(animationId);
       resizeObserver.disconnect();
+      intersectionObserver.disconnect();
       if (interactive && container) {
           container.removeEventListener('mousemove', handleMouseMove);
       }

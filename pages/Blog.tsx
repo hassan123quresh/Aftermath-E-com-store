@@ -13,7 +13,7 @@ const Blog = () => {
   const publishedPosts = blogPosts.filter(post => post.isPublished);
 
   return (
-    <div className="min-h-screen pt-4 md:pt-8 pb-24 px-4 md:px-6 max-w-7xl mx-auto animate-fade-in">
+    <div className="min-h-screen pt-4 md:pt-8 pb-24 px-4 md:px-6 max-w-7xl mx-auto animate-fade-in bg-stone-200">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 border-b border-obsidian/10 pb-6">
         <div>
@@ -32,7 +32,7 @@ const Blog = () => {
           <Link 
             key={post.id} 
             to={`/journal/${post.id}`} 
-            className="group block opacity-0 animate-fade-in-up flex flex-col h-full"
+            className="group block animate-fade-in-up flex flex-col h-full"
             style={{ animationDelay: `${idx * 100}ms`, animationFillMode: 'forwards' }}
           >
             {/* Image Container */}
@@ -62,7 +62,7 @@ const Blog = () => {
                 {post.excerpt}
               </p>
 
-              <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
+              <div className="mt-auto pt-4 border-t border-stone-300 flex items-center justify-between text-obsidian">
                  <div className="flex flex-wrap gap-2">
                     {post.tags.slice(0, 2).map(tag => (
                         <span key={tag} className="text-[9px] bg-stone-100 px-2 py-1 rounded text-stone-500 uppercase tracking-wider">{tag}</span>
@@ -78,7 +78,7 @@ const Blog = () => {
       </div>
 
       {publishedPosts.length === 0 && (
-          <div className="py-24 text-center opacity-50 font-serif">
+          <div className="py-24 text-center opacity-50 font-serif text-obsidian">
               No journal entries found.
           </div>
       )}

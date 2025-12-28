@@ -111,7 +111,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     aria-label="Menu"
                 >
                     {isMobileMenuOpen ? (
-                         // Render nothing here, the close button is inside the overlay
                          <div className="w-5 h-5" /> 
                     ) : (
                          <Menu className="w-5 h-5 stroke-1" style={textShadowStyle} />
@@ -119,11 +118,11 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 </button>
             </div>
 
-            {/* Logo (Centered on Mobile, Left on Desktop) */}
+            {/* Logo */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto z-10">
                 <Link to="/" className={`block transition-opacity ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
                     <img 
-                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_100,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_300/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                         alt="Aftermath" 
                         className={logoClass}
                         width="150"
@@ -167,7 +166,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         </button>
                     </div>
 
-                    {/* Search Icon Trigger (Visible when closed or on mobile) */}
+                    {/* Search Icon Trigger */}
                     {(!isSearchOpen || window.innerWidth < 768) && (
                         <button 
                             onClick={() => setIsSearchOpen(true)} 
@@ -178,7 +177,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         </button>
                     )}
 
-                    {/* Desktop Results Dropdown - Always use light bg for readability */}
+                    {/* Desktop Results Dropdown */}
                     {isSearchOpen && searchQuery.length > 0 && (
                         <div className="hidden md:block absolute top-full right-0 mt-2 w-80 bg-white shadow-2xl border border-stone-100 p-2 rounded-lg animate-fade-in backdrop-blur-md bg-white/95 text-obsidian">
                             {searchResults.length > 0 ? (
@@ -213,7 +212,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <button id="cart-icon-btn" onClick={toggleCart} className="relative group p-2 btn-glass-icon rounded-full" aria-label="Cart">
                     <ShoppingBag className="w-5 h-5 stroke-1" style={textShadowStyle} />
                     {cart.length > 0 && (
-                        <span className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isTransparent ? 'bg-white' : 'bg-obsidian'}`}></span>
+                        <span className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isTransparent ? 'bg-white' : 'bg-[#141414]'}`}></span>
                     )}
                 </button>
             </div>
@@ -266,7 +265,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* ULTRA-OPTIMIZED LIGHTWEIGHT MOBILE MENU */}
         {isMobileMenuOpen && (
-           <div className="fixed inset-0 z-[100] bg-obsidian text-stone-100 flex flex-col animate-fade-in">
+           <div className="fixed inset-0 z-[100] bg-[#141414] text-stone-100 flex flex-col animate-fade-in">
               
               {/* Header inside Menu */}
               <div className="flex items-center justify-between px-6 h-16 flex-shrink-0 border-b border-white/10">
@@ -280,7 +279,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   </button>
               </div>
 
-              {/* Navigation Links - Static, No Animation, No Hover Effects */}
+              {/* Navigation Links */}
               <div className="flex-1 flex flex-col px-6 py-8 space-y-8 overflow-y-auto">
                   {[
                     { label: "The Collection", path: "/collection", sub: "Explore All Artifacts" },
@@ -303,7 +302,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     </Link>
                   ))}
 
-                  {/* Account Link - Simplified */}
+                  {/* Account Link */}
                   <div className="pt-6 mt-auto border-t border-white/5">
                      <Link 
                         to="/admin" 
@@ -320,7 +319,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               </div>
 
               {/* Footer inside Menu */}
-              <div className="px-6 pb-8 pt-4 flex justify-between items-end border-t border-white/10 bg-obsidian">
+              <div className="px-6 pb-8 pt-4 flex justify-between items-end border-t border-white/10 bg-[#141414]">
                   <div className="flex gap-6">
                       <a href="https://instagram.com" className="text-stone-400 active:text-white"><Instagram className="w-5 h-5" /></a>
                       <a href="mailto:aftermathstore@hotmail.com" className="text-stone-400 active:text-white"><Mail className="w-5 h-5" /></a>
@@ -331,21 +330,20 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
       </header>
 
-      {/* Main Content - Add padding top if not on home page to account for fixed header */}
+      {/* Main Content */}
       <main className={`flex-grow ${isHomePage ? '' : 'pt-24 md:pt-28'}`}>
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-obsidian text-stone-300 py-16 px-6">
+      {/* Footer - Explicitly Black */}
+      <footer className="bg-[#141414] text-stone-300 py-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           
           {/* Logo & Description Column */}
           <div className="lg:col-span-1">
             <div className="mb-6">
-                {/* Footer Logo: Resized via Cloudinary (height ~150px source for retina) */}
                 <img 
-                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/h_150,c_scale/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_300/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                     alt="Aftermath" 
                     className="h-16 w-auto object-contain invert opacity-90"
                     width="200"
@@ -458,7 +456,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                          height="32"
                          loading="lazy"
                          onError={(e) => {
-                           // Text fallback if image fails
                            const img = e.target as HTMLImageElement;
                            const parent = img.parentElement;
                            if (parent) {
@@ -477,7 +474,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {/* Cart Drawer */}
       {isCartOpen && (
         <>
-          <div className="fixed inset-0 bg-obsidian/20 backdrop-blur-sm z-[60] transition-opacity" onClick={toggleCart}></div>
+          <div className="fixed inset-0 bg-[#141414]/20 backdrop-blur-sm z-[60] transition-opacity" onClick={toggleCart}></div>
           <div className="fixed inset-y-0 right-0 w-full md:w-[450px] bg-stone-100/90 backdrop-blur-xl shadow-2xl z-[60] transform transition-transform duration-300 ease-out flex flex-col border-l border-white/20 text-obsidian">
             <div className="p-6 flex items-center justify-between border-b border-stone-200/50">
               <h2 className="font-serif text-xl">Your Selection</h2>

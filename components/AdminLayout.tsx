@@ -18,7 +18,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="min-h-screen flex flex-col md:flex-row bg-stone-50 text-obsidian font-sans">
       
       {/* MOBILE TOP HEADER: Brand & Exit */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-50 bg-obsidian text-stone-300 shadow-sm h-14 flex items-center justify-between px-4 border-b border-stone-800">
+      <header className="md:hidden fixed top-0 inset-x-0 z-50 bg-[#141414] text-stone-300 shadow-sm h-14 flex items-center justify-between px-4 border-b border-stone-800">
          <div className="flex items-center gap-3">
             <Link to="/" className="block">
                  <img 
@@ -35,7 +35,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </header>
 
       {/* MOBILE BOTTOM NAVBAR: Navigation */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-obsidian text-stone-300 border-t border-stone-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-[#141414] text-stone-300 border-t border-stone-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
          <div className="flex items-center justify-between">
             {navItems.map(item => (
                 <Link 
@@ -54,8 +54,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
          </div>
       </nav>
 
-      {/* DESKTOP SIDEBAR (Vertical) - Unchanged */}
-      <aside className="hidden md:flex w-64 bg-obsidian text-stone-300 flex-col fixed inset-y-0 z-50">
+      {/* DESKTOP SIDEBAR (Vertical) - Explicitly Black */}
+      <aside className="hidden md:flex w-64 bg-[#141414] text-stone-300 flex-col fixed inset-y-0 z-50">
         <div className="p-8">
            <Link to="/" className="block mb-4">
                 <img 
@@ -92,7 +92,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content - Adjusted padding for top header and bottom nav on mobile */}
+      {/* Main Content */}
       <main className="flex-1 md:ml-64 pt-16 pb-24 md:py-12 p-4 md:p-12 overflow-y-auto w-full">
         {children}
       </main>

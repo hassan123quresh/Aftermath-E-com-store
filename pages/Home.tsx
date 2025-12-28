@@ -1,15 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Suspense } from 'react';
 import { useStore } from '../StoreContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LiquidChrome from '../components/LiquidChrome';
 import { HeroLiquidButton } from '../components/HeroLiquidButton';
 import LiquidButton from '../components/LiquidButton';
 import { PriceBadge } from '../components/PriceBadge';
-import { ProductPreview } from '../components/ProductPreview';
-import ThreeDCarousel, { ThreeDCarouselItem } from '../components/ThreeDCarousel';
-import CraftingSection from '../components/CraftingSection';
-import StarRating from '../components/StarRating';
 import { Maximize, ShieldCheck, Layers, Droplets, Fingerprint, Scissors, Zap, Box, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import StarRating from '../components/StarRating';
+
+// Lazy load heavy components below the fold
+const ProductPreview = React.lazy(() => import('../components/ProductPreview'));
+const CraftingSection = React.lazy(() => import('../components/CraftingSection'));
+const ThreeDCarousel = React.lazy(() => import('../components/ThreeDCarousel'));
 
 const Home = () => {
   const { products, reviews } = useStore();
@@ -101,18 +103,14 @@ const Home = () => {
     },
   ];
 
+  // Optimized Preview Images (w_500)
   const previewImages = [
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766659171/image_6_xbcp7l.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766658178/image_2_afb7wq.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766658939/image_4_gtjbub.png",
-      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766659072/image_5_kkzsh6.png"
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766659171/image_6_xbcp7l.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766658178/image_2_afb7wq.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766658939/image_4_gtjbub.png",
+      "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766659072/image_5_kkzsh6.png"
   ];
 
-  // UPDATED GLOW COLORS:
-  // 1: Red
-  // 2: White
-  // 3: Cream (Default)
-  // 4: White
   const glowColors = [
       "#dc2626", // RED
       "#ffffff", // WHITE
@@ -131,7 +129,7 @@ const Home = () => {
       { name: "hamza", comment: "need this in every color fr." }
   ];
 
-  const magazineItems: ThreeDCarouselItem[] = [
+  const magazineItems = [
     {
       id: 1,
       title: "The Architecture of Silence",
@@ -168,7 +166,7 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section */}
+      {/* Hero Section - Keep Eager */}
       <section className="relative h-screen w-full overflow-hidden bg-obsidian">
         <LiquidChrome
             baseColor={[0.1, 0.1, 0.1]}
@@ -338,18 +336,20 @@ const Home = () => {
         </div>
       </section>
 
-      {/* PRODUCT PREVIEW */}
-      <section className="w-full bg-obsidian border-t border-stone-800">
-        <ProductPreview
-            productImages={previewImages}
-            glowColors={glowColors}
-            articleTop={articleTop}
-            articleBottom={articleBottom}
-            start="top top"
-            rotate={0} 
-            scaleFactor={1}
-        />
-      </section>
+      {/* PRODUCT PREVIEW - Lazy Loaded */}
+      <Suspense fallback={<div className="h-[800px] w-full bg-obsidian animate-pulse" />}>
+        <section className="w-full bg-obsidian border-t border-stone-800">
+            <ProductPreview
+                productImages={previewImages}
+                glowColors={glowColors}
+                articleTop={articleTop}
+                articleBottom={articleBottom}
+                start="top top"
+                rotate={0} 
+                scaleFactor={1}
+            />
+        </section>
+      </Suspense>
 
       {/* Editorial Section */}
       <section className="bg-[#E6E5E1] text-[#1a1918] relative w-full border-t border-stone-200">
@@ -378,9 +378,11 @@ const Home = () => {
                 </div>
 
                 <div className="lg:col-span-7 flex flex-col gap-12 lg:pt-20">
-                    {/* Replaced static images with 3D Carousel */}
+                    {/* Replaced static images with 3D Carousel - Lazy Loaded */}
                     <div className="w-full relative group reveal-on-scroll">
-                        <ThreeDCarousel items={magazineItems} />
+                        <Suspense fallback={<div className="h-[500px] w-full bg-stone-200 rounded-xl animate-pulse" />}>
+                            <ThreeDCarousel items={magazineItems} />
+                        </Suspense>
                         
                         <div className="flex justify-center mt-12">
                             <Link 
@@ -409,8 +411,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Crafting Section */}
-      <CraftingSection />
+      {/* Crafting Section - Lazy Loaded */}
+      <Suspense fallback={<div className="h-[400px] w-full bg-[#1A1A1A] animate-pulse" />}>
+         <CraftingSection />
+      </Suspense>
 
       {/* Philosophy Section */}
       <section id="philosophy" className="bg-stone-200 py-40 px-6 relative overflow-hidden">
