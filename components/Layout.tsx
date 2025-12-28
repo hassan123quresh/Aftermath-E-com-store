@@ -195,7 +195,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                             <span className="text-xs font-medium font-serif">{product.name}</span>
                                             <span className="text-[10px] text-stone-500 uppercase tracking-wider">{product.category}</span>
                                         </div>
-                                        <span className="ml-auto text-xs font-medium">PKR {product.price.toLocaleString()}</p>
+                                        <span className="ml-auto text-xs font-medium">PKR {product.price.toLocaleString()}</span>
                                     </Link>
                                 ))
                             ) : (
