@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ParallaxScroll } from './ParallaxScroll';
 
@@ -13,7 +14,7 @@ const baseImages = [
   "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766862688/A_good_brand_is_more_than_a_name._It_is_how_the_whole_thing_makes_you_feel_without_trying_too_ha_dl9jpg.jpg",
   "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766862688/Studio_cut_sizes_are_not_sloppy_or_just_hanging_down._They_are_curated_in_a_pattern_that_lets_th_3_iqgm7w.jpg",
   "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766862687/A_good_brand_is_more_than_a_name._It_is_how_the_whole_thing_makes_you_feel_without_trying_too_ha_1_gitzes.jpg",
-  "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766862689/The_collection_is_built_on_the_belief_that_less_holds_its_own_power._Every_element_is_placed_wit_gvuz57.jpg"
+  "https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_500/v1766840067/The_way_something_is_packed_says_a_lot_about_how_it_was_made._When_care_goes_into_the_layers_it_wmbq5a.jpg"
 ];
 
 // Duplicate the array to ensure a dense, fully populated grid
@@ -21,7 +22,7 @@ const images = [...baseImages, ...baseImages];
 
 const CraftingSection = () => {
   return (
-    <div className="w-full bg-[#1A1A1A] relative py-20 md:py-32 overflow-hidden border-t border-white/5">
+    <div className="w-full bg-[#1A1A1A] relative pt-20 md:pt-32 pb-0 overflow-hidden border-t border-white/5">
         {/* Aesthetic Grey Noise Texture */}
         <div 
           className="absolute inset-0 z-0 opacity-[0.15] pointer-events-none mix-blend-overlay"

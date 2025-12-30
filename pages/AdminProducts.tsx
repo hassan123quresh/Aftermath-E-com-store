@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { Product, ProductVariant } from '../types';
@@ -18,6 +19,7 @@ const AdminProducts = () => {
   const initialProductState: Partial<Product> = {
       name: '',
       price: 0,
+      costPrice: 0,
       compareAtPrice: 0,
       category: categories[0] || '',
       description: '',
@@ -103,6 +105,7 @@ const AdminProducts = () => {
               id: productForm.id || `p-${Date.now()}`,
               name: productForm.name!,
               price: Number(productForm.price),
+              costPrice: productForm.costPrice ? Number(productForm.costPrice) : undefined,
               compareAtPrice: productForm.compareAtPrice ? Number(productForm.compareAtPrice) : undefined,
               category: productForm.category || 'Uncategorized',
               description: productForm.description || '',
@@ -172,14 +175,26 @@ const AdminProducts = () => {
                       </div>
                       
                       {/* Price Section */}
-                      <div>
-                            <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Price (PKR)</label>
-                            <input 
-                                type="number"
-                                className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
-                                value={productForm.price}
-                                onChange={e => setProductForm({...productForm, price: Number(e.target.value)})}
-                            />
+                      <div className="grid grid-cols-2 gap-4 col-span-2">
+                          <div>
+                                <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Sale Price (PKR)</label>
+                                <input 
+                                    type="number"
+                                    className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                                    value={productForm.price}
+                                    onChange={e => setProductForm({...productForm, price: Number(e.target.value)})}
+                                />
+                          </div>
+                          <div>
+                                <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Cost Price (PKR)</label>
+                                <input 
+                                    type="number"
+                                    className="w-full border border-stone-300 p-3 text-sm rounded-md focus:border-obsidian outline-none"
+                                    value={productForm.costPrice || ''}
+                                    onChange={e => setProductForm({...productForm, costPrice: Number(e.target.value)})}
+                                    placeholder="For profit calc"
+                                />
+                          </div>
                       </div>
                       <div>
                             <label className="block text-xs uppercase opacity-50 mb-1 font-bold">Compare at Price (Optional)</label>
@@ -374,7 +389,7 @@ const AdminProducts = () => {
                         <th className="p-4 font-normal">Image</th>
                         <th className="p-4 font-normal">Name</th>
                         <th className="p-4 font-normal">Category</th>
-                        <th className="p-4 font-normal">Price</th>
+                        <th className="p-4 font-normal">Price / Cost</th>
                         <th className="p-4 font-normal">Total Stock</th>
                         <th className="p-4 font-normal text-right">Actions</th>
                     </tr>
@@ -393,8 +408,10 @@ const AdminProducts = () => {
                             </td>
                             <td className="p-4 text-stone-500 text-xs md:text-sm">{product.category}</td>
                             <td className="p-4 text-sm">
-                                {product.compareAtPrice && <span className="text-stone-400 line-through text-xs mr-2">{product.compareAtPrice.toLocaleString()}</span>}
-                                PKR {product.price.toLocaleString()}
+                                <div className="flex flex-col">
+                                    <span className="font-bold">PKR {product.price.toLocaleString()}</span>
+                                    <span className="text-[10px] text-stone-400">Cost: {product.costPrice ? `PKR ${product.costPrice.toLocaleString()}` : 'N/A'}</span>
+                                </div>
                             </td>
                             <td className="p-4 text-sm">
                                 <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase ${

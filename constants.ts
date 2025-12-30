@@ -1,3 +1,4 @@
+
 import { Product, PromoCode, Order, BlogPost, Customer, Review } from './types';
 
 export const INITIAL_ANNOUNCEMENT = "FREE SHIPPING ALL OVER PAKISTAN";
@@ -5,16 +6,17 @@ export const INITIAL_ANNOUNCEMENT = "FREE SHIPPING ALL OVER PAKISTAN";
 export const INITIAL_PROMOS: PromoCode[] = [
   { code: 'WELCOME10', discountPercentage: 10, usageLimit: -1, usedCount: 12, isActive: true },
   { code: 'SILENCE', discountPercentage: 20, usageLimit: 50, usedCount: 45, isActive: true },
+  { code: 'VIP30', discountPercentage: 30, usageLimit: 10, usedCount: 3, isActive: true },
 ];
 
-// Replaced &width=800 with &width=500 for grid optimization
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'p1',
     name: 'Studio Cut Hoodie in Burnt Terra',
     price: 8499,
+    costPrice: 4200, // ~50% margin
     category: 'Hoodies',
-    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish\n\n| SIZE | XS | S | M | L |\n| :--- | :---: | :---: | :---: | :---: |\n| BODY LENGTH | 25 | 26 | 27 | 28 |\n| CHEST | 27 | 28 | 29 | 30 |\n| SLEEVE | 18.5 | 19 | 19.5 | 20 |\n| SHOULDER | 27.5 | 28.5 | 29.5 | 30.5 |\n| ARM HOLE | 11.5 | 12 | 12.5 | 13 |",
+    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut hoodie is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5.jpg?v=1763585095&width=500',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy5_2.jpg?v=1763585095&width=500',
@@ -38,8 +40,9 @@ export const MOCK_PRODUCTS: Product[] = [
     id: 'p6',
     name: 'Studio Cut Quarter in Cloud Dancer',
     price: 7999,
+    costPrice: 3800,
     category: 'Sweatshirts',
-    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
+    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.",
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1_7a132423-3efa-4f07-bcca-69ba437b394e.jpg?v=1763591134&width=500',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy_1ca85ebc-9107-439c-9c50-f3bb58d37ecb.jpg?v=1763591134&width=500',
@@ -59,8 +62,9 @@ export const MOCK_PRODUCTS: Product[] = [
     id: 'p7',
     name: 'Studio Cut Zipper in Coal Dust',
     price: 8249,
+    costPrice: 4000,
     category: 'Hoodies',
-    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut zipper is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
+    description: "Model is 5'11, wearing size M.\n\nThe After Hours studio cut zipper is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.",
     images: [
       'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard1copy2.jpg?v=1763332847&width=500',
       'https://aftermathstore.com/cdn/shop/files/AFTERMATH_ZIPPERSArtboard2copy2.jpg?v=1763332847&width=500',
@@ -79,8 +83,9 @@ export const MOCK_PRODUCTS: Product[] = [
     id: 'p8',
     name: 'Studio Cut Quarter in Coal Dust',
     price: 7999,
+    costPrice: 3800,
     category: 'Sweatshirts',
-    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.\n\n*   Relaxed oversized fit with voluminous sleeves\n*   True to size\n*   500 GSM cotton fleece\n*   Soft brushed interior with a structured outer feel\n*   Ribbed cuffs and hem for a clean finish",
+    description: "Model is 5'2, wearing size XS.\n\nThe After Hours studio cut quarter is named for the hours that are yours, wherever you spend them. A clean blank with a considered silhouette, it is made to sit right on the body, feel easy to move in and stay quiet enough for you to be the focus.",
     images: [
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2.jpg?v=1763591103&width=500',
       'https://aftermathstore.com/cdn/shop/files/STUDIO_CUT_AND_STUDIO_QUARTERArtboard1copy2_2.jpg?v=1763591103&width=500',
@@ -98,54 +103,162 @@ export const MOCK_PRODUCTS: Product[] = [
   }
 ];
 
+// --- DYNAMIC DATA GENERATOR ---
+// This ensures "This Month" always has data regardless of when you run the app.
+
+const TODAY = new Date();
+const format = (d: Date) => d.toISOString().split('T')[0];
+const daysAgo = (n: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+    return format(d);
+};
+
 export const MOCK_ORDERS: Order[] = [
+  // TODAY / YESTERDAY (Active Orders)
   {
-    id: 'ORD-7721',
-    customerName: 'Ahmed Khan',
+    id: 'ORD-8821',
+    customerName: 'Bilal Ahmed',
+    customerEmail: 'bilal.ahmed@example.com',
+    customerPhone: '+92 300 9876543',
+    address: 'House 45, Street 10, F-7/2',
+    city: 'Islamabad',
+    items: [ { ...MOCK_PRODUCTS[0], selectedSize: 'L', quantity: 1 } ],
+    total: 8499,
+    status: 'Pending',
+    paymentMethod: 'COD',
+    date: daysAgo(0),
+  },
+  {
+    id: 'ORD-8820',
+    customerName: 'Zainab Malik',
+    customerEmail: 'zainab.m@example.com',
+    customerPhone: '+92 333 1122334',
+    address: 'Apartment 4B, Emaar Coral Towers',
+    city: 'Karachi',
+    items: [ 
+        { ...MOCK_PRODUCTS[2], selectedSize: 'S', quantity: 1 },
+        { ...MOCK_PRODUCTS[3], selectedSize: 'M', quantity: 1 }
+    ],
+    total: 16248,
+    status: 'Confirmed',
+    paymentMethod: 'BankTransfer',
+    date: daysAgo(0),
+  },
+  {
+    id: 'ORD-8819',
+    customerName: 'Ahmed Khan', // VIP Customer
     customerEmail: 'ahmed@example.com',
     customerPhone: '+92 300 1234567',
     address: 'House 12, Street 4, DHA Phase 6',
     city: 'Lahore',
-    items: [
-      { ...MOCK_PRODUCTS[0], selectedSize: 'M', quantity: 1 }
-    ],
+    items: [ { ...MOCK_PRODUCTS[1], selectedSize: 'M', quantity: 2 } ],
+    total: 15998,
+    status: 'Shipped',
+    paymentMethod: 'COD',
+    date: daysAgo(1),
+  },
+
+  // THIS WEEK (Recent Activity)
+  {
+    id: 'ORD-8815',
+    customerName: 'Omar Farooq',
+    customerEmail: 'omar.f@example.com',
+    customerPhone: '+92 321 5556677',
+    address: 'Plot 22, Valencia Town',
+    city: 'Lahore',
+    items: [ { ...MOCK_PRODUCTS[0], selectedSize: 'XL', quantity: 1 } ],
     total: 8499,
     status: 'Delivered',
-    paymentMethod: 'BankTransfer',
-    date: '2023-10-15',
+    paymentMethod: 'COD',
+    date: daysAgo(3),
   },
   {
-    id: 'ORD-7722',
-    customerName: 'Sara Ali',
+    id: 'ORD-8812',
+    customerName: 'Sara Ali', // Recurring
     customerEmail: 'sara@example.com',
     customerPhone: '+92 321 9876543',
     address: 'Flat 4B, Askari 11',
     city: 'Lahore',
-    items: [
-      { ...MOCK_PRODUCTS[1], selectedSize: 'S', quantity: 1 },
-      { ...MOCK_PRODUCTS[2], selectedSize: 'S', quantity: 2 }
-
-    ],
-    total: 24497,
-    status: 'Pending',
-    paymentMethod: 'COD',
-    date: '2023-10-25',
-  },
-   {
-    id: 'ORD-7723',
-    customerName: 'Zainab Bibi',
-    customerEmail: 'zainab@example.com',
-    customerPhone: '+92 333 5555555',
-    address: 'Sector F-7/2',
-    city: 'Islamabad',
-    items: [
-       { ...MOCK_PRODUCTS[3], selectedSize: 'L', quantity: 1 }
-    ],
+    items: [ { ...MOCK_PRODUCTS[3], selectedSize: 'S', quantity: 1 } ],
     total: 7999,
-    status: 'Shipped',
+    status: 'Delivered',
+    paymentMethod: 'BankTransfer',
+    date: daysAgo(5),
+  },
+
+  // LAST WEEK / THIS MONTH (Returns & Issues)
+  // Intentional Return Logic: "Studio Cut Hoodie" Size M is frequently returned
+  {
+    id: 'ORD-8805',
+    customerName: 'Hassan Raza',
+    customerEmail: 'hassan.r@example.com',
+    customerPhone: '+92 301 4455667',
+    address: 'House 88, Model Town',
+    city: 'Lahore',
+    items: [ { ...MOCK_PRODUCTS[0], selectedSize: 'M', quantity: 1 } ], // Return Item
+    total: 8499,
+    status: 'Cancelled', // Returned
     paymentMethod: 'COD',
-    date: '2023-10-26',
-  }
+    date: daysAgo(12),
+  },
+  {
+    id: 'ORD-8801',
+    customerName: 'Usman Qureshi',
+    customerEmail: 'usman.q@example.com',
+    customerPhone: '+92 345 6677889',
+    address: 'St 5, Clifton Block 4',
+    city: 'Karachi',
+    items: [ { ...MOCK_PRODUCTS[0], selectedSize: 'M', quantity: 1 } ], // Return Item 2
+    total: 8499,
+    status: 'Cancelled',
+    paymentMethod: 'COD',
+    date: daysAgo(15),
+  },
+
+  // LAST MONTH (Historical Data for Trends)
+  {
+    id: 'ORD-8750',
+    customerName: 'Ahmed Khan', // Repeat Purchase
+    customerEmail: 'ahmed@example.com',
+    customerPhone: '+92 300 1234567',
+    address: 'House 12, Street 4, DHA Phase 6',
+    city: 'Lahore',
+    items: [ { ...MOCK_PRODUCTS[2], selectedSize: 'L', quantity: 1 } ],
+    total: 8249,
+    status: 'Delivered',
+    paymentMethod: 'BankTransfer',
+    date: daysAgo(35),
+  },
+  {
+    id: 'ORD-8742',
+    customerName: 'Ayesha Siddiqui',
+    customerEmail: 'ayesha.s@example.com',
+    customerPhone: '+92 333 9988776',
+    address: 'Sector G-11/3',
+    city: 'Islamabad',
+    items: [ { ...MOCK_PRODUCTS[1], selectedSize: 'XS', quantity: 1 } ],
+    total: 7999,
+    status: 'Delivered',
+    paymentMethod: 'COD',
+    date: daysAgo(40),
+  },
+  {
+    id: 'ORD-8730',
+    customerName: 'Fahad Mustafa',
+    customerEmail: 'fahad.m@example.com',
+    customerPhone: '+92 300 1122998',
+    address: 'Canal Road',
+    city: 'Faisalabad',
+    items: [ 
+        { ...MOCK_PRODUCTS[0], selectedSize: 'L', quantity: 2 },
+        { ...MOCK_PRODUCTS[3], selectedSize: 'L', quantity: 1 }
+    ],
+    total: 24997,
+    status: 'Delivered',
+    paymentMethod: 'BankTransfer',
+    date: daysAgo(42),
+  },
 ];
 
 export const MOCK_BLOG_POSTS: BlogPost[] = [
@@ -183,9 +296,9 @@ export const MOCK_CUSTOMERS: Customer[] = [
     phone: '+923001234567',
     address: 'House 12, Street 4, DHA Phase 6',
     city: 'Lahore',
-    ordersCount: 5,
-    totalSpend: 54000,
-    lastOrderDate: '2023-10-15',
+    ordersCount: 8, // VIP status
+    totalSpend: 125000,
+    lastOrderDate: daysAgo(1),
     joinedDate: '2023-01-10',
     isDHA: true,
   },
@@ -196,23 +309,36 @@ export const MOCK_CUSTOMERS: Customer[] = [
     phone: '+923219876543',
     address: 'Flat 4B, Askari 11',
     city: 'Lahore',
-    ordersCount: 2,
-    totalSpend: 24497,
-    lastOrderDate: '2023-10-25',
+    ordersCount: 4, // Regular
+    totalSpend: 32496,
+    lastOrderDate: daysAgo(5),
     joinedDate: '2023-09-01',
     isDHA: false,
   },
   {
     id: 'CUST-003',
-    name: 'Zainab Bibi',
-    email: 'zainab@example.com',
-    phone: '+923335555555',
-    address: 'Sector F-7/2',
-    city: 'Islamabad',
-    ordersCount: 1,
-    totalSpend: 7999,
-    lastOrderDate: '2023-10-26',
-    joinedDate: '2023-10-26',
+    name: 'Zainab Malik',
+    email: 'zainab.m@example.com',
+    phone: '+923331122334',
+    address: 'Apartment 4B, Emaar',
+    city: 'Karachi',
+    ordersCount: 1, // New
+    totalSpend: 16248,
+    lastOrderDate: daysAgo(0),
+    joinedDate: daysAgo(0),
+    isDHA: true,
+  },
+  {
+    id: 'CUST-004',
+    name: 'Hassan Raza',
+    email: 'hassan.r@example.com',
+    phone: '+923014455667',
+    address: 'House 88, Model Town',
+    city: 'Lahore',
+    ordersCount: 1, // Churned candidate if date is old, here implies recent bad experience (return)
+    totalSpend: 8499,
+    lastOrderDate: daysAgo(12),
+    joinedDate: daysAgo(12),
     isDHA: false,
   }
 ];

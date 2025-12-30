@@ -1,25 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStore } from '../StoreContext';
 import { Order } from '../types';
-import { Eye, Download, X, Printer, Archive, Activity, Ban } from 'lucide-react';
+import { Download, X, Printer, Activity, Archive, Ban } from 'lucide-react';
+import DatePicker from '../components/DatePicker';
 
 const AdminOrders = () => {
   const { orders, updateOrderStatus } = useStore();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'history' | 'cancelled'>('active');
+  const [filterDate, setFilterDate] = useState<Date | undefined>(undefined);
 
   // Filter orders based on status
   const activeOrders = orders.filter(o => !['Delivered', 'Cancelled'].includes(o.status));
   const deliveredOrders = orders.filter(o => o.status === 'Delivered');
   const cancelledOrders = orders.filter(o => o.status === 'Cancelled');
 
-  const displayedOrders = activeTab === 'active' ? activeOrders : (activeTab === 'history' ? deliveredOrders : cancelledOrders);
+  // Computed displayed orders based on tab AND selected date
+  const displayedOrders = useMemo(() => {
+      let list = activeTab === 'active' ? activeOrders : (activeTab === 'history' ? deliveredOrders : cancelledOrders);
+      
+      // Filter by single date if selected
+      if (filterDate) {
+          const dateString = filterDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+          // Note: our mock data is YYYY-MM-DD. If 'en-CA' isn't available in all environments, manual formatting works too.
+          // Since our mock data uses YYYY-MM-DD strings directly:
+          
+          // Re-formatting filterDate to match our mock string format YYYY-MM-DD
+          const year = filterDate.getFullYear();
+          const month = String(filterDate.getMonth() + 1).padStart(2, '0');
+          const day = String(filterDate.getDate()).padStart(2, '0');
+          const fmtDate = `${year}-${month}-${day}`;
+
+          list = list.filter(o => o.date === fmtDate);
+      }
+      
+      return list;
+  }, [activeTab, activeOrders, deliveredOrders, cancelledOrders, filterDate]);
 
   // Helper function to export orders to CSV
   const exportToCSV = () => {
     const headers = ["Order ID", "Date", "Customer", "Email", "Phone", "City", "Address", "Payment", "Total", "Status", "Items"];
     
-    // Export ALL orders regardless of tab
     const rows = orders.map(order => [
         order.id,
         order.date,
@@ -181,35 +202,46 @@ const AdminOrders = () => {
             <p className="text-xs text-stone-500 mt-1">Manage active shipments and view delivery history.</p>
          </div>
          
-         <div className="flex gap-4">
+         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
              {/* Tabs */}
-             <div className="bg-white border border-stone-200 p-1 rounded-lg flex">
+             <div className="bg-white border border-stone-200 p-1 rounded-lg flex overflow-x-auto">
                   <button 
                       onClick={() => setActiveTab('active')}
-                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'active' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${activeTab === 'active' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
                   >
                       <Activity className="w-3 h-3" /> Active ({activeOrders.length})
                   </button>
                   <button 
                       onClick={() => setActiveTab('history')}
-                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'history' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${activeTab === 'history' ? 'bg-obsidian text-white' : 'text-stone-500 hover:text-obsidian'}`}
                   >
                       <Archive className="w-3 h-3" /> Delivered ({deliveredOrders.length})
                   </button>
                   <button 
                       onClick={() => setActiveTab('cancelled')}
-                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all ${activeTab === 'cancelled' ? 'bg-red-900 text-white' : 'text-stone-500 hover:text-red-900'}`}
+                      className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-md transition-all whitespace-nowrap ${activeTab === 'cancelled' ? 'bg-red-900 text-white' : 'text-stone-500 hover:text-red-900'}`}
                   >
                       <Ban className="w-3 h-3" /> Cancelled ({cancelledOrders.length})
                   </button>
               </div>
 
-             <button 
-                onClick={exportToCSV}
-                className="flex items-center gap-2 bg-emerald-700 text-white px-5 py-2.5 text-[10px] md:text-xs uppercase tracking-widest rounded-full shadow-md hover:bg-emerald-800 transition-colors"
-             >
-                <Download className="w-4 h-4" /> <span>Export All</span>
-             </button>
+             <div className="flex gap-2">
+                 {/* Single Date Filter */}
+                 <div className="w-48">
+                    <DatePicker 
+                        date={filterDate} 
+                        setDate={setFilterDate} 
+                        placeholder="Filter by Date" 
+                    />
+                 </div>
+
+                 <button 
+                    onClick={exportToCSV}
+                    className="flex items-center gap-2 bg-emerald-700 text-white px-5 py-2.5 text-[10px] md:text-xs uppercase tracking-widest rounded-full shadow-md hover:bg-emerald-800 transition-colors whitespace-nowrap"
+                 >
+                    <Download className="w-4 h-4" /> <span>Export All</span>
+                 </button>
+             </div>
          </div>
       </div>
 
@@ -267,7 +299,7 @@ const AdminOrders = () => {
                     {displayedOrders.length === 0 && (
                         <tr>
                             <td colSpan={7} className="p-12 text-center text-stone-400 border-t border-stone-100">
-                                No {activeTab} orders found.
+                                {filterDate ? `No ${activeTab} orders found for ${filterDate.toLocaleDateString()}.` : `No ${activeTab} orders found.`}
                             </td>
                         </tr>
                     )}

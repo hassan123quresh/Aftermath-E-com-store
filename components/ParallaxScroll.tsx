@@ -1,3 +1,4 @@
+
 import { useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 import { motion } from "framer-motion";
@@ -39,7 +40,7 @@ export const ParallaxScroll = ({
       className={cn("items-start w-full overflow-hidden antialiased", className)}
       ref={gridRef}
     >
-      <div className="grid grid-cols-2 lg:grid-cols-3 items-start max-w-7xl mx-auto gap-3 md:gap-10 py-10 px-4 md:px-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 items-start max-w-7xl mx-auto gap-3 md:gap-10 pt-10 pb-0 px-4 md:px-6">
         <div className="grid gap-3 md:gap-10">
           {firstPart.map((el, idx) => (
             <motion.div

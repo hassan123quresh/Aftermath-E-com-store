@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { useNavigate } from 'react-router-dom';
 import LiquidButton from '../components/LiquidButton';
+import { Check, ShoppingBag, ShieldCheck } from 'lucide-react';
 
 const styles = `
 .card {
@@ -230,6 +231,19 @@ const Checkout = () => {
   const [promoCode, setPromoCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [error, setError] = useState('');
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+
+  // Captcha State
+  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0 });
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState(false);
+
+  useEffect(() => {
+      setCaptcha({
+          num1: Math.floor(Math.random() * 5) + 1,
+          num2: Math.floor(Math.random() * 5) + 1
+      });
+  }, []);
 
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const discountAmount = subtotal * discountPercent;
@@ -250,6 +264,13 @@ const Checkout = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Captcha Validation
+    if (parseInt(captchaInput) !== captcha.num1 + captcha.num2) {
+        setCaptchaError(true);
+        return;
+    }
+
     placeOrder({
       customerName: formData.name,
       customerEmail: formData.email,
@@ -260,11 +281,55 @@ const Checkout = () => {
       total: total,
       paymentMethod: paymentMethod,
     });
-    alert('Order Placed Successfully. We will contact you shortly.');
-    navigate('/');
+    
+    // Instead of alerting, set state to show thank you screen
+    setIsOrderPlaced(true);
+    window.scrollTo(0, 0);
   };
 
-  if (cart.length === 0) return <div className="min-h-screen flex items-center justify-center font-sans text-stone-500">Your cart is empty.</div>;
+  if (isOrderPlaced) {
+    return (
+        <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 md:px-6 animate-fade-in text-center">
+            <div className="mb-8 relative">
+                <div className="w-24 h-24 rounded-full bg-[#141414] flex items-center justify-center shadow-2xl relative z-10">
+                    <Check className="w-10 h-10 text-white" strokeWidth={1.5} />
+                </div>
+                <div className="absolute inset-0 bg-stone-200 rounded-full animate-ping opacity-20"></div>
+            </div>
+            
+            <h1 className="font-serif text-4xl md:text-6xl text-obsidian mb-4">
+                Thank You
+            </h1>
+            
+            <p className="text-sm md:text-base text-stone-500 max-w-md leading-relaxed mb-8">
+                Your order has been placed successfully. <br/>
+                We will contact you shortly to confirm the details.
+            </p>
+
+            <div className="flex gap-4">
+                <LiquidButton 
+                    onClick={() => navigate('/')} 
+                    variant="solid" 
+                    className="px-8 py-3 text-xs uppercase tracking-widest font-bold"
+                >
+                    Continue Shopping
+                </LiquidButton>
+            </div>
+        </div>
+    );
+  }
+
+  if (cart.length === 0) return (
+    <div className="min-h-screen flex items-center justify-center font-sans text-stone-500 flex-col gap-4 animate-fade-in">
+        <div className="p-6 bg-stone-100 rounded-full mb-2">
+            <ShoppingBag className="w-8 h-8 opacity-30 stroke-1"/>
+        </div>
+        <p className="font-serif text-lg text-obsidian">Your cart is empty.</p>
+        <LiquidButton onClick={() => navigate('/collection')} variant="outline" className="px-8 py-3 text-xs uppercase tracking-widest mt-2 border-stone-300">
+            Browse Collection
+        </LiquidButton>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-10">
@@ -502,6 +567,31 @@ const Checkout = () => {
                   </div>
                 </div>
                 
+                {/* Security CAPTCHA Section */}
+                <div className="px-6 py-4 border-t border-stone-100 bg-stone-50/50">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] uppercase tracking-wider text-stone-500 font-bold flex items-center gap-1">
+                            <ShieldCheck className="w-3 h-3" /> Security Check
+                        </span>
+                        {captchaError && <span className="text-[10px] text-red-600 font-bold animate-pulse">Incorrect Answer</span>}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="text-sm font-medium text-stone-700 bg-white border border-stone-200 px-4 py-2 rounded select-none shadow-sm flex-1 text-center font-serif">
+                            {captcha.num1} + {captcha.num2} = ?
+                        </div>
+                        <input 
+                            type="number"
+                            className={`w-20 h-[38px] border rounded px-2 text-center text-sm outline-none transition-all ${captchaError ? 'border-red-300 bg-red-50 text-red-900' : 'border-stone-200 focus:border-obsidian bg-white'}`}
+                            value={captchaInput}
+                            onChange={(e) => {
+                                setCaptchaInput(e.target.value);
+                                setCaptchaError(false);
+                            }}
+                            placeholder=""
+                        />
+                    </div>
+                </div>
+
                 <div className="checkout--footer">
                   <div className="flex flex-col">
                       <span className="text-[10px] uppercase tracking-wider text-stone-500 font-bold mb-1">Total</span>

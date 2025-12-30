@@ -1,3 +1,4 @@
+
 export interface ProductVariant {
   size: string;
   stock: number;
@@ -7,6 +8,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  costPrice?: number; // Added for Profit Calculation
   compareAtPrice?: number; // For sales
   description: string; // Markdown supported
   category: string;
