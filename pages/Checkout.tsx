@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../StoreContext';
 import { useNavigate } from 'react-router-dom';
@@ -229,6 +230,7 @@ const Checkout = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState<'COD' | 'BankTransfer'>('COD');
   const [promoCode, setPromoCode] = useState('');
+  const [appliedPromoCode, setAppliedPromoCode] = useState(''); // Store applied code
   const [discountPercent, setDiscountPercent] = useState(0);
   const [error, setError] = useState('');
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
@@ -255,9 +257,11 @@ const Checkout = () => {
     const discount = validatePromo(promoCode);
     if (discount > 0) {
       setDiscountPercent(discount);
+      setAppliedPromoCode(promoCode);
       setError('');
     } else {
       setDiscountPercent(0);
+      setAppliedPromoCode('');
       setError('Invalid code');
     }
   };
@@ -280,6 +284,7 @@ const Checkout = () => {
       items: cart,
       total: total,
       paymentMethod: paymentMethod,
+      promoCode: appliedPromoCode || undefined
     });
     
     // Instead of alerting, set state to show thank you screen
@@ -539,7 +544,7 @@ const Checkout = () => {
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
                     />
-                    <LiquidButton type="submit" variant="solid" className="h-[42px] px-6 text-[10px] uppercase tracking-widest font-bold">Apply</LiquidButton>
+                    <LiquidButton type="submit" variant="solid" className="h-[42px] px-6 text-[11px] uppercase tracking-widest font-bold">Apply</LiquidButton>
                 </form>
                 {error && <p className="text-red-500 text-xs px-6 pb-4 -mt-2 font-sans font-medium">{error}</p>}
                 {discountPercent > 0 && <p className="text-emerald-700 text-xs px-6 pb-4 -mt-2 font-sans font-bold">Discount applied!</p>}

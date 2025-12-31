@@ -46,6 +46,7 @@ export interface Order {
   status: 'Pending' | 'Confirmed' | 'Shipped' | 'Delivered' | 'Cancelled';
   paymentMethod: 'COD' | 'BankTransfer';
   date: string;
+  promoCode?: string;
 }
 
 export interface Customer {

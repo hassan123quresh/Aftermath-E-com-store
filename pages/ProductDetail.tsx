@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
@@ -92,6 +93,9 @@ const ProductDetail = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Mobile Scroll Ref
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
 
   // Fix: Scroll to top when product page is opened or changed
   useEffect(() => {
@@ -260,7 +264,7 @@ const ProductDetail = () => {
       }
   };
 
-  // Swipe Handlers
+  // Swipe Handlers (Legacy / Desktop Touch)
   const minSwipeDistance = 50;
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -283,6 +287,18 @@ const ProductDetail = () => {
       }
       if (isRightSwipe) {
           handlePrevMedia();
+      }
+  };
+
+  // Mobile Native Scroll Handler
+  const handleMobileScroll = () => {
+      if (mobileScrollRef.current) {
+          const scrollLeft = mobileScrollRef.current.scrollLeft;
+          const width = mobileScrollRef.current.offsetWidth;
+          const index = Math.round(scrollLeft / width);
+          if (index !== activeMediaIndex) {
+              setActiveMediaIndex(index);
+          }
       }
   };
 
@@ -366,13 +382,50 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-4 md:py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-2 md:py-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
         
-        {/* LEFT COLUMN: Images & Unboxing (Desktop Only) */}
-        <div className="flex flex-col gap-16">
-            {/* Images - Sticky removed for better flow with video below */}
-            <div className="space-y-2">
+        {/* LEFT COLUMN: Images */}
+        <div className="flex flex-col gap-8 md:gap-16">
+            
+            {/* MOBILE: Swipeable Carousel */}
+            <div className="md:hidden relative w-full aspect-[3/4] bg-stone-300 overflow-hidden rounded-lg">
+                <div 
+                    ref={mobileScrollRef}
+                    className="flex w-full h-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
+                    onScroll={handleMobileScroll}
+                >
+                    {mediaItems.map((item, idx) => (
+                        <div key={idx} className="w-full h-full flex-shrink-0 snap-center relative">
+                             {item.type === 'image' ? (
+                                 <img src={item.src} className="w-full h-full object-cover" alt={product.name} />
+                             ) : (
+                                 <video src={item.src} className="w-full h-full object-cover" controls playsInline />
+                             )}
+                        </div>
+                    ))}
+                </div>
+                
+                {/* Dots Indicator */}
+                <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10 pointer-events-none">
+                    {mediaItems.map((_, idx) => (
+                        <div 
+                            key={idx} 
+                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 shadow-sm ${activeMediaIndex === idx ? 'bg-white scale-125' : 'bg-white/40'}`}
+                        />
+                    ))}
+                </div>
+
+                {/* Sold Out Overlay */}
+                {isCompletelySoldOut && (
+                    <div className="absolute inset-0 pointer-events-none flex items-center justify-center bg-obsidian/10 z-20">
+                         <span className="bg-white/90 px-6 py-3 text-sm font-bold uppercase tracking-widest text-obsidian border border-obsidian/10 shadow-lg">Sold Out</span>
+                    </div>
+                )}
+            </div>
+
+            {/* DESKTOP: Main Image & Thumbnails */}
+            <div className="hidden md:block space-y-2">
                 {/* Main Media Container */}
                 <div 
                     className={`aspect-[3/4] w-full overflow-hidden bg-stone-300 relative group ${activeMedia.type === 'image' ? 'md:cursor-zoom-in' : ''}`}
@@ -410,19 +463,19 @@ const ProductDetail = () => {
                         </div>
                     )}
 
-                    {/* Navigation Arrows (Visible on Mobile / Fade in on Desktop) */}
+                    {/* Navigation Arrows (Visible on hover on Desktop) */}
                     {mediaItems.length > 1 && (
                         <>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
-                                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-0 group-hover:opacity-100"
                                 aria-label="Previous image"
                             >
                                 <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
                             </button>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
-                                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white/40 backdrop-blur-md border border-white/50 rounded-full text-obsidian shadow-lg hover:bg-white/60 transition-all z-10 opacity-0 group-hover:opacity-100"
                                 aria-label="Next image"
                             >
                                 <ChevronRight className="w-4 h-4 md:w-5 md:h-5 stroke-[1.5]" />
@@ -484,9 +537,9 @@ const ProductDetail = () => {
         </div>
 
         {/* RIGHT COLUMN: Details & Reviews */}
-        <div className="flex flex-col pt-4">
+        <div className="flex flex-col">
             {/* Header */}
-            <div className="mb-12 border-b border-obsidian/10 pb-8">
+            <div className="mb-8 md:mb-10 border-b border-obsidian/10 pb-6 md:pb-8">
                 <h1 className="font-serif text-3xl md:text-4xl mb-4">{product.name}</h1>
                 <div className="flex flex-col items-start gap-3">
                     <PriceBadge price={product.price} compareAtPrice={product.compareAtPrice} className="text-lg md:text-xl px-6 py-2" />
@@ -567,7 +620,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Shipping & Returns Details */}
-                <div className="mt-10 pt-8 border-t border-obsidian/10">
+                <div className="mt-8 pt-8 border-t border-obsidian/10">
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                         {/* Free Shipping */}
                         <div className="bg-stone-50/50 p-3 md:p-4 rounded-lg border border-stone-200/50 flex flex-col items-start gap-2 md:gap-3 hover:border-stone-300 transition-colors h-full">
@@ -712,42 +765,51 @@ const ProductDetail = () => {
       {/* Desktop Zoom Modal - Only active for images */}
       {isZoomed && activeMedia.type === 'image' && (
         <div 
-            className="fixed inset-0 z-[100] bg-obsidian/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
-            onClick={() => setIsZoomed(false)}
+            className="fixed inset-0 z-[100] bg-obsidian/95 backdrop-blur-xl animate-fade-in flex flex-col"
         >
-            {/* Close Button */}
+            {/* Fixed Controls Layer */}
+            <div className="absolute inset-0 z-50 pointer-events-none p-6 flex justify-between items-center h-full">
+                 {/* Left Nav */}
+                 <button 
+                    onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
+                    className="pointer-events-auto p-4 text-white/50 hover:text-white transition-colors hover:bg-white/10 rounded-full"
+                >
+                    <ChevronLeft className="w-12 h-12 stroke-[0.5]" />
+                </button>
+
+                {/* Right Nav */}
+                <button 
+                    onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
+                    className="pointer-events-auto p-4 text-white/50 hover:text-white transition-colors hover:bg-white/10 rounded-full"
+                >
+                    <ChevronRight className="w-12 h-12 stroke-[0.5]" />
+                </button>
+            </div>
+
+            {/* Close Button (Top Right) */}
             <button 
-                className="absolute top-6 right-6 p-2 text-white/60 hover:text-white transition-colors"
+                className="absolute top-6 right-6 z-50 p-2 text-white/60 hover:text-white transition-colors cursor-pointer"
                 onClick={() => setIsZoomed(false)}
             >
                 <X className="w-10 h-10 stroke-1" />
             </button>
 
-            {/* Navigation Buttons */}
-            <button 
-                onClick={(e) => { e.stopPropagation(); handlePrevMedia(); }}
-                className="hidden md:block absolute left-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
+            {/* Scrollable Container */}
+            <div 
+                className="w-full h-full overflow-auto flex items-start justify-center cursor-zoom-out p-10 md:p-20"
+                onClick={() => setIsZoomed(false)}
             >
-                <ChevronLeft className="w-12 h-12 stroke-[0.5]" />
-            </button>
-
-            {/* Zoomed Image */}
-            <img 
-                src={activeMedia.src} 
-                alt={product.name}
-                className="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl cursor-default select-none"
-                onClick={(e) => e.stopPropagation()} 
-            />
-
-            <button 
-                onClick={(e) => { e.stopPropagation(); handleNextMedia(); }}
-                className="hidden md:block absolute right-8 p-4 text-white/50 hover:text-white transition-colors hover:bg-white/5 rounded-full"
-            >
-                <ChevronRight className="w-12 h-12 stroke-[0.5]" />
-            </button>
+                <img 
+                    src={activeMedia.src} 
+                    alt={product.name}
+                    className="max-w-none shadow-2xl cursor-default select-none bg-stone-100"
+                    style={{ height: '200vh' }} // Force 2x Viewport Height
+                    onClick={(e) => e.stopPropagation()} 
+                />
+            </div>
             
-            {/* Image Counter */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest uppercase font-sans">
+            {/* Image Counter (Fixed Bottom) */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest uppercase font-sans z-50 pointer-events-none">
                 {activeMediaIndex + 1} / {mediaItems.length}
             </div>
         </div>

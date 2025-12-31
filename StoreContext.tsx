@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Product, CartItem, Order, PromoCode, StoreContextType, ToastData, ToastAction, BlogPost, Customer, Review } from './types';
 import { MOCK_PRODUCTS, MOCK_ORDERS, INITIAL_PROMOS, INITIAL_ANNOUNCEMENT, MOCK_BLOG_POSTS, MOCK_CUSTOMERS, MOCK_REVIEWS } from './constants';
@@ -67,6 +68,23 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
     
     // Add new order
     setOrders(prev => [newOrder, ...prev]);
+
+    // Handle Promo Code Usage
+    if (orderData.promoCode) {
+        setPromos(prev => prev.map(p => {
+            if (p.code === orderData.promoCode) {
+                const newUsedCount = p.usedCount + 1;
+                // If usage limit is set and reached, deactivate
+                const isExhausted = p.usageLimit !== -1 && newUsedCount >= p.usageLimit;
+                return {
+                    ...p,
+                    usedCount: newUsedCount,
+                    isActive: isExhausted ? false : p.isActive
+                };
+            }
+            return p;
+        }));
+    }
     
     // Clear Cart
     setCart([]);
