@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../StoreContext';
-import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle, PlayCircle, Star, MessageSquare } from 'lucide-react';
+import { Truck, Package, ArrowRight, ChevronLeft, ChevronRight, X, ZoomIn, HelpCircle, PlayCircle, Star, MessageSquare, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { marked } from 'marked';
 import katex from 'katex';
 import createDOMPurify from 'dompurify';
@@ -76,6 +76,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { products, addToCart, toggleCart, showToast, reviews, addReview } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [showSizeError, setShowSizeError] = useState(false);
   
@@ -136,14 +137,13 @@ const ProductDetail = () => {
 
   const activeMedia = mediaItems[activeMediaIndex];
 
-  // Only show related items that are visible
-  const relatedProducts = products
-    .filter(p => p.category === product.category && p.id !== product.id && p.isVisible)
-    .slice(0, 3);
-
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size);
     setShowSizeError(false);
+  };
+
+  const handleQuantityChange = (delta: number) => {
+      setQuantity(prev => Math.max(1, prev + delta));
   };
 
   const handleAddToCart = () => {
@@ -202,7 +202,11 @@ const ProductDetail = () => {
     
     // Provide visual feedback
     setActiveButton('cart');
-    addToCart(product, selectedSize);
+    
+    // Add multiple items based on quantity
+    for(let i = 0; i < quantity; i++) {
+        addToCart(product, selectedSize);
+    }
     
     // Show toast with two actions
     showToast("Added to Cart", [
@@ -225,7 +229,11 @@ const ProductDetail = () => {
       
       // Visual feedback
       setActiveButton('buy');
-      addToCart(product, selectedSize);
+      
+      // Add multiple items based on quantity
+      for(let i = 0; i < quantity; i++) {
+          addToCart(product, selectedSize);
+      }
       
       // Navigate after a brief delay to show the feedback
       setTimeout(() => {
@@ -562,61 +570,102 @@ const ProductDetail = () => {
                 {/* Size Selector */}
                 <div>
                     <div className="flex justify-between mb-4">
-                        <span className={`text-xs uppercase tracking-widest transition-colors duration-300 ${showSizeError ? 'text-red-700 font-bold' : 'opacity-60 text-obsidian'}`}>
-                            {isCompletelySoldOut ? 'Sold Out' : (showSizeError ? 'Please Select a Size' : 'Select Size')}
+                        <span className={`text-base font-serif text-stone-600 transition-colors duration-300 ${showSizeError ? 'text-red-700 font-bold' : ''}`}>
+                            {isCompletelySoldOut ? 'Sold Out' : 'Size'}
                         </span>
-                        <Link to="/faq" className="text-xs underline opacity-40 cursor-pointer hover:text-obsidian transition-colors">Size Guide & FAQ</Link>
+                        <Link to="/faq" className="text-xs underline opacity-40 cursor-pointer hover:text-obsidian transition-colors">Size Guide</Link>
                     </div>
-                    <div className="flex flex-wrap gap-4">
+                    
+                    {/* Grid Layout for Sizes - Match Reference Image */}
+                    <div className="grid grid-cols-4 gap-3">
                         {product.inventory.map(variant => {
                             const isVariantSoldOut = variant.stock <= 0;
+                            const isSelected = selectedSize === variant.size;
                             return (
-                                <LiquidButton
+                                <button
                                     key={variant.size}
                                     onClick={() => !isVariantSoldOut && handleSizeSelect(variant.size)}
-                                    size="lg"
-                                    variant={selectedSize === variant.size ? 'solid' : 'outline'}
-                                    className={`min-w-[48px] h-12 p-0 px-2 ${
-                                        selectedSize !== variant.size ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
-                                    } ${
-                                        showSizeError && selectedSize !== variant.size ? 'border-red-300 bg-red-50' : ''
-                                    } ${isVariantSoldOut ? 'opacity-40 cursor-not-allowed hover:border-obsidian/30 border-dashed bg-stone-100' : ''}`}
                                     disabled={isVariantSoldOut}
+                                    className={`
+                                        h-12 rounded-md flex items-center justify-center font-sans text-sm font-medium transition-all duration-200 select-none
+                                        ${isSelected 
+                                            ? 'bg-obsidian text-white border border-obsidian shadow-sm scale-[1.02]' 
+                                            : 'bg-white text-obsidian border border-stone-200 hover:border-stone-400 hover:bg-stone-50'
+                                        }
+                                        ${isVariantSoldOut ? 'opacity-30 cursor-not-allowed bg-stone-100 border-dashed border-stone-300 relative overflow-hidden' : 'cursor-pointer'}
+                                        ${showSizeError && !isSelected ? 'border-red-300 bg-red-50' : ''}
+                                    `}
                                     title={isVariantSoldOut ? 'Out of Stock' : `${variant.stock} left`}
                                 >
                                     {variant.size}
-                                </LiquidButton>
+                                    {isVariantSoldOut && <div className="absolute inset-0 flex items-center justify-center pointer-events-none"><div className="w-full h-[1px] bg-stone-400 rotate-[-25deg]"></div></div>}
+                                </button>
                             );
                         })}
                     </div>
                 </div>
 
-                {/* Actions (Always visible) */}
-                <div className="flex flex-row gap-3 md:gap-4 w-full">
-                    <LiquidButton
-                        onClick={handleAddToCart}
-                        variant={activeButton === 'cart' ? 'solid' : 'outline'}
-                        className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
-                            activeButton !== 'cart' ? 'border-obsidian/30 hover:border-obsidian text-obsidian/80' : ''
-                        } ${
-                            activeButton === 'cart' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
-                        } ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed hover:border-obsidian/30' : ''}`}
-                        fullWidth
-                        disabled={isCompletelySoldOut}
-                    >
-                        {isCompletelySoldOut ? 'Sold Out' : (activeButton === 'cart' ? 'Added' : 'Add to Cart')}
-                    </LiquidButton>
-                    <LiquidButton
+                {/* Actions: Quantity & Add to Cart */}
+                <div className="space-y-4">
+                    <div className="flex gap-3 h-14">
+                        {/* Quantity Counter */}
+                        <div className="flex items-center justify-between border border-stone-200 bg-stone-50/50 rounded-md px-4 w-32 shrink-0">
+                            <button 
+                                onClick={() => handleQuantityChange(-1)} 
+                                className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-obsidian transition-colors disabled:opacity-30"
+                                disabled={quantity <= 1 || isCompletelySoldOut}
+                            >
+                                <Minus className="w-4 h-4" />
+                            </button>
+                            <span className="font-serif text-lg font-medium w-6 text-center">{quantity}</span>
+                            <button 
+                                onClick={() => handleQuantityChange(1)} 
+                                className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-obsidian transition-colors disabled:opacity-30"
+                                disabled={isCompletelySoldOut}
+                            >
+                                <Plus className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        {/* Add to Cart Button */}
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={isCompletelySoldOut}
+                            className={`
+                                flex-1 flex items-center justify-center gap-3 rounded-md text-sm font-bold uppercase tracking-widest transition-all duration-500
+                                ${activeButton === 'cart' 
+                                    ? 'bg-emerald-800 text-white' 
+                                    : 'bg-obsidian text-white hover:bg-stone-800 shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                                }
+                                ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed hover:transform-none hover:bg-obsidian shadow-none' : ''}
+                            `}
+                        >
+                            {activeButton === 'cart' ? (
+                                <>
+                                    <span className="animate-pulse">Added</span>
+                                </>
+                            ) : (
+                                <>
+                                    <ShoppingBag className="w-4 h-4 mb-0.5" />
+                                    <span>{isCompletelySoldOut ? 'Sold Out' : 'Add to cart'}</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Buy Now Button */}
+                    <button
                         onClick={handleBuyNow}
-                        variant="solid"
-                        className={`flex-1 h-12 md:h-14 px-2 md:px-6 text-[10px] md:text-xs uppercase tracking-widest font-semibold transition-all duration-300 ${
-                             activeButton === 'buy' ? 'bg-emerald-800 border-emerald-800 text-white' : ''
-                        } ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        fullWidth
                         disabled={isCompletelySoldOut}
+                        className={`
+                            w-full h-14 rounded-md bg-obsidian text-white text-sm font-bold uppercase tracking-widest 
+                            transition-all duration-300 hover:bg-stone-900 shadow-lg hover:shadow-xl hover:-translate-y-0.5
+                            ${isCompletelySoldOut ? 'opacity-50 cursor-not-allowed hover:transform-none shadow-none' : ''}
+                            ${activeButton === 'buy' ? 'bg-emerald-800' : ''}
+                        `}
                     >
-                        {isCompletelySoldOut ? 'Sold Out' : (activeButton === 'buy' ? 'Proceeding...' : 'Buy Now')}
-                    </LiquidButton>
+                        {activeButton === 'buy' ? 'Proceeding...' : 'Buy it now'}
+                    </button>
                 </div>
 
                 {/* Shipping & Returns Details */}
