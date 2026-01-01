@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 
 interface LoadingScreenProps {
@@ -35,7 +36,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         
         {/* Main Logo */}
         <img 
-            src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp"
+            src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766520199/aftermath_logo_1_-02_phtpip.webp"
             alt="Aftermath"
             className="h-12 md:h-20 w-auto object-contain animate-fade-in-up opacity-0 invert"
             style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}

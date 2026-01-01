@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useStore } from '../StoreContext';
 import { Menu, ShoppingBag, X, User, Search, Mail, MessageCircle, Instagram, ArrowRight } from 'lucide-react';
@@ -122,7 +123,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto z-10">
                 <Link to="/" className={`block transition-opacity ${isSearchOpen ? 'opacity-0 md:opacity-100' : 'opacity-100'}`}>
                     <img 
-                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_300/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                         alt="Aftermath" 
                         className={logoClass}
                         width="150"
@@ -195,7 +196,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                             <span className="text-xs font-medium font-serif">{product.name}</span>
                                             <span className="text-[10px] text-stone-500 uppercase tracking-wider">{product.category}</span>
                                         </div>
-                                        <span className="ml-auto text-xs font-medium">PKR {product.price.toLocaleString()}</span>
+                                        <span className="ml-auto text-xs font-medium">PKR {product.price.toLocaleString()}</p>
                                     </Link>
                                 ))
                             ) : (
@@ -343,7 +344,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div className="lg:col-span-1">
             <div className="mb-6">
                 <img 
-                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_300/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                     alt="Aftermath" 
                     className="h-16 w-auto object-contain invert opacity-90"
                     width="200"
@@ -352,7 +353,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 />
             </div>
             <p className="text-sm opacity-70 max-w-sm leading-relaxed mb-4">
-              Clothing for stillness. Built for people who choose calm over noise.
+              Clothing for the quiet moments after the noise. Designed for stillness.
               <br /><br />
               Lahore, Pakistan
             </p>

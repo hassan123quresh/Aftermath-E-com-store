@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart3, Package, ShoppingCart, Tag, LogOut, LayoutDashboard, BookOpen, Users } from 'lucide-react';
@@ -22,7 +23,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
          <div className="flex items-center gap-3">
             <Link to="/" className="block">
                  <img 
-                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                     alt="Aftermath" 
                     className="h-6 w-auto object-contain invert"
                  />
@@ -59,7 +60,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="p-8">
            <Link to="/" className="block mb-4">
                 <img 
-                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/f_auto,q_auto,w_800/v1766520199/aftermath_logo_1_-02_phtpip.webp" 
                     alt="Aftermath" 
                     className="h-12 w-auto object-contain invert"
                 />
