@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { StoreProvider } from './StoreContext';
@@ -43,7 +44,7 @@ const PageLoader = () => (
      <img 
         src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1766566500/589657275_17854363365582984_3626859287362746756_n_bf4ekc.jpg" 
         alt="Loading..." 
-        className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover animate-pulse shadow-xl"
+        className="w-24 h-24 md:w-32 md:h-32 rounded-3xl object-cover animate-pulse shadow-xl"
      />
   </div>
 );
