@@ -1,9 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useStore } from '../StoreContext';
 import { useNavigate } from 'react-router-dom';
 import LiquidButton from '../components/LiquidButton';
 import { Check, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { PromoCode } from '../types';
 
 const styles = `
 .card {
@@ -230,8 +231,7 @@ const Checkout = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState<'COD' | 'BankTransfer'>('COD');
   const [promoCode, setPromoCode] = useState('');
-  const [appliedPromoCode, setAppliedPromoCode] = useState(''); // Store applied code
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
   const [error, setError] = useState('');
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
@@ -247,23 +247,57 @@ const Checkout = () => {
       });
   }, []);
 
-  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const discountAmount = subtotal * discountPercent;
-  const shippingFee = 0; // Free shipping
-  const total = subtotal - discountAmount + shippingFee;
+  // Calculate Totals with Specific Product Discount
+  const { subtotal, discountAmount, total, shippingFee } = useMemo(() => {
+      const sub = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      let disc = 0;
+
+      if (appliedPromo) {
+          disc = cart.reduce((acc, item) => {
+              // Check if promo applies to this item
+              const isApplicable = !appliedPromo.applicableProductIds || 
+                                   appliedPromo.applicableProductIds.length === 0 || 
+                                   appliedPromo.applicableProductIds.includes(item.id);
+              
+              if (isApplicable) {
+                  return acc + (item.price * item.quantity * (appliedPromo.discountPercentage / 100));
+              }
+              return acc;
+          }, 0);
+      }
+
+      const ship = 0; // Free shipping
+      const tot = sub - disc + ship;
+
+      return { subtotal: sub, discountAmount: disc, total: tot, shippingFee: ship };
+  }, [cart, appliedPromo]);
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    const discount = validatePromo(promoCode);
-    if (discount > 0) {
-      setDiscountPercent(discount);
-      setAppliedPromoCode(promoCode);
-      setError('');
-    } else {
-      setDiscountPercent(0);
-      setAppliedPromoCode('');
-      setError('Invalid code');
+    setError('');
+    
+    if (!promoCode.trim()) return;
+
+    const promo = validatePromo(promoCode);
+    
+    if (!promo) {
+      setAppliedPromo(null);
+      setError('Invalid or expired code');
+      return;
     }
+
+    // Check if valid for current cart
+    if (promo.applicableProductIds && promo.applicableProductIds.length > 0) {
+        const hasApplicableItems = cart.some(item => promo.applicableProductIds?.includes(item.id));
+        if (!hasApplicableItems) {
+            setAppliedPromo(null);
+            setError('This coupon is not applicable to any items in your cart.');
+            return;
+        }
+    }
+
+    setAppliedPromo(promo);
+    setError('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -284,7 +318,7 @@ const Checkout = () => {
       items: cart,
       total: total,
       paymentMethod: paymentMethod,
-      promoCode: appliedPromoCode || undefined
+      promoCode: appliedPromo?.code || undefined
     });
     
     // Instead of alerting, set state to show thank you screen
@@ -547,7 +581,7 @@ const Checkout = () => {
                     <LiquidButton type="submit" variant="solid" className="h-[42px] px-6 text-[11px] uppercase tracking-widest font-bold">Apply</LiquidButton>
                 </form>
                 {error && <p className="text-red-500 text-xs px-6 pb-4 -mt-2 font-sans font-medium">{error}</p>}
-                {discountPercent > 0 && <p className="text-emerald-700 text-xs px-6 pb-4 -mt-2 font-sans font-bold">Discount applied!</p>}
+                {appliedPromo && <p className="text-emerald-700 text-xs px-6 pb-4 -mt-2 font-sans font-bold">Discount applied! ({appliedPromo.discountPercentage}%)</p>}
               </div>
 
               {/* Card: Checkout Totals - Order 5 on Mobile */}
@@ -559,7 +593,7 @@ const Checkout = () => {
                       <span className="checkout-value">PKR {subtotal.toLocaleString()}</span>
                   </div>
                   
-                  {discountPercent > 0 && (
+                  {discountAmount > 0 && (
                       <div className="checkout-row">
                           <span className="checkout-label text-emerald-700">Discount</span>
                           <span className="checkout-value text-emerald-700">- PKR {discountAmount.toLocaleString()}</span>

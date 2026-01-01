@@ -69,6 +69,7 @@ export interface PromoCode {
   usageLimit: number; // -1 for infinite
   usedCount: number;
   isActive: boolean;
+  applicableProductIds?: string[]; // If empty or undefined, applies to all
 }
 
 export interface BlogPost {
@@ -114,7 +115,7 @@ export interface StoreContextType {
   orders: Order[];
   placeOrder: (order: Omit<Order, 'id' | 'date' | 'status'>) => void;
   promos: PromoCode[];
-  validatePromo: (code: string) => number; // returns discount multiplier (e.g., 0.10 for 10%)
+  validatePromo: (code: string) => PromoCode | null; // Returns full object for advanced validation
   
   // Reviews
   reviews: Review[];
@@ -141,6 +142,7 @@ export interface StoreContextType {
   updateOrderStatus: (id: string, status: Order['status']) => void;
   togglePromo: (code: string) => void;
   addPromo: (promo: PromoCode) => void;
+  updatePromo: (promo: PromoCode) => void; // Added update capability
   deletePromo: (code: string) => void;
   addCategory: (category: string) => void;
   deleteCategory: (category: string) => void;

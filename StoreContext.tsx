@@ -154,11 +154,11 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
     });
   };
 
-  const validatePromo = (code: string): number => {
+  const validatePromo = (code: string): PromoCode | null => {
     const promo = promos.find(p => p.code === code && p.isActive);
-    if (!promo) return 0;
-    if (promo.usageLimit !== -1 && promo.usedCount >= promo.usageLimit) return 0;
-    return promo.discountPercentage / 100;
+    if (!promo) return null;
+    if (promo.usageLimit !== -1 && promo.usedCount >= promo.usageLimit) return null;
+    return promo;
   };
 
   // Toast Logic
@@ -193,6 +193,10 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
   
   const addPromo = (promo: PromoCode) => {
       setPromos(prev => [...prev, promo]);
+  };
+
+  const updatePromo = (updatedPromo: PromoCode) => {
+      setPromos(prev => prev.map(p => p.code === updatedPromo.code ? updatedPromo : p));
   };
 
   const deletePromo = (code: string) => {
@@ -246,6 +250,7 @@ export const StoreProvider = ({ children }: { children?: ReactNode }) => {
       updateOrderStatus,
       togglePromo,
       addPromo,
+      updatePromo,
       deletePromo,
       addCategory,
       deleteCategory,
