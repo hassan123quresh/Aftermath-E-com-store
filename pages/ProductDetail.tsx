@@ -670,36 +670,54 @@ const ProductDetail = () => {
 
                 {/* Shipping & Returns Details */}
                 <div className="mt-8 pt-8 border-t border-obsidian/10">
-                    <div className="grid grid-cols-2 gap-3 md:gap-4">
-                        {/* Free Shipping */}
-                        <div className="bg-stone-50/50 p-3 md:p-4 rounded-lg border border-stone-200/50 flex flex-col items-start gap-2 md:gap-3 hover:border-stone-300 transition-colors h-full">
-                            <Truck className="w-5 h-5 stroke-[1.5] text-obsidian" />
-                            <div className="space-y-1">
-                                <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-obsidian">Free Shipping*</h4>
-                                <p className="text-[9px] md:text-[10px] text-stone-600 leading-relaxed">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Free Shipping Card */}
+                        <div className="relative bg-stone-200 p-4 rounded-lg border border-stone-300 overflow-hidden">
+                            {/* Decorative Background Icon */}
+                            <div className="absolute -right-4 -bottom-4 opacity-[0.05] pointer-events-none text-obsidian">
+                                <Truck className="w-24 h-24" />
+                            </div>
+                            
+                            <div className="relative z-10 flex flex-col h-full items-start">
+                                <div className="mb-3 p-2 bg-white rounded-full shadow-sm border border-stone-100">
+                                    <Truck className="w-4 h-4 text-obsidian" strokeWidth={1.5} />
+                                </div>
+                                
+                                <h4 className="font-serif text-sm font-bold text-obsidian mb-1">Free Shipping*</h4>
+                                <p className="text-[10px] text-stone-600 font-medium leading-relaxed mb-1">
                                     3–5 business days within Pakistan.
                                 </p>
-                                <p className="text-[8px] md:text-[9px] text-stone-400 opacity-60">*All orders nationwide</p>
+                                <p className="text-[9px] text-stone-500 uppercase tracking-wide font-bold mb-3 opacity-60">
+                                    *All orders nationwide
+                                </p>
+                                
+                                <Link to="/shipping" className="mt-auto inline-flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-bold text-obsidian hover:underline underline-offset-2 decoration-obsidian/30">
+                                    Delivery Details <ArrowRight className="w-2.5 h-2.5" />
+                                </Link>
                             </div>
-                             <Link to="/shipping" className="mt-auto pt-2 flex items-center gap-1 text-[9px] md:text-[10px] font-medium text-stone-500 hover:text-obsidian group">
-                                <span>Delivery Details</span>
-                                <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
-                            </Link>
                         </div>
 
-                        {/* Easy Returns */}
-                        <div className="bg-stone-50/50 p-3 md:p-4 rounded-lg border border-stone-200/50 flex flex-col items-start gap-2 md:gap-3 hover:border-stone-300 transition-colors h-full">
-                            <Package className="w-5 h-5 stroke-[1.5] text-obsidian" />
-                            <div className="space-y-1">
-                                <h4 className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-obsidian">Easy Returns</h4>
-                                <p className="text-[9px] md:text-[10px] text-stone-600 leading-relaxed">
+                        {/* Easy Returns Card */}
+                        <div className="relative bg-stone-200 p-4 rounded-lg border border-stone-300 overflow-hidden">
+                            {/* Decorative Background Icon */}
+                            <div className="absolute -right-4 -bottom-4 opacity-[0.05] pointer-events-none text-obsidian">
+                                <Package className="w-24 h-24" />
+                            </div>
+
+                            <div className="relative z-10 flex flex-col h-full items-start">
+                                <div className="mb-3 p-2 bg-white rounded-full shadow-sm border border-stone-100">
+                                    <Package className="w-4 h-4 text-obsidian" strokeWidth={1.5} />
+                                </div>
+                                
+                                <h4 className="font-serif text-sm font-bold text-obsidian mb-1">Easy Returns</h4>
+                                <p className="text-[10px] text-stone-600 font-medium leading-relaxed mb-4">
                                     14-day refund or store credit policy.
                                 </p>
+                                
+                                <Link to="/returns" className="mt-auto inline-flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-bold text-obsidian hover:underline underline-offset-2 decoration-obsidian/30">
+                                    Returns Policy <ArrowRight className="w-2.5 h-2.5" />
+                                </Link>
                             </div>
-                            <Link to="/returns" className="mt-auto pt-2 flex items-center gap-1 text-[9px] md:text-[10px] font-medium text-stone-500 hover:text-obsidian group">
-                                <span>Returns Policy</span>
-                                <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
-                            </Link>
                         </div>
                     </div>
                 </div>
